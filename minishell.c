@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/21 14:04:14 by marvin            #+#    #+#             */
-/*   Updated: 2022/05/12 18:13:19 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/05/13 18:17:15 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,13 +131,14 @@ void     quotes_handling(char *context, char **env)
 }
 int main(int ac, char **av, char **env)
 {
+	struct termios termios_new;
     (void)ac;
     (void)env;
     (void)av;
     char *context;
 	struct sigaction sa;
-	// sa.sa_handler = &sig_handler;
-	// sa.sa_flags =  SA_RESTART;
+	sa.sa_handler = &sig_handler;
+	sa.sa_flags =  SA_RESTART;
 	sigaction (SIGINT, &sa, NULL);
 	signal(SIGQUIT, SIG_IGN);
     while (1)
@@ -145,10 +146,10 @@ int main(int ac, char **av, char **env)
         context = readline("minishell : ");
 		if (context == NULL)
 			exit(1);
-		if (builtcmd(context))
-			
+		if (ft_strstr(context, "pwd"))
+			pwd();
         add_history(context);
-        quotes_handling(context, env);
+        // quotes_handling(context, env);
         // pipe_handling(s);
         // break;
     }
