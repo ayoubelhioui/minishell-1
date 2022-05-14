@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/21 14:04:14 by marvin            #+#    #+#             */
-/*   Updated: 2022/05/13 18:17:15 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/05/14 19:20:41 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,10 +146,8 @@ int main(int ac, char **av, char **env)
         context = readline("minishell : ");
 		if (context == NULL)
 			exit(1);
-		if (ft_strstr(context, "pwd"))
-			pwd();
         add_history(context);
-        // quotes_handling(context, env);
+        quotes_handling(context, env);
         // pipe_handling(s);
         // break;
     }

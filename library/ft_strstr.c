@@ -6,11 +6,11 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 18:01:12 by ijmari            #+#    #+#             */
-/*   Updated: 2022/05/13 18:02:29 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/05/14 19:19:01 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
- #include "minishell.h"
+ #include "../minishell.h"
 
 int	ft_strstr(const char *s1, const char *s2)
 {

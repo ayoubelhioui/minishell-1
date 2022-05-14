@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/21 14:03:51 by marvin            #+#    #+#             */
-/*   Updated: 2022/05/13 18:18:07 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/05/14 19:02:05 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,10 @@ void	sig_handler(int sig);
 int		cd_dir(const char *path);
 int		ft_strstr(const char *s1, const char *s2);
 void	pwd(void);
+void	ft_exit(void);
+int		is_int(char *str);
+void	ft_echo(const char *s, char opt);
+void	ft_env(char **env);
 typedef struct pipe_commands
 {
     char *command;
