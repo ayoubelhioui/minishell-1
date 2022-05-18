@@ -1,13 +1,13 @@
 #include "../minishell.h"
 
-void	ft_env(char **env)
+void	ft_env(t_list **env)
 {
-	int i;
+	t_list *current;
 
-	i = 0;
-	while (env[i])
+	current = *env;
+	while (current != 0)
 	{
-		printf("%s\n", env[i]);
-		i++;
+		printf("%s\n", current->content);
+		current = current->next;
 	}
 }
