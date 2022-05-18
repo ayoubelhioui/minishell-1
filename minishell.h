@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/21 14:03:51 by marvin            #+#    #+#             */
-/*   Updated: 2022/05/17 20:19:44 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/05/18 18:02:59 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,19 +15,49 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <signal.h>
-#include <unistd.h>
-#include <readline/readline.h>
-#include <readline/history.h>
 #include "library/library.h"
 #include <readline/readline.h>
 #include <readline/history.h>
-#include <termios.h>
-#include <sys/types.h>
-#include <dirent.h>
 
-#define SINGLE_QUOTES '\''
-#define DOUBLE_QUOTES '\"'
+# define SINGLE_QUOTE '\''
+# define UNDER_SCORE '_'
+# define DOUBLE_QUOTE '\"'
+# define EQUAL '='
+# define SPACE ' '
+# define DOLLAR_SIGN '$'
+# define TRUE 1
+# define FALSE 0
+# define HERE_DOC 1
+# define RED_IN 2
+# define RED_OUT 3
+# define APPEND 4
+
+typedef struct returned_data
+{
+    char    *cmd_path;
+    char    **args;
+    int     input_fd;
+    int     output_fd;
+    // struct returned_data    *next;
+}               t_returned_data;
+
+
+typedef struct data
+{
+    char    *context;
+    char    **command_and_args;
+    int     index;   
+}               t_data;
+
+void    replace_with_real_value(t_data *data, char *real_value, char *saver ,int dollar_sign_position);
+void    remove_the_word(t_data *data, char *saver, int position);
+int     check_unclosed_quotes(char *context);
+void    ft_strcpy(char *s, char *str,int start_position, int length);
+void    double_quotes(t_data *data, char **env, int is_double_quotes);
+void    dollar_sign(t_data *data, char **env);
+// void    ft_strcpy(char *s, char *str,int start_position, int length);
+char    *search_in_env(char *data, char **env);
+void    replacing_space(t_data *data, char quotes);
 void	sig_handler(int sig);
 void	cd(char **paths);
 int		ft_strstr(const char *s1, const char *s2);
@@ -40,27 +70,5 @@ void	built_check(char	*context, t_list **env);
 void	ft_export(t_list **env,char **args);
 void	delete_node(t_list **env, t_list *node, int pos);
 void	ft_unset(t_list **env, char	**args);
-typedef struct pipe_commands
-{
-    char *command;
-    char *arguments;
-}               t_pipe_commands;
-
-typedef struct data
-{
-    char *command;
-    char **arguments;
-    char *input_file;
-    char *output_file;
-}               t_data;
-
-typedef struct pipe_handling
-{
-	int	(*pipes)[2];
-	int	commands;
-	int	*ids;
-	int	input_fd;
-	int	output_fd;
-}	t_pipe_handling;
 
 #endif

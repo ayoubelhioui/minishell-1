@@ -1,23 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   ft_isalnum.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/03 15:02:39 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/05/11 14:21:10 by ael-hiou         ###   ########.fr       */
+/*   Created: 2021/11/03 11:47:04 by ael-hiou          #+#    #+#             */
+/*   Updated: 2022/05/15 15:58:41 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "library.h"
+#include "../minishell.h"
 
-size_t	ft_strlen(const char *s)
+int	ft_isalpha(int c)
 {
-	size_t	i;
+	if ((c >= 65 && c <= 90) || (c >= 97 && c <= 122))
+		return (1);
+	return (0);
+}
 
-	i = 0;
-	while (s[i])
-		i++;
-	return (i);
+int	ft_isdigit(int c)
+{
+	if (c >= 48 && c <= 57)
+		return (1);
+	return (0);
+}
+
+int	ft_isalnum(int c)
+{
+	if ((c >= 48 && c <= 57) || (c >= 97 && c <= 122) || (c >= 65 && c <= 90))
+		return (1);
+	return (0);
 }

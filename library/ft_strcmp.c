@@ -1,23 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   ft_strcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/03 15:02:39 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/05/11 14:21:10 by ael-hiou         ###   ########.fr       */
+/*   Created: 2022/05/10 17:38:11 by ael-hiou          #+#    #+#             */
+/*   Updated: 2022/05/10 17:40:31 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "library.h"
+#include "../minishell.h"
 
-size_t	ft_strlen(const char *s)
+int	ft_strcmp(const char *s1, const char *s2)
 {
 	size_t	i;
 
 	i = 0;
-	while (s[i])
+	while (s1[i] == s2[i] && s1[i] && s2[i])
 		i++;
-	return (i);
+	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 }
