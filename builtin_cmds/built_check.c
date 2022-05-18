@@ -21,8 +21,11 @@ void	built_check(char *context, t_list **env)
 		i++;
 	}
 	args[i - 1] = NULL;
-	if (!strcmp(context, "cd"))
+	if (!strcmp(command, "cd"))
+	{
+		printf("OOOO\n");
 		cd(args);
+	}
 	else if (!strcmp(command, "pwd"))
 		pwd();
 	else if (!strcmp(command, "env"))
@@ -32,7 +35,9 @@ void	built_check(char *context, t_list **env)
 	else if (!strcmp(command, "exit"))
 		ft_exit();
 	else if (!strcmp(command, "export"))
+	{
 		ft_export(env, args);
+	}
 	else if (!strcmp(command, "unset"))
 		ft_unset(env, args);
 }

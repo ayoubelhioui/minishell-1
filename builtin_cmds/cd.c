@@ -1,13 +1,11 @@
 #include "../minishell.h"
 
-void	cd(char **path)
+void	cd(char **paths)
 {
 	int	ret;
 
-	printf("%s\n")
-	if (!path)
-		return ;
-	ret = chdir((const char *) path[0]);
+	int i = 0;
+	ret = chdir((const char *) paths[0]);
 	if (ret != 0)
-		printf("cd: no such file or directory : %s\n", *path);
+		printf("cd: no such file or directory : %s\n", paths[0]);
 }
