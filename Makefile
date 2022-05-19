@@ -6,7 +6,7 @@
 #    By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/21 14:09:12 by marvin            #+#    #+#              #
-#    Updated: 2022/05/18 18:05:12 by ijmari           ###   ########.fr        #
+#    Updated: 2022/05/19 10:37:28 by ijmari           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,11 +15,11 @@ library/ft_strlen.c library/ft_strstr.c library/ft_lstadd_back_bonus.c library/f
 library/ft_lstadd_front_bonus.c library/ft_lstlast_bonus.c library/ft_lstnew_bonus.c \
 builtin_cmds/cd.c builtin_cmds/pwd.c builtin_cmds/exit.c builtin_cmds/echo.c utils.c builtin_cmds/env.c \
 builtin_cmds/built_check.c builtin_cmds/export.c builtin_cmds/unset.c library/ft_isalnum.c \
-quotes_handling.c library/ft_substr.c library/ft_strncmp.c Library/ft_strcmp.c
+quotes_handling.c library/ft_substr.c library/ft_strncmp.c Library/ft_strcmp.c signals.c
 CC = cc
 # CFLAGS = -Wextra -Werror -Wall
 NAME = minishell
-READLINE = -lreadline -I ~/goinfre/.brew/opt/readline/include
+READLINE = -lreadline -L ~/goinfre/.brew/opt/readline/lib -I ~/goinfre/.brew/opt/readline/include
 SRC_O = $(SRC:.c=.o)
 
 all :$(NAME)

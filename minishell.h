@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/21 14:03:51 by marvin            #+#    #+#             */
-/*   Updated: 2022/05/18 18:02:59 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/05/19 10:36:06 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,11 @@
 #include "library/library.h"
 #include <readline/readline.h>
 #include <readline/history.h>
+#include <signal.h>
+#include <unistd.h>
+#include <termios.h>
+#include <sys/types.h>
+#include <dirent.h>
 
 # define SINGLE_QUOTE '\''
 # define UNDER_SCORE '_'

@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/21 14:04:14 by marvin            #+#    #+#             */
-/*   Updated: 2022/05/18 18:16:21 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/05/19 10:34:35 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -318,14 +318,15 @@ int main(int ac, char **av, char **env)
 {
     (void)av;
     t_data entered_data;
+	struct sigaction sa;
 	t_list	*env_l;
     
 	if (ac != 1)
         exit (1);
-	// sa.sa_handler = &sig_handler;
-	// sa.sa_flags =  SA_RESTART;
-	// sigaction (SIGINT, &sa, NULL);
-	// signal(SIGQUIT, SIG_IGN);
+	sa.sa_handler = &sig_handler;
+	sa.sa_flags =  SA_RESTART;
+	sigaction (SIGINT, &sa, NULL);
+	signal(SIGQUIT, SIG_IGN);
 	create_list(env, &env_l);
     while (TRUE)
     {
