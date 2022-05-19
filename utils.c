@@ -55,3 +55,12 @@ void	delete_node(t_list **env, t_list *node, int pos)
 		free(del);
 	}
 }
+
+void	print_list(t_list *en)
+{
+	while (en)
+    {
+        printf("declare -x %s\n", en->content);
+        en = en->next;
+    }
+}

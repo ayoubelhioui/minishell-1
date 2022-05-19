@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/22 18:05:59 by marvin            #+#    #+#             */
-/*   Updated: 2022/05/18 18:04:02 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/05/19 10:08:56 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,4 +47,5 @@ int			ft_check(const char *set, char a);
 size_t		ft_right(const char *s1, const char *set);
 size_t		ft_left(const char *s1, const char *set);
 char		*ft_strtrim(char *s1, char *set);
+void		print_list(t_list *en);
 #endif
