@@ -54,7 +54,7 @@ void sort_list(t_list *en)
         }
         lptr = ptr1;
     }
-	print_list(en);
+	print_list(en, NULL);
 }
 void	ft_export(t_list **env, char **args)
 {
@@ -76,12 +76,7 @@ void	ft_export(t_list **env, char **args)
 	{
 		split_arg = ft_split(args[i], '=');
 		presence_case = find_the_arg(env, args[i], split_arg, equ);
-		if (!ft_strstr(args[i], equ))
-		{
-			printf("declare -x %s\n", args[i]);
-			return ;
-		}
-		else if (presence_case)
+		if (presence_case)
 		{
 			len = ft_strlen(args[i]);
 			presence_case->content = malloc((len + 1) * sizeof(char));
@@ -95,6 +90,7 @@ void	ft_export(t_list **env, char **args)
 		}
 		else
 			ft_lstadd_back(env, ft_lstnew(args[i]));
+		ft_free(split_arg);
 		i++;
 	}
 }

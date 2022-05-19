@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/22 18:05:59 by marvin            #+#    #+#             */
-/*   Updated: 2022/05/19 10:08:56 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/05/19 13:20:56 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 typedef struct s_list
 {
 	char			*content;
+	char			criteria;
 	struct s_list	*next;
 }	t_list;
 char	    *copy(char const *s, char *str, unsigned int start, size_t len);
@@ -47,5 +48,6 @@ int			ft_check(const char *set, char a);
 size_t		ft_right(const char *s1, const char *set);
 size_t		ft_left(const char *s1, const char *set);
 char		*ft_strtrim(char *s1, char *set);
-void		print_list(t_list *en);
+void		print_list(t_list *en, char	*arg);
+void		ft_free(char **ptr);
 #endif

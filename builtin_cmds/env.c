@@ -7,7 +7,8 @@ void	ft_env(t_list **env)
 	current = *env;
 	while (current != 0)
 	{
-		printf("%s\n", current->content);
+		if (current->criteria == 'e')
+			printf("%s\n", current->content);
 		current = current->next;
 	}
 }

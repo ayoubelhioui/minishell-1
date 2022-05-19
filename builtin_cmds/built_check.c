@@ -24,7 +24,7 @@ void	built_check(char *context, t_list **env)
 	if (!strcmp(command, "cd"))
 	{
 		printf("OOOO\n");
-		cd(args);
+		cd(args, env);
 	}
 	else if (!strcmp(command, "pwd"))
 		pwd();

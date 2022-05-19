@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/21 14:03:51 by marvin            #+#    #+#             */
-/*   Updated: 2022/05/19 10:36:06 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/05/19 15:46:44 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void    dollar_sign(t_data *data, char **env);
 char    *search_in_env(char *data, char **env);
 void    replacing_space(t_data *data, char quotes);
 void	sig_handler(int sig);
-void	cd(char **paths);
+void	cd(char **paths, t_list **env);
 int		ft_strstr(const char *s1, const char *s2);
 void	pwd(void);
 void	ft_exit(void);

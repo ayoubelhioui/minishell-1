@@ -56,11 +56,28 @@ void	delete_node(t_list **env, t_list *node, int pos)
 	}
 }
 
-void	print_list(t_list *en)
+void	ft_free(char **ptr)
 {
+	int i;
+
+	i = 0;
+	while (ptr[i])
+		free(ptr[i++]);
+	free(ptr);
+}
+
+void	print_list(t_list *en, char	*arg)
+{
+	char	**name_path;
+
 	while (en)
     {
-        printf("declare -x %s\n", en->content);
+		name_path = ft_split(en->content, '=');
+		if (en->criteria == 'e')
+        	printf("declare -x %s%c\"%s\"\n", name_path[0], '=', name_path[1]);
+		else
+			printf("declare -x %s\n", name_path[0]);
+		ft_free(name_path);
         en = en->next;
     }
 }
