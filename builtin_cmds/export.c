@@ -93,18 +93,18 @@ void	ft_export(t_list **env, char **args)
 	{
 		split_arg = ft_split(args[i], '=');
 		presence_case = find_the_arg(env, args[i], split_arg, "=\0");
-		if (!check_if_valid(args[i]))
-		{
-			printf("export: \'%s\': not a valid identifier\n", args[i]);
-			i++;
-			continue;
-		}
+		// if (!check_if_valid(args[i]))
+		// {
+		// 	printf("export: \'%s\': not a valid identifier\n", args[i]);
+		// 	i++;
+		// 	continue;
+		// }
 		// else if (check_if_valid(args[i]))
 		// {
 		// 	printf("%s with %s\n", presence_case->content, split_arg[1]);
 		// 	// presence_case->content = ft_strjoin(presence_case->content, split_arg[1]);
 		// }
-		else if (presence_case)
+		if (presence_case)
 		{
 			len = ft_strlen(args[i]);
 			presence_case->content = malloc((len + 1) * sizeof(char));

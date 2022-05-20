@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/04/21 14:04:14 by marvin            #+#    #+#             */
-/*   Updated: 2022/05/19 12:50:29 by ijmari           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "minishell.h"
 
 void    back_space(char *context)
@@ -239,48 +227,192 @@ void     get_cmd_args(t_data *entered_data, t_returned_data *returned_data, char
         i++;
     }
 }
+
+int red_counter(char *context, char redirection)
+{
+    int i;
+    int counter;
+
+    i = 0;
+    counter = 0;
+    while (context[i])
+    {
+        if (context[i] == redirection)
+            counter++;
+        i++;
+    }
+    return (counter);
+}
+
+// void    determination(t_data *entered_data)
+// {
+//     int i;
+//     int input_fd;
+//     int which_one;
+
+//     i = 0;
+//     which_one = 0;
+//     while (entered_data->context[i])
+//     {
+//         if (entered_data->context[i] == RED_INPUT && entered_data->context[i + 1] != RED_INPUT)
+//         {
+//             which_one = RED_INPUT;
+//             // if (entered_data->context[i + 1] == '<')
+//             //     which_one = HERE_DOC;
+//         }
+//         else if ((entered_data->context[i] == RED_OUTPUT) && (entered_data->context[i + 1] != RED_OUTPUT))
+//         {
+//             which_one = RED_OUTPUT;
+//             input_fd = red_output(entered_data->context, (i + 1));
+//             // if (entered_data->context[i + 1] == '>')
+//             //     which_one = APPEND;
+//         }
+//         i++;
+//     }
+// }
+
 // void    red_input(char *context)
 // {}
 
-void    red_output(char *context)
+void red_output(char *context, int index)
 {
     int i;
-    char    *file_name;
+    int after_redirection;
+    int before_redirection;
 
+    after_redirection = 0;
+    before_redirection = 0;
     i = 0;
-    if (context[i] == SPACE)
+    while (context[i] && context[i] != RED_OUTPUT)
+    {
         i++;
-    while (context[i] && context[i] != SPACE)
-        i++;
-    file_name = ft_substr(context, 0, i);
+        before_redirection++;
+    }
+    
+}
+// void    
+void    search_for_token(t_list **head)
+{
+    int i;
+    int position;
+    t_list  *temp;
+
+    temp = (*head);
+    while (temp)
+    {
+        i = 0;
+        while (temp->content[i])
+        {
+            if (temp->content[i] == RED_INPUT)
+            {}
+            else if (temp->content[i] == RED_OUTPUT)
+            {
+                
+            }
+        }
+    }
 }
 
-void    determination(t_data *entered_data)
+void    add_to_list(t_list  **head, char *string)
+{
+    t_list *new;
+    
+    new = ft_lstnew(string);
+    ft_lstadd_back(head, new);
+}
+
+void    making_a_list(char **s)
+{
+    t_list *ctx;
+    int     s_length;
+    int i;
+
+    s_length = get_length(s);
+    ctx = malloc(sizeof(t_list) * (s_length));
+    i = 0;
+    ctx = NULL;
+    while (s[i])
+    {
+        add_to_list(&ctx, s[i]);
+        i++;
+    }
+    search_for_token(&ctx);
+}
+
+char    *add_space(char *context, int redirections_counter)
 {
     int i;
-    int which_one;
+    int j;
+    int new_string_length;
+    char *new_string;
 
+    new_string_length = ft_strlen(context) + redirections_counter + 1;
+    new_string = malloc(sizeof(char) * (new_string_length));
     i = 0;
-    which_one = 0;
-    while (entered_data->context[i])
+    j = 0;
+    while (i < new_string_length)
     {
-        if (entered_data->context[i] == '<')
+        if (context[i] == RED_INPUT || context[i] == RED_OUTPUT)
         {
-            which_one = RED_IN;
-            if (entered_data->context[i + 1] == '<')
-                which_one = HERE_DOC;
+            new_string[j] = context[i];
+            j++;
+            new_string[j] = SPACE;
+            j++;
         }
-        else if (entered_data->context[i] == '>')
+        else if (context[i + 1] == RED_INPUT || context[i + 1] == RED_OUTPUT)
         {
-            which_one = RED_OUT;
-            red_output(entered_data->context + i + 1);
-            if (entered_data->context[i + 1] == '>')
-                which_one = APPEND;
+            new_string[j] = context[i];
+            j++;
+            new_string[j] = SPACE;
+            j++;
+        }
+        else
+        {
+            new_string[j] = context[i];
+            j++;
         }
         i++;
-        // else
-        // {}
     }
+    return (new_string);
+}
+
+void    in_a_quote()
+{
+    
+}
+
+char    *get_new_context(char *context)
+{
+    int i;
+    int counter;
+    int in_quote;
+
+    i = 0;
+    counter = 0;
+    in_quote = 0;
+    while (context[i])
+    {
+        if (context[i] == SINGLE_QUOTE)
+        {
+            if (in_quote == SINGLE_QUOTE)
+                in_quote = 0;
+            else
+                in_quote = SINGLE_QUOTE;
+        }
+        else if (context[i] == DOUBLE_QUOTE)
+        {
+            if (in_quote == DOUBLE_QUOTE)
+                in_quote = 0;
+            else
+                in_quote = DOUBLE_QUOTE;
+        }
+        if ((context[i] == RED_INPUT || context[i] == RED_OUTPUT))
+            counter+=2;
+        i++;
+    }
+    if (in_quote == 0)
+        return (add_space(context, counter));
+    return (NULL);
 }
 
 void    preparing(t_data *entered_data, char **env)
@@ -290,10 +422,16 @@ void    preparing(t_data *entered_data, char **env)
     (void)env;
     char            **splitted_data;
     // int             array_length;
-
-    // i = 0;
-    splitted_data = ft_split(entered_data->context, '|');
-    determination(entered_data);
+    
+    entered_data->context = get_new_context(entered_data->context);
+    splitted_data = ft_split(entered_data->context, ' ');
+    
+    // making_a_list(splitted_data);
+    // determination(entered_data);
+    // int i = 0;
+    // while (splitted_data[i])
+    //     printf("It Is : %s\n", splitted_data[i++]);
+    // ft_free(splitted_data);
     // array_length = get_length(splitted_data);
     // returned_data = malloc(sizeof(t_returned_data) * (array_length));
     // while (i < array_length)
@@ -317,24 +455,24 @@ void    preparing(t_data *entered_data, char **env)
 int main(int ac, char **av, char **env)
 {
     (void)av;
-    t_data entered_data;
 	struct sigaction sa;
+    t_data entered_data;
 	t_list	*env_l;
     
 	if (ac != 1)
         exit (1);
-	sa.sa_handler = &sig_handler;
-	sa.sa_flags =  SA_RESTART;
-	sigaction (SIGINT, &sa, NULL);
-	signal(SIGQUIT, SIG_IGN);
-	create_list(env, &env_l);
+	// sa.sa_handler = &sig_handler;
+	// sa.sa_flags =  SA_RESTART;
+	// sigaction (SIGINT, &sa, NULL);
+	// signal(SIGQUIT, SIG_IGN);
+	// create_list(env, &env_l);
     while (TRUE)
     {
         entered_data.context = readline("minishell : ");
 		if (entered_data.context == NULL)
 			exit(1);
-		else if (ft_strlen(entered_data.context) == 0)
-			continue;
+        if (ft_strlen(entered_data.context) == 0)
+            continue;
 		built_check(entered_data.context, &env_l);
         add_history(entered_data.context);
         if (check_unclosed_quotes(entered_data.context))
@@ -343,6 +481,7 @@ int main(int ac, char **av, char **env)
             continue ;
         }
         preparing(&entered_data, env);
+        free (entered_data.context);
         // quotes_handling(&entered_data, &returned_data, env);
     }
 }

@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   library.h                                          :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/04/22 18:05:59 by marvin            #+#    #+#             */
-/*   Updated: 2022/05/19 13:20:56 by ijmari           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef LIBRARY_H
 # define LIBRARY_H
 #include <stdio.h>
@@ -37,7 +25,7 @@ int	        ft_isalpha(int c);
 int	        ft_isalnum(int c);
 void		ft_lstadd_back(t_list **lst, t_list *new);
 int			ft_lstsize(t_list *lst);
-t_list		*ft_lstnew(void *content);
+t_list		*ft_lstnew(char	*content);
 t_list		*ft_lstlast(t_list *lst);
 void		ft_lstdelone(t_list *lst, void (*del)(void *));
 void		ft_lstadd_front(t_list **lst, t_list *new);
@@ -48,6 +36,6 @@ int			ft_check(const char *set, char a);
 size_t		ft_right(const char *s1, const char *set);
 size_t		ft_left(const char *s1, const char *set);
 char		*ft_strtrim(char *s1, char *set);
-void		print_list(t_list *en, char	*arg);
+void		print_list(t_list *en, char *arg);
 void		ft_free(char **ptr);
 #endif

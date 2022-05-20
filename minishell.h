@@ -1,27 +1,15 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/04/21 14:03:51 by marvin            #+#    #+#             */
-/*   Updated: 2022/05/19 15:46:44 by ijmari           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef MINISHELL_H
 #define MINISHELL_H
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "library/library.h"
+#include <fcntl.h>
+#include <signal.h>
 #include <readline/readline.h>
 #include <readline/history.h>
-#include <signal.h>
-#include <unistd.h>
-#include <termios.h>
 #include <sys/types.h>
+#include <unistd.h>
 #include <dirent.h>
 
 # define SINGLE_QUOTE '\''
@@ -32,10 +20,8 @@
 # define DOLLAR_SIGN '$'
 # define TRUE 1
 # define FALSE 0
-# define HERE_DOC 1
-# define RED_IN 2
-# define RED_OUT 3
-# define APPEND 4
+# define RED_INPUT '<'
+# define RED_OUTPUT '>'
 
 typedef struct returned_data
 {
@@ -46,6 +32,11 @@ typedef struct returned_data
     // struct returned_data    *next;
 }               t_returned_data;
 
+// typedef struct list
+// {
+//     char *string;
+//     struct list *next;
+// }           t_string;
 
 typedef struct data
 {
@@ -53,7 +44,7 @@ typedef struct data
     char    **command_and_args;
     int     index;   
 }               t_data;
-
+void    ft_free(char **s);
 void    replace_with_real_value(t_data *data, char *real_value, char *saver ,int dollar_sign_position);
 void    remove_the_word(t_data *data, char *saver, int position);
 int     check_unclosed_quotes(char *context);
