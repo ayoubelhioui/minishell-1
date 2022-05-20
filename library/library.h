@@ -38,4 +38,5 @@ size_t		ft_left(const char *s1, const char *set);
 char		*ft_strtrim(char *s1, char *set);
 void		print_list(t_list *en, char *arg);
 void		ft_free(char **ptr);
+// hswbdhwbdhwbdhbwdhbwhdbhwd
 #endif

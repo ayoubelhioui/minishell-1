@@ -23,10 +23,14 @@ t_list	*find_the_arg(t_list **env, char *arg, char **split_arg, char *equ)
 void swap(t_list *a, t_list *b)
 {
     char *temp;
+	char crit;
 
     temp = a->content;
-    a->content = b->content;
-    b->content = temp;
+	crit = a->criteria;
+	a->content = b->content;
+	a->criteria = b->criteria;
+	b->content = temp;
+	b->criteria = crit;
 }
 
 void sort_list(t_list *en)
@@ -87,23 +91,24 @@ void	ft_export(t_list **env, char **args)
 	int		j;
 
 	i = 0;
+	curr = *env;
 	if (*args == NULL)
 		sort_list(*env);
 	while (args[i])
 	{
 		split_arg = ft_split(args[i], '=');
 		presence_case = find_the_arg(env, args[i], split_arg, "=\0");
-		// if (!check_if_valid(args[i]))
-		// {
-		// 	printf("export: \'%s\': not a valid identifier\n", args[i]);
-		// 	i++;
-		// 	continue;
-		// }
-		// else if (check_if_valid(args[i]))
-		// {
-		// 	printf("%s with %s\n", presence_case->content, split_arg[1]);
-		// 	// presence_case->content = ft_strjoin(presence_case->content, split_arg[1]);
-		// }
+		if (!check_if_valid(args[i]))
+		{
+			printf("export: \'%s\': not a valid identifier\n", args[i]);
+			i++;
+			continue;
+		}
+	// 	// else if (check_if_valid(args[i]))
+	// 	// {
+	// 	// 	printf("%s with %s\n", presence_case->content, split_arg[1]);
+	// 	// 	// presence_case->content = ft_strjoin(presence_case->content, split_arg[1]);
+	// 	// }
 		if (presence_case)
 		{
 			len = ft_strlen(args[i]);
@@ -117,8 +122,8 @@ void	ft_export(t_list **env, char **args)
 			presence_case->content[j] = '\0';
 		}
 		else
-			ft_lstadd_back(env, ft_lstnew(args[i]));
-		ft_free(split_arg);
+		ft_lstadd_back(env, ft_lstnew(args[i]));
+	// 	ft_free(split_arg);
 		i++;
 	}
 }

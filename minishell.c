@@ -465,7 +465,7 @@ int main(int ac, char **av, char **env)
 	// sa.sa_flags =  SA_RESTART;
 	// sigaction (SIGINT, &sa, NULL);
 	// signal(SIGQUIT, SIG_IGN);
-	// create_list(env, &env_l);
+	create_list(env, &env_l);
     while (TRUE)
     {
         entered_data.context = readline("minishell : ");

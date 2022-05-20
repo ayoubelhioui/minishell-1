@@ -7,7 +7,7 @@ void	cd(char **paths, t_list **env)
 	t_list	*curr;
 
 	curr = *env;
-	if (*paths == NULL || ft_strcmp(paths[0], "~"))
+	if (*paths == NULL || !ft_strcmp(paths[0], "~"))
 	{
 		while (curr)
 		{
