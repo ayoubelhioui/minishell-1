@@ -248,7 +248,8 @@ int redirection_counter(t_list *splitted_data, char redirection)
 
 void    here_doc()
 {
-    
+     char *s;
+     
 }
 
 int getting_fd(t_list *splitted_data, char redirection)
@@ -271,11 +272,12 @@ int getting_fd(t_list *splitted_data, char redirection)
                 else
                     fd = open(splitted_data->content, O_WRONLY | O_CREAT | O_TRUNC, 0777);
                 splitted_data = splitted_data->next;
-            }
+            }   
             else
                 fd = open(splitted_data->content, O_WRONLY | O_CREAT, 0777);
             i++;
         }
+        printf("Im Here : %s\n", splitted_data->content);
         splitted_data = splitted_data->next;
     }
     return (fd);
@@ -439,6 +441,7 @@ void    preparing(t_data *entered_data, char **env)
         d = d->next;
     }
     int input_fd = getting_fd(data_list, RED_OUTPUT);
+    // printf("IT Is : %d\n", input_fd);    
     dprintf(input_fd, "Hey Dude");
     // determination(entered_data);
     // int i = 0;

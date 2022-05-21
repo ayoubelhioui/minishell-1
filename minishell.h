@@ -11,6 +11,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <dirent.h>
+#include "includes/get_next_line.h"
 
 # define SINGLE_QUOTE '\''
 # define UNDER_SCORE '_'
