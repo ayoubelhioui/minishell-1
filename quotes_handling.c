@@ -6,7 +6,7 @@
 /*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/15 15:38:43 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/05/18 16:25:05 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/05/21 12:55:13 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,33 +93,4 @@ void    double_quotes(t_data *data, char **env, int is_double_quotes)
     data->index = i;
     if (is_double_quotes)
         replacing_space(data, DOUBLE_QUOTE);
-}
-
-
-int check_unclosed_quotes(char *context)
-{
-    int quote;
-    int i;
-
-    quote = 0;
-    i = 0;
-    while (context[i])
-    {
-        if (context[i] == DOUBLE_QUOTE)
-        {
-            if (quote == DOUBLE_QUOTE)
-                quote = 0;
-            else if (quote == 0)
-                quote = DOUBLE_QUOTE;
-        }
-        else if (context[i] == SINGLE_QUOTE)
-        {
-            if (quote == SINGLE_QUOTE)
-                quote = 0;
-            else if (quote == 0)
-                quote = SINGLE_QUOTE;
-        }
-        i++;
-    }
-    return (quote);
 }

@@ -32,18 +32,13 @@ typedef struct returned_data
     // struct returned_data    *next;
 }               t_returned_data;
 
-// typedef struct list
-// {
-//     char *string;
-//     struct list *next;
-// }           t_string;
-
 typedef struct data
 {
     char    *context;
     char    **command_and_args;
     int     index;   
 }               t_data;
+
 void    ft_free(char **s);
 void    replace_with_real_value(t_data *data, char *real_value, char *saver ,int dollar_sign_position);
 void    remove_the_word(t_data *data, char *saver, int position);

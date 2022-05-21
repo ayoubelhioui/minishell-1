@@ -13,10 +13,10 @@ void    back_space(char *context)
     }
 }
 
-void    replacing_space(t_data *entered_data, char quotes)
+void    replacing_space(t_data *entered_data, char quote)
 {
     entered_data->index++;
-    while (entered_data->context[entered_data->index] && entered_data->context[entered_data->index] != quotes)
+    while (entered_data->context[entered_data->index] && entered_data->context[entered_data->index] != quote)
     {
         if (entered_data->context[entered_data->index] == ' ')
             (entered_data->context[entered_data->index]) = -1;
@@ -228,89 +228,69 @@ void     get_cmd_args(t_data *entered_data, t_returned_data *returned_data, char
     }
 }
 
-int red_counter(char *context, char redirection)
+int redirection_counter(t_list *splitted_data, char redirection)
 {
     int i;
     int counter;
+    t_list *temp;
 
     i = 0;
     counter = 0;
-    while (context[i])
+    temp = splitted_data;
+    while (temp)
     {
-        if (context[i] == redirection)
+        if (ft_strlen(temp->content) && temp->content[0] == redirection)
             counter++;
-        i++;
+        temp = temp->next;
     }
     return (counter);
 }
 
-// void    determination(t_data *entered_data)
-// {
-//     int i;
-//     int input_fd;
-//     int which_one;
-
-//     i = 0;
-//     which_one = 0;
-//     while (entered_data->context[i])
-//     {
-//         if (entered_data->context[i] == RED_INPUT && entered_data->context[i + 1] != RED_INPUT)
-//         {
-//             which_one = RED_INPUT;
-//             // if (entered_data->context[i + 1] == '<')
-//             //     which_one = HERE_DOC;
-//         }
-//         else if ((entered_data->context[i] == RED_OUTPUT) && (entered_data->context[i + 1] != RED_OUTPUT))
-//         {
-//             which_one = RED_OUTPUT;
-//             input_fd = red_output(entered_data->context, (i + 1));
-//             // if (entered_data->context[i + 1] == '>')
-//             //     which_one = APPEND;
-//         }
-//         i++;
-//     }
-// }
-
-// void    red_input(char *context)
-// {}
-
-void red_output(char *context, int index)
+int getting_fd(t_list *splitted_data, char redirection)
 {
+    int counter;
+    int fd;
     int i;
-    int after_redirection;
-    int before_redirection;
 
-    after_redirection = 0;
-    before_redirection = 0;
+    counter = redirection_counter(splitted_data, redirection);
     i = 0;
-    while (context[i] && context[i] != RED_OUTPUT)
+    while (i < counter)
     {
-        i++;
-        before_redirection++;
-    }
-    
-}
-// void    
-void    search_for_token(t_list **head)
-{
-    int i;
-    int position;
-    t_list  *temp;
-
-    temp = (*head);
-    while (temp)
-    {
-        i = 0;
-        while (temp->content[i])
+        if ((ft_strlen(splitted_data->content) == 1) && (splitted_data->content[0] == redirection))
         {
-            if (temp->content[i] == RED_INPUT)
-            {}
-            else if (temp->content[i] == RED_OUTPUT)
-            {
-                
-            }
+            splitted_data = splitted_data->next;
+            fd = open(splitted_data->content, O_WRONLY | O_CREAT, 0777);
+            i++;
         }
+        splitted_data = splitted_data->next;
     }
+    return (fd);
+}
+
+void    in_a_quote(int *in_quote, int quote)
+{
+    if (*in_quote == quote)
+        *in_quote = 0;
+    else if (*in_quote == 0)
+        *in_quote = quote;
+}
+
+int check_unclosed_quotes(char *context)
+{
+    int in_quote;
+    int i;
+
+    in_quote = 0;
+    i = 0;
+    while (context[i])
+    {
+        if (context[i] == DOUBLE_QUOTE)
+            in_a_quote(&in_quote, DOUBLE_QUOTE);
+        else if (context[i] == SINGLE_QUOTE)
+            in_a_quote(&in_quote, SINGLE_QUOTE);
+        i++;
+    }
+    return (in_quote);
 }
 
 void    add_to_list(t_list  **head, char *string)
@@ -321,7 +301,7 @@ void    add_to_list(t_list  **head, char *string)
     ft_lstadd_back(head, new);
 }
 
-void    making_a_list(char **s)
+t_list  *making_a_list(char **s)
 {
     t_list *ctx;
     int     s_length;
@@ -336,10 +316,11 @@ void    making_a_list(char **s)
         add_to_list(&ctx, s[i]);
         i++;
     }
-    search_for_token(&ctx);
+    return (ctx);
+    // search_for_token(&ctx);  
 }
 
-char    *add_space(char *context, int redirections_counter)
+char    *add_space(char *context, int start_position, int redirections_counter)
 {
     int i;
     int j;
@@ -352,14 +333,14 @@ char    *add_space(char *context, int redirections_counter)
     j = 0;
     while (i < new_string_length)
     {
-        if (context[i] == RED_INPUT || context[i] == RED_OUTPUT)
+        if ((context[i] == RED_INPUT || context[i] == RED_OUTPUT) && i >= start_position)
         {
             new_string[j] = context[i];
             j++;
             new_string[j] = SPACE;
             j++;
         }
-        else if (context[i + 1] == RED_INPUT || context[i + 1] == RED_OUTPUT)
+        else if ((context[i + 1] == RED_INPUT || context[i + 1] == RED_OUTPUT) && i >= start_position)
         {
             new_string[j] = context[i];
             j++;
@@ -373,60 +354,80 @@ char    *add_space(char *context, int redirections_counter)
         }
         i++;
     }
+    printf("The New String Is : %s\n", new_string);
     return (new_string);
 }
 
-void    in_a_quote()
-{
-    
-}
 
-char    *get_new_context(char *context)
+
+void    red_input(char *context)
+{}
+
+void    red_output(char **splitted_data)
 {
     int i;
-    int counter;
-    int in_quote;
 
     i = 0;
+    while (splitted_data[i])
+    {
+
+    }
+}
+
+char    *get_new_context(t_data *entered_data)
+{
+    int counter;
+    int first_red_position;
+    int in_quote;
+
+    entered_data->index = 0;
     counter = 0;
     in_quote = 0;
-    while (context[i])
+    first_red_position = 0;
+    while (entered_data->context[entered_data->index])
     {
-        if (context[i] == SINGLE_QUOTE)
+        if (entered_data->context[entered_data->index] == SINGLE_QUOTE)
         {
-            if (in_quote == SINGLE_QUOTE)
-                in_quote = 0;
-            else
-                in_quote = SINGLE_QUOTE;
+            replacing_space(entered_data, SINGLE_QUOTE);
+            in_a_quote(&in_quote, SINGLE_QUOTE);
         }
-        else if (context[i] == DOUBLE_QUOTE)
+        else if (entered_data->context[entered_data->index] == DOUBLE_QUOTE)
         {
-            if (in_quote == DOUBLE_QUOTE)
-                in_quote = 0;
-            else
-                in_quote = DOUBLE_QUOTE;
+            replacing_space(entered_data, DOUBLE_QUOTE);
+            in_a_quote(&in_quote, DOUBLE_QUOTE);
         }
-        if ((context[i] == RED_INPUT || context[i] == RED_OUTPUT))
+        if ((entered_data->context[entered_data->index] == RED_INPUT || entered_data->context[entered_data->index] == RED_OUTPUT) && (in_quote == 0))
+        {
             counter+=2;
-        i++;
+            if (first_red_position == 0)
+                first_red_position = entered_data->index;
+        }
+        entered_data->index++;
     }
-    if (in_quote == 0)
-        return (add_space(context, counter));
-    return (NULL);
+    return (add_space(entered_data->context, first_red_position, counter));
 }
 
 void    preparing(t_data *entered_data, char **env)
 {
     // t_returned_data *returned_data;
     // int             i;
+    t_list *data_list;
     (void)env;
     char            **splitted_data;
     // int             array_length;
     
-    entered_data->context = get_new_context(entered_data->context);
+    entered_data->context = get_new_context(entered_data);
     splitted_data = ft_split(entered_data->context, ' ');
-    
-    // making_a_list(splitted_data);
+    data_list = making_a_list(splitted_data);
+    t_list *d = data_list;
+    while (d)
+    {
+        printf("Data Is : %s\n", d->content);
+        d = d->next;
+    }
+    int fd = getting_fd(data_list, RED_OUTPUT);
+    printf("It Is : %d\n", fd);
+    dprintf(fd, "Fuck Wlad L97ab");
     // determination(entered_data);
     // int i = 0;
     // while (splitted_data[i])

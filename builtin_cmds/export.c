@@ -1,19 +1,22 @@
 #include "../minishell.h"
 
-t_list	*find_the_arg(t_list **env, char *arg, char **split_arg, char *equ)
+int	check_presence(t_list **env, char **split_arg, char *arg)
 {
 	t_list	*curr;
-	char	*searched;
-	int		i;
+	char	*temp;
 
-	searched = ft_strjoin(split_arg[0], equ);
 	curr = *env;
+	if (split_arg[1] != NULL)
+		temp = ft_strjoin(split_arg[0], "=");
 	while (curr)
 	{
-		if (ft_strstr(curr->content, searched))
+		if (!split_arg[1])
+			if (!ft_strcmp(arg, curr->content))
+				return (1);
+		else
 		{
-			free(searched);
-			return (curr);
+			if (ft_strstr(curr->content, temp))
+				return (1);
 		}
 		curr = curr->next;
 	}
@@ -68,6 +71,8 @@ int	check_if_valid(char *arg)
 
 	equal = 0;
 	i = 0;
+	if (!ft_strstr(arg, "=\0"))
+		return (1);
 	while (arg[i])
 	{
 		if ((arg[i] == '+' && equal == 0 && arg[i + 1] != '=')
@@ -97,33 +102,21 @@ void	ft_export(t_list **env, char **args)
 	while (args[i])
 	{
 		split_arg = ft_split(args[i], '=');
-		presence_case = find_the_arg(env, args[i], split_arg, "=\0");
-		if (!check_if_valid(args[i]))
+		if (check_if_valid(args[i]))
 		{
-			printf("export: \'%s\': not a valid identifier\n", args[i]);
+			printf ("export: \'%s\': not a valid identifier", args[i]);
 			i++;
 			continue;
 		}
-	// 	// else if (check_if_valid(args[i]))
-	// 	// {
-	// 	// 	printf("%s with %s\n", presence_case->content, split_arg[1]);
-	// 	// 	// presence_case->content = ft_strjoin(presence_case->content, split_arg[1]);
-	// 	// }
-		if (presence_case)
+		else if (!check_presence(env, split_arg, args[i]))
 		{
-			len = ft_strlen(args[i]);
-			presence_case->content = malloc((len + 1) * sizeof(char));
-			j = 0;
-			while (j < len)
-			{
-				presence_case->content[j] = args[i][j];
-				j++;
-			}
-			presence_case->content[j] = '\0';
+			i++;
+			continue;
 		}
 		else
-		ft_lstadd_back(env, ft_lstnew(args[i]));
-	// 	ft_free(split_arg);
+		{
+			ft_lstadd_back(env, ft_lstnew(args[i]));
+		}
 		i++;
 	}
 }
