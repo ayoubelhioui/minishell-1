@@ -246,6 +246,11 @@ int redirection_counter(t_list *splitted_data, char redirection)
     return (counter);
 }
 
+void    here_doc()
+{
+    
+}
+
 int getting_fd(t_list *splitted_data, char redirection)
 {
     int counter;
@@ -259,7 +264,16 @@ int getting_fd(t_list *splitted_data, char redirection)
         if ((ft_strlen(splitted_data->content) == 1) && (splitted_data->content[0] == redirection))
         {
             splitted_data = splitted_data->next;
-            fd = open(splitted_data->content, O_WRONLY | O_CREAT, 0777);
+            if ((ft_strlen(splitted_data->content) == 1) && (splitted_data->content[0] == redirection))
+            {
+                if (redirection == RED_INPUT)
+                    here_doc();
+                else
+                    fd = open(splitted_data->content, O_WRONLY | O_CREAT | O_TRUNC, 0777);
+                splitted_data = splitted_data->next;
+            }
+            else
+                fd = open(splitted_data->content, O_WRONLY | O_CREAT, 0777);
             i++;
         }
         splitted_data = splitted_data->next;
@@ -415,7 +429,6 @@ void    preparing(t_data *entered_data, char **env)
     (void)env;
     char            **splitted_data;
     // int             array_length;
-    
     entered_data->context = get_new_context(entered_data);
     splitted_data = ft_split(entered_data->context, ' ');
     data_list = making_a_list(splitted_data);
@@ -425,9 +438,8 @@ void    preparing(t_data *entered_data, char **env)
         printf("Data Is : %s\n", d->content);
         d = d->next;
     }
-    int fd = getting_fd(data_list, RED_OUTPUT);
-    printf("It Is : %d\n", fd);
-    dprintf(fd, "Fuck Wlad L97ab");
+    int input_fd = getting_fd(data_list, RED_OUTPUT);
+    dprintf(input_fd, "Hey Dude");
     // determination(entered_data);
     // int i = 0;
     // while (splitted_data[i])
@@ -481,7 +493,7 @@ int main(int ac, char **av, char **env)
             printf("Missing Quote!\n");
             continue ;
         }
-        // preparing(&entered_data, env);
+        preparing(&entered_data, env);
         free (entered_data.context);
         // quotes_handling(&entered_data, &returned_data, env);
     }
