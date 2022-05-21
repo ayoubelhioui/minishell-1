@@ -29,7 +29,7 @@ void	create_list(char **env, t_list **env_l)
 		ft_lstadd_back (env_l, ft_lstnew(env[i++]));
 }
 
-void	delete_node(t_list **env, t_list *node, int pos)
+void	delete_node(t_list **env, int pos)
 {
 	t_list	*del;
 	t_list	*original;
@@ -37,7 +37,7 @@ void	delete_node(t_list **env, t_list *node, int pos)
 
 	i = 0;
 	original = *env;
-	if (pos == 0 && original == node)
+	if (pos == 0)
 	{
 		*env = (*env)->next;
 		original->next = NULL; 

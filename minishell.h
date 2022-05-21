@@ -59,7 +59,7 @@ void	ft_echo(const char **s);
 void	ft_env(t_list **env);
 void	built_check(char	*context, t_list **env);
 void	ft_export(t_list **env,char **args);
-void	delete_node(t_list **env, t_list *node, int pos);
+void	delete_node(t_list **env, int pos);
 void	ft_unset(t_list **env, char	**args);
 
 #endif

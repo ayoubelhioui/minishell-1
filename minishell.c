@@ -481,7 +481,7 @@ int main(int ac, char **av, char **env)
             printf("Missing Quote!\n");
             continue ;
         }
-        preparing(&entered_data, env);
+        // preparing(&entered_data, env);
         free (entered_data.context);
         // quotes_handling(&entered_data, &returned_data, env);
     }

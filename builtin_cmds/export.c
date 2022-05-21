@@ -11,8 +11,10 @@ int	check_presence(t_list **env, char **split_arg, char *arg)
 	while (curr)
 	{
 		if (!split_arg[1])
+		{
 			if (!ft_strcmp(arg, curr->content))
 				return (1);
+		}
 		else
 		{
 			if (ft_strstr(curr->content, temp))
@@ -71,7 +73,7 @@ int	check_if_valid(char *arg)
 
 	equal = 0;
 	i = 0;
-	if (!ft_strstr(arg, "=\0"))
+	if (!ft_strstr(arg, "="))
 		return (1);
 	while (arg[i])
 	{
@@ -102,9 +104,9 @@ void	ft_export(t_list **env, char **args)
 	while (args[i])
 	{
 		split_arg = ft_split(args[i], '=');
-		if (check_if_valid(args[i]))
+		if (!check_if_valid(args[i]))
 		{
-			printf ("export: \'%s\': not a valid identifier", args[i]);
+			printf ("export: \'%s\': not a valid identifier\n", args[i]);
 			i++;
 			continue;
 		}

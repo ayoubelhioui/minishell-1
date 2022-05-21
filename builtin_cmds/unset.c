@@ -17,7 +17,7 @@ void	ft_unset(t_list **env, char	**args)
 		{
 			if (ft_strstr(curr->content, temp) || ft_strstr(curr->content, args[i]))
 			{
-				delete_node(env, curr, pos);
+				delete_node(env, pos);
 				break;
 			}
 			pos++;
