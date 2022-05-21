@@ -1,6 +1,6 @@
 #include "../minishell.h"
 
-int	check_presence(t_list **env, char **split_arg, char *arg)
+t_list	*check_presence(t_list **env, char **split_arg, char *arg)
 {
 	t_list	*curr;
 	char	*temp;
@@ -13,12 +13,12 @@ int	check_presence(t_list **env, char **split_arg, char *arg)
 		if (!split_arg[1])
 		{
 			if (!ft_strcmp(arg, curr->content))
-				return (1);
+				return (curr);
 		}
 		else
 		{
 			if (ft_strstr(curr->content, temp))
-				return (1);
+				return (curr);
 		}
 		curr = curr->next;
 	}
@@ -43,15 +43,16 @@ void sort_list(t_list *en)
     int swapped = 1;
     t_list *ptr1;
     t_list *lptr;
+	t_list *curr;
 
+	curr = en;
 	lptr = NULL;
     if (en == NULL)
         return;
     while(swapped)
     {
         swapped = 0;
-        ptr1 = en;
-
+        ptr1 = curr;
         while (ptr1->next != lptr)
         {
             if (ft_strcmp(ptr1->content , ptr1->next->content) > 0)
@@ -70,8 +71,10 @@ int	check_if_valid(char *arg)
 {
 	int i;
 	int	equal;
+	int	flag;
 
 	equal = 0;
+	flag = 0;
 	i = 0;
 	if (!ft_strstr(arg, "="))
 		return (1);
@@ -82,6 +85,12 @@ int	check_if_valid(char *arg)
 			return (0);
 		else if (arg[i] == '=')
 			equal = 1;
+		i++;
+	}
+	while (arg[i])
+	{
+		if (arg[i] == '+' && arg[i] == '=')
+			return (2);
 		i++;
 	}
 	return (1);
@@ -110,15 +119,17 @@ void	ft_export(t_list **env, char **args)
 			i++;
 			continue;
 		}
-		else if (!check_presence(env, split_arg, args[i]))
+		else if (check_if_valid(args[i]) == 2)
+		{
+
+		}
+		else if (check_presence(env, split_arg, args[i]))
 		{
 			i++;
 			continue;
 		}
 		else
-		{
 			ft_lstadd_back(env, ft_lstnew(args[i]));
-		}
 		i++;
 	}
 }

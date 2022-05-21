@@ -69,15 +69,17 @@ void	ft_free(char **ptr)
 void	print_list(t_list *en, char	*arg)
 {
 	char	**name_path;
+	t_list	*cc;
 
-	while (en)
+	cc = en;
+	while (cc)
     {
-		name_path = ft_split(en->content, '=');
-		if (en->criteria == 'e')
+		name_path = ft_split(cc->content, '=');
+		if (cc->criteria == 'e')
         	printf("declare -x %s%c\"%s\"\n", name_path[0], '=', name_path[1]);
 		else
 			printf("declare -x %s\n", name_path[0]);
 		ft_free(name_path);
-        en = en->next;
+        cc = cc->next;
     }
 }
