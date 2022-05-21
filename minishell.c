@@ -272,7 +272,7 @@ int getting_fd(t_list *splitted_data, char redirection)
                 else
                     fd = open(splitted_data->content, O_WRONLY | O_CREAT | O_TRUNC, 0777);
                 splitted_data = splitted_data->next;
-            }
+            }   
             else
                 fd = open(splitted_data->content, O_WRONLY | O_CREAT, 0777);
             i++;
