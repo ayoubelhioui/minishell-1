@@ -1,25 +1,30 @@
 #include "../minishell.h"
 
-t_list	*check_presence(t_list **env, char **split_arg, char *arg)
+int	existed(char *arg, t_list **env, char **split_arg)
 {
 	t_list	*curr;
-	char	*temp;
+	int		flag;
+	int 	i;
+	char	**spl;
 
+	i = 0;
+	flag = 0;
+	while (arg[i])
+	{
+		if (arg[i] == '=')
+			flag = 1;
+		if (arg[i] == '+' && flag == 0 && arg[i + 1] == '=')
+			return (0);
+		i++;
+	}
 	curr = *env;
-	if (split_arg[1] != NULL)
-		temp = ft_strjoin(split_arg[0], "=");
 	while (curr)
 	{
-		if (!split_arg[1])
-		{
-			if (!ft_strcmp(arg, curr->content))
-				return (curr);
-		}
-		else
-		{
-			if (ft_strstr(curr->content, temp))
-				return (curr);
-		}
+		spl = ft_split(curr->content, '=');
+		if (!ft_strcmp(arg, curr->content)
+		|| (ft_equal(curr->content) && ft_strcmp(curr->content, arg))
+		|| (!ft_equal(curr->content) && ft_strcmp(spl[0], arg)))
+			return (1);
 		curr = curr->next;
 	}
 	return (0);
@@ -76,8 +81,6 @@ int	check_if_valid(char *arg)
 	equal = 0;
 	flag = 0;
 	i = 0;
-	if (!ft_strstr(arg, "="))
-		return (1);
 	while (arg[i])
 	{
 		if ((arg[i] == '+' && equal == 0 && arg[i + 1] != '=')
@@ -87,10 +90,11 @@ int	check_if_valid(char *arg)
 			equal = 1;
 		i++;
 	}
+	i = 0;
 	while (arg[i])
 	{
-		if (arg[i] == '+' && arg[i] == '=')
-			return (2);
+		if (!ft_isalnum(arg[i]) && arg[i] != '=' && arg[i] != '+')
+			return (0);
 		i++;
 	}
 	return (1);
@@ -98,6 +102,7 @@ int	check_if_valid(char *arg)
 void	ft_export(t_list **env, char **args)
 {
 	int		i;
+	t_list	*ret;
 	t_list	*curr;
 	t_list	*presence_case;
 	char	**split_arg;
@@ -113,21 +118,30 @@ void	ft_export(t_list **env, char **args)
 	while (args[i])
 	{
 		split_arg = ft_split(args[i], '=');
+		// ret = check_diff(env, args[i], split_arg);
 		if (!check_if_valid(args[i]))
 		{
 			printf ("export: \'%s\': not a valid identifier\n", args[i]);
 			i++;
 			continue;
 		}
-		else if (check_if_valid(args[i]) == 2)
-		{
-
-		}
-		else if (check_presence(env, split_arg, args[i]))
+		if (existed(args[i], env, split_arg))
 		{
 			i++;
 			continue;
 		}
+		// else if (ret)
+		// {
+		// 	len = ft_strlen(args[i]);
+		// 	ret->content = malloc((len + 1) * sizeof(char));
+		// 	j = 0;
+		// 	while (j < len)
+		// 	{
+		// 		ret->content[j] = args[i][j];
+		// 		j++;
+		// 	}
+		// 	ret->content[j] = '\0';
+		// }
 		else
 			ft_lstadd_back(env, ft_lstnew(args[i]));
 		i++;

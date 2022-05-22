@@ -62,5 +62,5 @@ void	built_check(char	*context, t_list **env);
 void	ft_export(t_list **env,char **args);
 void	delete_node(t_list **env, int pos);
 void	ft_unset(t_list **env, char	**args);
-
+int		ft_equal(char *arg);
 #endif

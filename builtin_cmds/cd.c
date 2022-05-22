@@ -11,7 +11,7 @@ void	cd(char **paths, t_list **env)
 	{
 		while (curr)
 		{
-			if (ft_strstr(curr->content, "HOME"))
+			if (ft_strstr(curr->content, "HOME="))
 			{
 				buff = ft_split(curr->content, '=');
 				ret = chdir((const char *) buff[1]);

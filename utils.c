@@ -83,3 +83,17 @@ void	print_list(t_list *en, char	*arg)
         cc = cc->next;
     }
 }
+
+int	ft_equal(char *arg)
+{
+	int	i;
+
+	i = 0;
+	while (arg[i])
+	{
+		if (arg[i] == '=')
+			return (0);
+		i++;
+	}
+	return (1);
+}
