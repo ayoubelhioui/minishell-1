@@ -9,6 +9,8 @@ typedef struct s_list
 {
 	char			*content;
 	char			criteria;
+	int				exists;
+	int				changed;
 	struct s_list	*next;
 }	t_list;
 char	    *copy(char const *s, char *str, unsigned int start, size_t len);

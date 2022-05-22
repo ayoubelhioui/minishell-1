@@ -1,6 +1,17 @@
 #include "../minishell.h"
 
-int	existed(char *arg, t_list **env, char **split_arg)
+
+int	change_value(char *arg, t_list **env, char **split_arg)
+{
+	int len;
+	int	j;
+	t_list	*curr;
+	char	**spl;
+
+	return (0);
+}
+
+t_list	*existed(char *arg, t_list **env, char **split_arg)
 {
 	t_list	*curr;
 	int		flag;
@@ -21,13 +32,17 @@ int	existed(char *arg, t_list **env, char **split_arg)
 	while (curr)
 	{
 		spl = ft_split(curr->content, '=');
-		if (!ft_strcmp(arg, curr->content)
-		|| (ft_equal(curr->content) && ft_strcmp(curr->content, arg))
-		|| (!ft_equal(curr->content) && ft_strcmp(spl[0], arg)))
-			return (1);
+		if (!ft_strcmp(spl[0] ,split_arg[0]) && spl[1] == NULL && split_arg[1] == NULL)
+			return (0);
+		else if (spl[1] != NULL && split_arg[1]!= NULL
+		&& !ft_strcmp(spl[0] ,split_arg[0]) && !ft_strcmp(spl[1] ,split_arg[1]))
+			return (0);
+		else if (!ft_strcmp(spl[0] ,split_arg[0]) && split_arg[1] == NULL)
+			return (0);
+		ft_free(spl);
 		curr = curr->next;
 	}
-	return (0);
+	return (curr);
 }
 
 void swap(t_list *a, t_list *b)
@@ -81,7 +96,7 @@ int	check_if_valid(char *arg)
 	equal = 0;
 	flag = 0;
 	i = 0;
-	while (arg[i])
+	while (arg[i] && arg[i] != '=')
 	{
 		if ((arg[i] == '+' && equal == 0 && arg[i + 1] != '=')
 		|| (arg[i] == '-' && equal == 0))
@@ -91,7 +106,7 @@ int	check_if_valid(char *arg)
 		i++;
 	}
 	i = 0;
-	while (arg[i])
+	while (arg[i] && arg[i] != '=')
 	{
 		if (!ft_isalnum(arg[i]) && arg[i] != '=' && arg[i] != '+')
 			return (0);
@@ -118,17 +133,23 @@ void	ft_export(t_list **env, char **args)
 	while (args[i])
 	{
 		split_arg = ft_split(args[i], '=');
-		// ret = check_diff(env, args[i], split_arg);
+		ret = existed(args[i], env, split_arg);
 		if (!check_if_valid(args[i]))
 		{
 			printf ("export: \'%s\': not a valid identifier\n", args[i]);
 			i++;
 			continue;
 		}
-		if (existed(args[i], env, split_arg))
+		if (!ret)
 		{
+			printf("OK\n");
 			i++;
 			continue;
+		}
+		else if (ret)
+		{
+			printf("OKKK\n");
+			change_value(args[i], env, split_arg);
 		}
 		// else if (ret)
 		// {

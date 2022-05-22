@@ -92,8 +92,8 @@ int	ft_equal(char *arg)
 	while (arg[i])
 	{
 		if (arg[i] == '=')
-			return (0);
+			return (1);
 		i++;
 	}
-	return (1);
+	return (0);
 }
