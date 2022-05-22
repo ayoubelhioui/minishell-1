@@ -11,7 +11,6 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <dirent.h>
-#include "includes/get_next_line.h"
 
 # define SINGLE_QUOTE '\''
 # define UNDER_SCORE '_'
@@ -24,7 +23,7 @@
 # define RED_INPUT '<'
 # define RED_OUTPUT '>'
 # define STD_INPUT 0
-
+# define STD_OUTPUT 1
 typedef struct returned_data
 {
     char    *cmd_path;

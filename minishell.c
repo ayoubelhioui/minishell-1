@@ -264,6 +264,29 @@ int here_doc(char *limiter)
     return (p[0]);
 }
 
+int heredoc_searcher(t_list *splitted_data)
+{
+    t_list *temp;
+    char *saver;
+    int     i;
+
+    i = 0;
+    temp = splitted_data;
+    while (temp)
+    {
+        if (((ft_strlen(temp->content) == 1) && (temp->content[0] == RED_INPUT)) && ((ft_strlen(temp->next->content) == 1) && (temp->next->content[0] == RED_INPUT)))
+        {
+            saver = temp->next->next->content;
+            // delete_node(&splitted_data, i);
+            // delete_node(&splitted_data, i);
+            return (here_doc(saver));
+        }
+        temp = temp->next;
+        i++;
+    }
+    return (STD_INPUT);
+}
+
 int getting_fd(t_list *splitted_data, char redirection)
 {
     t_list *temp;
@@ -271,6 +294,7 @@ int getting_fd(t_list *splitted_data, char redirection)
     int fd;
     int i;
 
+    fd = heredoc_searcher(splitted_data);
     temp = splitted_data;
     counter = redirection_counter(temp, redirection);
     i = 0;
@@ -282,10 +306,7 @@ int getting_fd(t_list *splitted_data, char redirection)
             if ((ft_strlen(temp->content) == 1) && (temp->content[0] == redirection))
             {
                 temp = temp->next;
-                if (redirection == RED_INPUT)
-                    return (here_doc(temp->content));
-                else
-                    fd = open(temp->content, O_WRONLY | O_CREAT | O_APPEND, 0777);
+                fd = open(temp->content, O_WRONLY | O_CREAT | O_APPEND, 0777);
             }
             else
                 fd = open(temp->content, O_WRONLY | O_CREAT | O_TRUNC, 0777);
@@ -420,6 +441,23 @@ char    *get_new_context(t_data *entered_data)
     return (add_space(entered_data->context, first_red_position, counter));
 }
 
+t_list  *remove_redirections(t_list *old_list)
+{
+    int total_redirections;
+    char *saver;
+    int i;
+    t_list *new_list;
+
+    total_redirections = redirection_counter(old_list, STD_INPUT) + redirection_counter(old_list, STD_OUTPUT);
+    new_list = malloc(sizeof(t_list) * (ft_lstsize(old_list) - total_redirections));
+    saver = NULL;
+    i = 0;
+    while (i < ft_lstsize(old_list) && old_list)
+    {
+        if ()
+    }
+    return (new_list);
+}
 void    preparing(t_data *entered_data, char **env, t_returned_data *returned_data)
 {
     // t_returned_data *returned_data;
@@ -427,17 +465,24 @@ void    preparing(t_data *entered_data, char **env, t_returned_data *returned_da
     t_list *data_list;
     (void)env;
     char            **splitted_data;
-    // int             array_length;
     entered_data->context = get_new_context(entered_data);
     splitted_data = ft_split(entered_data->context, ' ');
     data_list = making_a_list(splitted_data);
+    t_list *c = data_list;
+    while (c)
+    {
+        printf("Data Is : %s\n", c->content);
+        c = c->next;
+    }
+    returned_data->output_fd = getting_fd(data_list, RED_OUTPUT);
+    data_list = remove_redirections(data_list);
     t_list *d = data_list;
     while (d)
     {
-        printf("Data Is : %s\n", d->content);
+        printf("New Is 2 : %s\n", d->content);
         d = d->next;
     }
-    returned_data->input_fd = getting_fd(data_list, RED_OUTPUT);
+    dprintf(returned_data->output_fd, "Hello World\n");
     // printf("IT Is : %d\n", input_fd);
     // write (input_fd, "OKKOK", 5);
     // determination(entered_data);
@@ -479,6 +524,8 @@ int main(int ac, char **av, char **env)
 	// sa.sa_flags =  SA_RESTART;
 	// sigaction (SIGINT, &sa, NULL);
 	// signal(SIGQUIT, SIG_IGN);
+    returned_data.input_fd = STD_INPUT;
+    returned_data.output_fd = STD_OUTPUT;
 	create_list(env, &env_l);
     while (TRUE)
     {
