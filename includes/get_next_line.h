@@ -6,7 +6,7 @@
 /*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 12:09:11 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/05/21 15:16:10 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/05/21 17:09:58 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # include <unistd.h>
 # include "../minishell.h"
 
-# define BUFFER_SIZE 10
+# define BUFFER_SIZE 1
 
 // char	*ft_strdup(char *src);
 // size_t	ft_strlen(char *str);

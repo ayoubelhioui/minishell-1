@@ -239,46 +239,59 @@ int redirection_counter(t_list *splitted_data, char redirection)
     temp = splitted_data;
     while (temp)
     {
-        if (ft_strlen(temp->content) && temp->content[0] == redirection)
+        if (((ft_strlen(temp->content)) == 1) && (temp->content[0] == redirection))
             counter++;
         temp = temp->next;
     }
     return (counter);
 }
 
-void    here_doc()
+int here_doc(char *limiter)
 {
-     char *s;
-     
+    int p[2];
+    char *entered_line;
+    
+    entered_line = readline("> ");
+    pipe(p);
+    while (entered_line)
+    {
+        if (ft_strcmp(entered_line, limiter) == 0)
+            break ;
+        write(p[1], entered_line, ft_strlen(entered_line));
+        free (entered_line);
+        entered_line = readline("> ");
+    }
+    return (p[0]);
 }
 
 int getting_fd(t_list *splitted_data, char redirection)
 {
+    t_list *temp;
     int counter;
     int fd;
     int i;
 
-    counter = redirection_counter(splitted_data, redirection);
+    temp = splitted_data;
+    counter = redirection_counter(temp, redirection);
     i = 0;
-    while (i < counter)
+    while (i < counter && temp)
     {
-        if ((ft_strlen(splitted_data->content) == 1) && (splitted_data->content[0] == redirection))
+        if ((ft_strlen(temp->content) == 1) && (temp->content[0] == redirection))
         {
-            splitted_data = splitted_data->next;
-            if ((ft_strlen(splitted_data->content) == 1) && (splitted_data->content[0] == redirection))
+            temp = temp->next;
+            if ((ft_strlen(temp->content) == 1) && (temp->content[0] == redirection))
             {
+                temp = temp->next;
                 if (redirection == RED_INPUT)
-                    here_doc();
+                    return (here_doc(temp->content));
                 else
-                    fd = open(splitted_data->content, O_WRONLY | O_CREAT | O_TRUNC, 0777);
-                splitted_data = splitted_data->next;
-            }   
+                    fd = open(temp->content, O_WRONLY | O_CREAT | O_APPEND, 0777);
+            }
             else
-                fd = open(splitted_data->content, O_WRONLY | O_CREAT, 0777);
+                fd = open(temp->content, O_WRONLY | O_CREAT | O_TRUNC, 0777);
             i++;
         }
-        printf("Im Here : %s\n", splitted_data->content);
-        splitted_data = splitted_data->next;
+        temp = temp->next;
     }
     return (fd);
 }
@@ -370,24 +383,8 @@ char    *add_space(char *context, int start_position, int redirections_counter)
         }
         i++;
     }
-    printf("The New String Is : %s\n", new_string);
+    // printf("The New String Is : %s\n", new_string);
     return (new_string);
-}
-
-
-
-void    red_input(char *context)
-{}
-
-void    red_output(char **splitted_data)
-{
-    int i;
-
-    i = 0;
-    while (splitted_data[i])
-    {
-
-    }
 }
 
 char    *get_new_context(t_data *entered_data)
@@ -423,7 +420,7 @@ char    *get_new_context(t_data *entered_data)
     return (add_space(entered_data->context, first_red_position, counter));
 }
 
-void    preparing(t_data *entered_data, char **env)
+void    preparing(t_data *entered_data, char **env, t_returned_data *returned_data)
 {
     // t_returned_data *returned_data;
     // int             i;
@@ -440,9 +437,9 @@ void    preparing(t_data *entered_data, char **env)
         printf("Data Is : %s\n", d->content);
         d = d->next;
     }
-    int input_fd = getting_fd(data_list, RED_OUTPUT);
-    // printf("IT Is : %d\n", input_fd);    
-    dprintf(input_fd, "Hey Dude");
+    returned_data->input_fd = getting_fd(data_list, RED_OUTPUT);
+    // printf("IT Is : %d\n", input_fd);
+    // write (input_fd, "OKKOK", 5);
     // determination(entered_data);
     // int i = 0;
     // while (splitted_data[i])
@@ -473,6 +470,7 @@ int main(int ac, char **av, char **env)
     (void)av;
 	struct sigaction sa;
     t_data entered_data;
+    t_returned_data returned_data;
 	t_list	*env_l;
     
 	if (ac != 1)
@@ -496,7 +494,7 @@ int main(int ac, char **av, char **env)
             printf("Missing Quote!\n");
             continue ;
         }
-        preparing(&entered_data, env);
+        preparing(&entered_data, env, &returned_data);
         free (entered_data.context);
         // quotes_handling(&entered_data, &returned_data, env);
     }

@@ -23,6 +23,7 @@
 # define FALSE 0
 # define RED_INPUT '<'
 # define RED_OUTPUT '>'
+# define STD_INPUT 0
 
 typedef struct returned_data
 {
