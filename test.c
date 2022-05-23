@@ -1,8 +1,11 @@
 #include "minishell.h"
 int main()
 {
-	int j = 0;
-	char **f=ft_split("OKKKK", '=');
-	while (f[j])
-		printf("%s\n", f[j++]);
+	char *s = strdup("OKKK");
+	char *f;
+
+	f = s;
+	printf("%s\n", f);
+	f = strdup("jjjjjj");
+	printf("f :%s and s : %s\n", f, s);
 }

@@ -1,48 +1,76 @@
 #include "../minishell.h"
 
 
-int	change_value(char *arg, t_list **env, char **split_arg)
+void	add_value(char *arg, t_list **env, char **split_arg)
 {
-	int len;
-	int	j;
 	t_list	*curr;
 	char	**spl;
-
-	return (0);
+	int		check;
+	
+	curr = *env;
+	check = there_is_plus(arg);
+	while (*env)
+	{
+		spl = ft_split((*env)->content, '=');
+		if (check)
+			split_arg = split_env(arg);
+		else
+			split_arg = ft_split(arg, '=');
+		if (!ft_strcmp(spl[0], split_arg[0]))
+		{
+			if (spl[1] == NULL && split_arg[1])
+			{
+				printf("OKK\n");
+				(*env)->content = ft_strjoin((*env)->content, "=");
+				(*env)->content = ft_strjoin((*env)->content, split_arg[1]);
+				printf("%s\n", (*env)->content);
+			}
+			else
+			{
+				(*env)->content = ft_strjoin((*env)->content, split_arg[1]);
+				printf("%s\n", (*env)->content);
+			}
+		}
+		ft_free(spl);
+		(*env) = (*env)->next;
+	}
+	*env = curr;
+	printf("%s\n", (*env)->content);
 }
-
-t_list	*existed(char *arg, t_list **env, char **split_arg)
+int	there_is_plus(char *arg)
 {
-	t_list	*curr;
-	int		flag;
-	int 	i;
-	char	**spl;
+	int	i;
 
 	i = 0;
-	flag = 0;
 	while (arg[i])
 	{
-		if (arg[i] == '=')
-			flag = 1;
-		if (arg[i] == '+' && flag == 0 && arg[i + 1] == '=')
-			return (0);
+		if (arg[i] == '+' && arg[i + 1] == '=')
+			return (1);
 		i++;
 	}
+	return (0);
+}
+int	ft_isnode(t_list **env, char *arg)
+{
+	t_list	*curr;
+	char	**spl;
+	char	**split_arg;
+	int		check;
+
 	curr = *env;
+	check = there_is_plus(arg);
 	while (curr)
 	{
 		spl = ft_split(curr->content, '=');
-		if (!ft_strcmp(spl[0] ,split_arg[0]) && spl[1] == NULL && split_arg[1] == NULL)
-			return (0);
-		else if (spl[1] != NULL && split_arg[1]!= NULL
-		&& !ft_strcmp(spl[0] ,split_arg[0]) && !ft_strcmp(spl[1] ,split_arg[1]))
-			return (0);
-		else if (!ft_strcmp(spl[0] ,split_arg[0]) && split_arg[1] == NULL)
-			return (0);
-		ft_free(spl);
+		if (check)
+			split_arg = ft_split(arg, '+');
+		else
+			split_arg = ft_split(arg, '=');
+		if (!ft_strcmp(spl[0], split_arg[0]))
+			return (1);
 		curr = curr->next;
 	}
-	return (curr);
+	return (0);
 }
 
 void swap(t_list *a, t_list *b)
@@ -108,7 +136,7 @@ int	check_if_valid(char *arg)
 	i = 0;
 	while (arg[i] && arg[i] != '=')
 	{
-		if (!ft_isalnum(arg[i]) && arg[i] != '=' && arg[i] != '+')
+		if (!ft_isalnum(arg[i]) && arg[i] != '=' && arg[i] != '+' && arg[i] != '_')
 			return (0);
 		i++;
 	}
@@ -123,6 +151,7 @@ void	ft_export(t_list **env, char **args)
 	char	**split_arg;
 	char	**sorted_env;
 	char	*check;
+	char	*temp;
 	int		len;
 	int		j;
 
@@ -133,38 +162,36 @@ void	ft_export(t_list **env, char **args)
 	while (args[i])
 	{
 		split_arg = ft_split(args[i], '=');
-		ret = existed(args[i], env, split_arg);
 		if (!check_if_valid(args[i]))
 		{
-			printf ("export: \'%s\': not a valid identifier\n", args[i]);
+			printf("export: \'%s\': not a valid identifier\n", args[i]);
 			i++;
 			continue;
 		}
-		if (!ret)
+		else if (ft_isnode(env, args[i]))
 		{
-			printf("OK\n");
-			i++;
-			continue;
+			printf("HERE there is\n");
+			if (there_is_plus(args[i]))
+			{
+				printf("HERE add value\n");
+				add_value (args[i], env, split_arg);
+			}
 		}
-		else if (ret)
-		{
-			printf("OKKK\n");
-			change_value(args[i], env, split_arg);
-		}
-		// else if (ret)
-		// {
-		// 	len = ft_strlen(args[i]);
-		// 	ret->content = malloc((len + 1) * sizeof(char));
-		// 	j = 0;
-		// 	while (j < len)
-		// 	{
-		// 		ret->content[j] = args[i][j];
-		// 		j++;
-		// 	}
-		// 	ret->content[j] = '\0';
-		// }
 		else
-			ft_lstadd_back(env, ft_lstnew(args[i]));
+		{
+			if (there_is_plus(args[i]))
+			{
+				printf("HERE add new value with +\n");
+				temp = join_pl(split_arg[0], "=");
+				temp = ft_strjoin(temp, split_arg[1]);
+				ft_lstadd_back(env, ft_lstnew(temp));
+			}
+			else
+			{
+				printf("HERE add normally\n");
+				ft_lstadd_back(env, ft_lstnew(args[i]));
+			}
+		}	
 		i++;
 	}
 }
