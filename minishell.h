@@ -12,6 +12,7 @@
 #include <unistd.h>
 #include <dirent.h>
 
+# define PIPE '|'
 # define SINGLE_QUOTE '\''
 # define UNDER_SCORE '_'
 # define DOUBLE_QUOTE '\"'
@@ -37,6 +38,7 @@ typedef struct data
 {
     char    *context;
     char    **command_and_args;
+    int     value;
     int     index;   
 }               t_data;
 

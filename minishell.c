@@ -264,27 +264,21 @@ int here_doc(char *limiter)
     return (p[0]);
 }
 
-int heredoc_searcher(t_list *splitted_data)
+void    heredoc_searcher(char **splitted_data, int *input_fd)
 {
-    t_list *temp;
     char *saver;
     int     i;
 
     i = 0;
-    temp = splitted_data;
-    while (temp)
+    while (splitted_data[i])
     {
-        if (((ft_strlen(temp->content) == 1) && (temp->content[0] == RED_INPUT)) && ((ft_strlen(temp->next->content) == 1) && (temp->next->content[0] == RED_INPUT)))
+        if (((ft_strlen(splitted_data[i]) == 1) && (splitted_data[i][0] == RED_INPUT)) && ((ft_strlen(splitted_data[i + 1]) == 1) && (splitted_data[i + 1][0] == RED_INPUT)))
         {
-            saver = temp->next->next->content;
-            // delete_node(&splitted_data, i);
-            // delete_node(&splitted_data, i);
-            return (here_doc(saver));
+            i +=2;
+            (*input_fd) = here_doc(splitted_data[i]);
         }
-        temp = temp->next;
         i++;
     }
-    return (STD_INPUT);
 }
 
 int getting_fd(t_list *splitted_data, char redirection)
@@ -294,7 +288,6 @@ int getting_fd(t_list *splitted_data, char redirection)
     int fd;
     int i;
 
-    fd = heredoc_searcher(splitted_data);
     temp = splitted_data;
     counter = redirection_counter(temp, redirection);
     i = 0;
@@ -385,26 +378,18 @@ char    *add_space(char *context, int start_position, int redirections_counter)
     {
         if ((context[i] == RED_INPUT || context[i] == RED_OUTPUT) && i >= start_position)
         {
-            new_string[j] = context[i];
-            j++;
-            new_string[j] = SPACE;
-            j++;
+            new_string[j++] = context[i];
+            new_string[j++] = SPACE;
         }
-        else if ((context[i + 1] == RED_INPUT || context[i + 1] == RED_OUTPUT) && i >= start_position)
+        else if ((context[i + 1] == RED_INPUT || context[i + 1] == RED_OUTPUT) && i >= start_position - 1)
         {
-            new_string[j] = context[i];
-            j++;
-            new_string[j] = SPACE;
-            j++;
+            new_string[j++] = context[i];
+            new_string[j++] = SPACE;
         }
         else
-        {
-            new_string[j] = context[i];
-            j++;
-        }
+            new_string[j++] = context[i];
         i++;
     }
-    // printf("The New String Is : %s\n", new_string);
     return (new_string);
 }
 
@@ -454,47 +439,57 @@ t_list  *remove_redirections(t_list *old_list)
     i = 0;
     while (i < ft_lstsize(old_list) && old_list)
     {
-        if ()
+        // if ()
     }
     return (new_list);
 }
+
 void    preparing(t_data *entered_data, char **env, t_returned_data *returned_data)
 {
-    // t_returned_data *returned_data;
-    // int             i;
-    t_list *data_list;
-    (void)env;
-    char            **splitted_data;
+    t_list          *data_list;
+    char            **splitted_by_space;
+    char            **splitted_by_pipe;
+    int             pipe_number;
+    int             i;
+
+    data_list = malloc(sizeof(t_list));
+    pipe_number = get_length(splitted_by_pipe) - 1;
     entered_data->context = get_new_context(entered_data);
-    splitted_data = ft_split(entered_data->context, ' ');
-    data_list = making_a_list(splitted_data);
-    t_list *c = data_list;
-    while (c)
-    {
-        printf("Data Is : %s\n", c->content);
-        c = c->next;
-    }
-    returned_data->output_fd = getting_fd(data_list, RED_OUTPUT);
-    data_list = remove_redirections(data_list);
-    t_list *d = data_list;
-    while (d)
-    {
-        printf("New Is 2 : %s\n", d->content);
-        d = d->next;
-    }
-    dprintf(returned_data->output_fd, "Hello World\n");
+    heredoc_searcher(ft_split(entered_data->context, SPACE), &returned_data->input_fd);
+    splitted_by_pipe = ft_split(entered_data->context, PIPE);
+    i = 0;
+    while (splitted_by_pipe[i])
+        printf("It Is : %s\n", splitted_by_pipe[i++]);
+    // i = 0;
+    // while (splitted_by_pipe[i])
+    // {
+    //     splitted_by_space = ft_split(splitted_by_pipe[i], SPACE);
+    //     data_list = making_a_list(splitted_by_space);
+    //     if (pipe_number == 0)
+    //     {
+    //         returned_data->input_fd = getting_fd(splitted_by_pipe[i], RED_INPUT);
+    //         returned_data->output_fd = getting_fd(splitted_by_pipe[i], RED_OUTPUT);
+    //     }
+    //     else
+    //     {
+            
+    //     }
+    //     i++;
+    // }
+    // data_list = remove_redirections(data_list);
+    // dprintf(returned_data->output_fd, "Hello World\n");
     // printf("IT Is : %d\n", input_fd);
     // write (input_fd, "OKKOK", 5);
     // determination(entered_data);
     // int i = 0;
-    // while (splitted_data[i])
-    //     printf("It Is : %s\n", splitted_data[i++]);
-    // ft_free(splitted_data);
-    // array_length = get_length(splitted_data);
+    // while (splitted_by_space[i])
+    //     printf("It Is : %s\n", splitted_by_space[i++]);
+    // ft_free(splitted_by_space);
+    // array_length = get_length(splitted_by_space);
     // returned_data = malloc(sizeof(t_returned_data) * (array_length));
     // while (i < array_length)
     // {
-    //     entered_data->context = splitted_data[i];
+    //     entered_data->context = splitted_by_space[i];
     //     get_cmd_args(entered_data, &returned_data[i], env);
     //     i++;
     // }
@@ -512,7 +507,6 @@ void    preparing(t_data *entered_data, char **env, t_returned_data *returned_da
 
 int main(int ac, char **av, char **env)
 {
-    (void)av;
 	struct sigaction sa;
     t_data entered_data;
     t_returned_data returned_data;
@@ -541,7 +535,7 @@ int main(int ac, char **av, char **env)
             printf("Missing Quote!\n");
             continue ;
         }
-        // preparing(&entered_data, env, &returned_data);
+        preparing(&entered_data, env, &returned_data);
         free (entered_data.context);
         // quotes_handling(&entered_data, &returned_data, env);
     }
