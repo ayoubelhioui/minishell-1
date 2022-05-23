@@ -41,5 +41,7 @@ size_t		ft_left(const char *s1, const char *set);
 char		*ft_strtrim(char *s1, char *set);
 void		print_list(t_list *en, char *arg);
 void		ft_free(char **ptr);
-// hswbdhwbdhwbdhbwdhbwhdbhwd
+char		*join_pl(char const *s1, char const *s2);
+char		**split_env(char *arg);
+int			there_is_plus(char *arg);
 #endif
