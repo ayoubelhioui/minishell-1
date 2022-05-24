@@ -13,7 +13,9 @@ void	add_value(char *arg, t_list **env, char **split_arg)
 	{
 		spl = ft_split((*env)->content, '=');
 		if (check)
+		{
 			split_arg = split_env(arg);
+		}
 		else
 			split_arg = ft_split(arg, '=');
 		if (!ft_strcmp(spl[0], split_arg[0]))

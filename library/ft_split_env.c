@@ -66,5 +66,6 @@ char	**split_env(char *arg)
 	len2 = len_2(arg, len1);
 	s = malloc((len1 + len2 + 1) * sizeof(char *));
 	s = fill_the_d(len1, len2, arg, s);
+	printf("inside fct %s and %s and len1 %d and len2 %d\n", s[0], s[1], len1, len2);
 	return (s);
 }
