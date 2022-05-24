@@ -502,6 +502,9 @@ void    preparing(t_data *entered_data, char **env, t_returned_data **returned_d
     commands_number = get_length(splitted_by_pipe);
     create_returned_nodes(returned_data, commands_number);
     input_output_init(*returned_data);
+
+
+    
     while (*returned_data)
     {
         printf("Input Is : %d,  and ouput Is : %d\n", (*returned_data)->input_fd, (*returned_data)->output_fd);
