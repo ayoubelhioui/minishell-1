@@ -31,7 +31,7 @@ typedef struct returned_data
     char    **args;
     int     input_fd;
     int     output_fd;
-    // struct returned_data    *next;
+    struct returned_data    *next;
 }               t_returned_data;
 
 typedef struct data
@@ -43,6 +43,7 @@ typedef struct data
 }               t_data;
 
 void    ft_free(char **s);
+void	returned_data_addback(t_returned_data **returned_data, t_returned_data *new);
 void    replace_with_real_value(t_data *data, char *real_value, char *saver ,int dollar_sign_position);
 void    remove_the_word(t_data *data, char *saver, int position);
 int     check_unclosed_quotes(char *context);

@@ -46,10 +46,7 @@ char	**fill_the_d(int len1, int len2, char *arg, char **s)
 	i++;
 	j = 0;
 	while (j < len2)
-	{
-		s[i][j] = arg[total];
-		j++;
-	}
+		s[i][j++] = arg[total++];
 	s[i][j] = '\0';
 	s[2] = NULL;
 	return (s);

@@ -444,22 +444,83 @@ t_list  *remove_redirections(t_list *old_list)
     return (new_list);
 }
 
-void    preparing(t_data *entered_data, char **env, t_returned_data *returned_data)
+void    create_returned_nodes(t_returned_data **returned_data, int commands_number)
+{
+    t_returned_data *new;
+    while(commands_number > 0)
+    {
+        new = malloc(sizeof(t_returned_data));
+        returned_data_addback(returned_data, new);
+        commands_number--;
+    }
+}
+
+void	returned_data_addback(t_returned_data **returned_data, t_returned_data *new)
+{
+	t_returned_data	*temp;
+
+	temp = (*returned_data);
+	if (*returned_data)
+	{
+		// temp = ft_lstlast(*returned_data);
+		while (temp->next)
+			temp = temp->next;
+		temp->next = new;
+	}
+	else
+		*returned_data = new;
+}
+
+
+void    input_output_init(t_returned_data *returned_data)
+{
+    t_returned_data *temp;
+
+    temp = returned_data;
+    while (temp)
+    {
+        temp->input_fd = STD_INPUT;
+        temp->output_fd = STD_OUTPUT;
+        temp = temp->next;
+    }
+}
+
+void    preparing(t_data *entered_data, char **env, t_returned_data **returned_data)
 {
     t_list          *data_list;
     char            **splitted_by_space;
     char            **splitted_by_pipe;
-    int             pipe_number;
+    int             commands_number;
     int             i;
+    int             (*pipes_array)[2];
+
+    // vars->pipes_array = malloc(sizeof(int *) * vars->pipes_number);
 
     data_list = malloc(sizeof(t_list));
-    pipe_number = get_length(splitted_by_pipe) - 1;
     entered_data->context = get_new_context(entered_data);
-    heredoc_searcher(ft_split(entered_data->context, SPACE), &returned_data->input_fd);
     splitted_by_pipe = ft_split(entered_data->context, PIPE);
-    i = 0;
-    while (splitted_by_pipe[i])
-        printf("It Is : %s\n", splitted_by_pipe[i++]);
+    commands_number = get_length(splitted_by_pipe);
+    create_returned_nodes(returned_data, commands_number);
+    input_output_init(*returned_data);
+    while (*returned_data)
+    {
+        printf("Input Is : %d,  and ouput Is : %d\n", (*returned_data)->input_fd, (*returned_data)->output_fd);
+        (*returned_data) = (*returned_data)->next;
+    }
+    // t_list          *data_list;
+    // char            **splitted_by_space;
+    // char            **splitted_by_pipe;
+    // int             pipe_number;
+    // int             i;
+
+    // data_list = malloc(sizeof(t_list));
+    // pipe_number = get_length(splitted_by_pipe) - 1;
+    // entered_data->context = get_new_context(entered_data);
+    // heredoc_searcher(ft_split(entered_data->context, SPACE), &returned_data->input_fd);
+    // splitted_by_pipe = ft_split(entered_data->context, PIPE);
+    // i = 0;
+    // while (splitted_by_pipe[i])
+    //     printf("It Is : %s\n", splitted_by_pipe[i++]);
     // i = 0;
     // while (splitted_by_pipe[i])
     // {
@@ -509,7 +570,7 @@ int main(int ac, char **av, char **env)
 {
 	struct sigaction sa;
     t_data entered_data;
-    t_returned_data returned_data;
+    t_returned_data *returned_data;
 	t_list	*env_l;
     
 	if (ac != 1)
@@ -518,8 +579,7 @@ int main(int ac, char **av, char **env)
 	// sa.sa_flags =  SA_RESTART;
 	// sigaction (SIGINT, &sa, NULL);
 	// signal(SIGQUIT, SIG_IGN);
-    returned_data.input_fd = STD_INPUT;
-    returned_data.output_fd = STD_OUTPUT;
+    returned_data = malloc(sizeof(t_returned_data));
 	create_list(env, &env_l);
     while (TRUE)
     {
