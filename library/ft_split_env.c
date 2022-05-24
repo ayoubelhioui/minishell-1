@@ -46,10 +46,7 @@ char	**fill_the_d(int len1, int len2, char *arg, char **s)
 	i++;
 	j = 0;
 	while (j < len2)
-	{
-		s[i][j] = arg[total];
-		j++;
-	}
+		s[i][j++] = arg[total++];
 	s[i][j] = '\0';
 	s[2] = NULL;
 	return (s);
@@ -66,6 +63,5 @@ char	**split_env(char *arg)
 	len2 = len_2(arg, len1);
 	s = malloc((len1 + len2 + 1) * sizeof(char *));
 	s = fill_the_d(len1, len2, arg, s);
-	printf("inside fct %s and %s and len1 %d and len2 %d\n", s[0], s[1], len1, len2);
 	return (s);
 }
