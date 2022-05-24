@@ -45,6 +45,11 @@ char		*ft_strtrim(char *s1, char *set);
 void		print_list(t_list *en, char *arg);
 void		ft_free(char **ptr);
 char		*join_pl(char const *s1, char const *s2);
-char		**split_env(char *arg);
+char		**split_with_plus(char *arg);
 int			there_is_plus(char *arg);
+void		sort_list(t_list *en);
+void		swap(t_list *a, t_list *b);
+int			check_if_valid(char *arg);
+void		add_it_back(char **split_arg, char *arg, t_list **env);
+char		**split_with_equ(char *arg);
 #endif

@@ -51,7 +51,7 @@ char	**fill_the_d(int len1, int len2, char *arg, char **s)
 	s[2] = NULL;
 	return (s);
 }
-char	**split_env(char *arg)
+char	**split_with_plus(char *arg)
 {
 	char	**s;
 	int		len1;
