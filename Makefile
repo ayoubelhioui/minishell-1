@@ -7,7 +7,7 @@ quotes_handling.c library/ft_substr.c library/ft_strncmp.c Library/ft_strcmp.c l
 CC = cc
 # CFLAGS = -Wextra -Werror -Wall
 NAME = minishell
-READLINE =-lreadline -L ~/goinfre/.brew/opt/readline/lib -I ~/goinfre/.brew/opt/readline/include
+READLINE = -lreadline -L ~/goinfre/.brew/opt/readline/lib -I ~/goinfre/.brew/opt/readline/include
 SRC_O = $(SRC:.c=.o)
 
 all :$(NAME)
