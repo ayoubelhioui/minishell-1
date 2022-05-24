@@ -5,14 +5,17 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <ctype.h>
+
 typedef struct s_list
 {
 	char			*content;
+	int				value;
 	char			criteria;
 	int				exists;
 	int				changed;
 	struct s_list	*next;
 }	t_list;
+
 char	    *copy(char const *s, char *str, unsigned int start, size_t len);
 size_t	    ft_strlcpy(char *dst, const char *src, size_t dstsize);
 char	    *ft_substr(char const *s, unsigned int start, size_t len);

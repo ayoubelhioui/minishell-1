@@ -1,28 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/18 12:09:11 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/05/21 17:09:58 by ael-hiou         ###   ########.fr       */
+/*   Created: 2022/05/23 11:59:58 by ael-hiou          #+#    #+#             */
+/*   Updated: 2022/05/23 14:23:12 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
-# include <stdlib.h>
-# include <fcntl.h>
-# include <stdio.h>
-# include <unistd.h>
-# include "../minishell.h"
+#include "minishell.h"
 
-# define BUFFER_SIZE 1
-
-// char	*ft_strdup(char *src);
-// size_t	ft_strlen(char *str);
-// char	*ft_strjoin(char *s1, char *s2);
-char	*get_next_line(int fd);
-// void	ft_strlcpy(char *dst, char *src, int dstsize);
-#endif
+int main(int ac, char **av, char **env)
+{
+    char *path = "/bin/ls";
+    char *s[] = {"ls", "-la", NULL};
+    execve(path, s, env);
+    printf("Hello World\n");
+}
