@@ -573,7 +573,7 @@ int main(int ac, char **av, char **env)
 {
 	struct sigaction sa;
     t_data entered_data;
-    t_returned_data *returned_data;
+    // t_returned_data *returned_data;
 	t_list	*env_l;
     
 	if (ac != 1)
@@ -582,7 +582,7 @@ int main(int ac, char **av, char **env)
 	// sa.sa_flags =  SA_RESTART;
 	// sigaction (SIGINT, &sa, NULL);
 	// signal(SIGQUIT, SIG_IGN);
-    returned_data = malloc(sizeof(t_returned_data));
+    // returned_data = malloc(sizeof(t_returned_data));
 	create_list(env, &env_l);
     while (TRUE)
     {
@@ -598,7 +598,7 @@ int main(int ac, char **av, char **env)
             printf("Missing Quote!\n");
             continue ;
         }
-        preparing(&entered_data, env, &returned_data);
+        // preparing(&entered_data, env, &returned_data);
         free (entered_data.context);
         // quotes_handling(&entered_data, &returned_data, env);
     }
