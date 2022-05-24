@@ -1,4 +1,4 @@
-#include "libft.h"
+#include "library.h"
 
 int	ft_lstsize(t_list *lst)
 {
