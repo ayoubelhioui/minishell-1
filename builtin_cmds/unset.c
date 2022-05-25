@@ -11,7 +11,7 @@ void	ft_unset(t_list **env, char	**args)
 	while (args[i])
 	{
 		curr = *env;
-		temp = ft_strjoin(args[i], "=\0");
+		temp = ft_strjoin(args[i], "=");
 		pos = 0;
 		while (curr)
 		{
