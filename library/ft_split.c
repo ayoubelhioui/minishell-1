@@ -58,7 +58,7 @@ void	ft_next(char **str, const char *s, char c, int size)
 	str[i] = 0;
 }
 
-char	**ft_split(char const *s, char c)
+char	**ft_split(char  *s, char c)
 {
 	char	**str;
 	int		size;
