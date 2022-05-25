@@ -6,6 +6,8 @@ int	len_e2(char *arg, int prev_len)
 	int	i;	
 
 	len = 0;
+	if (arg[prev_len] == '\0')
+		return (0);
 	i = prev_len + 1;
 	while (arg[i])
 	{
@@ -19,7 +21,7 @@ int	len_e1(char *arg)
 	int	len;
 
 	len = 0;
-	while (arg[len] != '=')
+	while (arg[len] != '=' && arg[len])
 		len++;
 	return (len);
 }
@@ -41,15 +43,21 @@ char	**fill_it(char *arg, char **s, int len, int len2)
 		total++;
 	}
 	s[i][j] = '\0';
-	printf("INSIDE %s\n", s[0]);
-	s[1] = malloc((len2 + 1));
-	total = j + 1;
-	i++;
-	j = 0;
-	while (j < len2)
-		s[i][j++] = arg[total++];
-	s[i][j] = '\0';
-	s[2] = NULL;
+	if (len2)
+	{
+		s[1] = malloc((len2 + 1));
+		total = j + 1;
+		i++;
+		j = 0;
+		while (j < len2)
+		{
+			s[i][j++] = arg[total++];
+		}
+		s[i][j] = '\0';
+		s[2] = NULL;
+	}
+	else
+		s[1] = NULL;
 	return (s);
 }
 
@@ -59,6 +67,7 @@ char	**split_with_equ(char *arg)
 	int		len2;
 	char	**s;
 
+	len2 = 0;
 	len	= len_e1(arg);
 	len2 = len_e2(arg, len);
 	s = malloc((len + len2 + 1) * sizeof(char *));

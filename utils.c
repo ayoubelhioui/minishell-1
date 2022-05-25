@@ -74,7 +74,7 @@ void	print_list(t_list *en, char	*arg)
 	cc = en;
 	while (cc)
     {
-		name_path = ft_split(cc->content, '=');  
+		name_path = split_with_equ(cc->content);  
 		if (cc->criteria == 'e')
 		{
 			if (name_path[1])

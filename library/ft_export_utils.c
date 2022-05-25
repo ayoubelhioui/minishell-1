@@ -7,12 +7,17 @@ void	add_it_back(char **split_arg, char *arg, t_list **env)
 	temp = NULL;
 	if (there_is_plus(arg))
 	{
+		printf("HERE 4\n");
 		temp = join_pl(split_arg[0], "=");
 		temp = ft_strjoin(temp, split_arg[1]);
+		printf("HERE 4 %s and %s\n", split_arg[0], split_arg[1]);
 		ft_lstadd_back(env, ft_lstnew(temp));
 	}
 	else
+	{
+		printf("HERE 5 %s and %s\n", split_arg[0], split_arg[1]);
 		ft_lstadd_back(env, ft_lstnew(arg));
+	}
 }
 
 int	check_if_valid(char *arg)
@@ -24,6 +29,8 @@ int	check_if_valid(char *arg)
 	equal = 0;
 	flag = 0;
 	i = 0;
+	if (arg[0] >= '0' && arg[0] <= '9')
+		return (0);
 	while (arg[i] && arg[i] != '=')
 	{
 		if ((arg[i] == '+' && equal == 0 && arg[i + 1] != '=')
