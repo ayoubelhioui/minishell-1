@@ -11,6 +11,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <dirent.h>
+#include <errno.h>
 
 # define PIPE '|'
 # define SINGLE_QUOTE '\''
@@ -32,6 +33,7 @@ typedef struct returned_data
     char    **args;
     int     input_fd;
     int     output_fd;
+    int     is_executable;
     struct returned_data    *next;
 }               t_returned_data;
 
