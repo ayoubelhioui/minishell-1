@@ -480,31 +480,31 @@ void	returned_data_addback(t_returned_data **returned_data, t_returned_data *new
 		*returned_data = new;
 }
 
-void    getting_fd (char *str, t_returned_data *returned_data)
-{
-    char **s;
-    t_returned_data *temp;
+// void    getting_fd (char *str, t_returned_data *returned_data)
+// {
+//     char **s;
+//     t_returned_data *temp;
 
-    int     i;
-    temp = returned_data;
-    s = ft_split(str, SPACE);
-    i = 0;
-    while (s[i])
-    {
-        if (ft_strlen(s[i] == 1) && s[0] == RED_INPUT)
-        {
-            i++;
-            if (ft_strlen(s[i] == 1) && s[0] == RED_INPUT)
-            {
+//     int     i;
+//     temp = returned_data;
+//     s = ft_split(str, SPACE);
+//     i = 0;
+//     while (s[i])
+//     {
+//         if (ft_strlen(s[i] == 1) && s[0] == RED_INPUT)
+//         {
+//             i++;
+//             if (ft_strlen(s[i] == 1) && s[0] == RED_INPUT)
+//             {
 
-            }
-            else
-            {
-                temp->input_fd = open(s[i], )
-            }
-        }
-    }
-}
+//             }
+//             else
+//             {
+//                 temp->input_fd = open(s[i], )
+//             }
+//         }
+//     }
+// }
 
 void    preparing(t_data *entered_data, char **env, t_returned_data **returned_data)
 {
@@ -516,21 +516,21 @@ void    preparing(t_data *entered_data, char **env, t_returned_data **returned_d
     int             (*pipes_array)[2];
 
 
-    entered_data->context = get_new_context(entered_data);
-    splitted_by_pipe = ft_split(entered_data->context, PIPE);
-    commands_number = get_length(splitted_by_pipe);
-    splitted_by_space = ft_split(entered_data->context, SPACE);
-    create_returned_nodes(returned_data, commands_number);
+    // entered_data->context = get_new_context(entered_data);
+    // splitted_by_pipe = ft_split(entered_data->context, PIPE);
+    // commands_number = get_length(splitted_by_pipe);
+    // splitted_by_space = ft_split(entered_data->context, SPACE);
+    // create_returned_nodes(returned_data, commands_number);
     // int j = 0;
     // while (splitted_by_space[i])
     //     printf("it Is : %s\n", splitted_by_space[i++]);
-    heredoc_searcher(splitted_by_space, *returned_data);
+    // heredoc_searcher(splitted_by_space, *returned_data);
     i = 0;
-    while (splitted_by_pipe[i])
-    {
-        getting_fd (splitted_by_pipe[i], returned_data);
-        i++;
-    }
+    // while (splitted_by_pipe[i])
+    // {
+        // getting_fd (splitted_by_pipe[i], returned_data);
+        // i++;
+    // }
     // data_list = remove_redirections(data_list);
     // while (*returned_data)
     // {
@@ -594,7 +594,7 @@ int main(int ac, char **av, char **env)
             printf("Missing Quote!\n");
             continue ;
         }
-        preparing(&entered_data, env, &returned_data);
+        // preparing(&entered_data, env, &returned_data);
         free (entered_data.context);
         // quotes_handling(&entered_data, &returned_data, env);
     }
