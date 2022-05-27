@@ -257,13 +257,12 @@ int here_doc(char *limiter)
     {
         if (ft_strcmp(entered_line, limiter) == 0)
             break ;
-        write(p[1], entered_line, ft_strlen(entered_line));
-        write(p[1], "\n", 2);
+        write(p[STD_OUTPUT], entered_line, ft_strlen(entered_line));
+        write(p[STD_OUTPUT], "\n", 2);
         free (entered_line);
-        printf("limiter Is : %s\n", limiter);
         entered_line = readline("> ");
     }
-    return (p[0]);
+    return (p[STD_INPUT]);
 }
 
 void    change_command_input_fd(t_returned_data *returned_data, int heredoc_position, int input_fd)
@@ -297,13 +296,13 @@ int heredoc_searcher(char **splitted_data, t_returned_data *returned_data)
     heredoc_position = 0;
     while (splitted_data[i])
     {
-        if ((ft_strlen(splitted_data[i]) == 1) && (splitted_data[i][0] == PIPE))
+        if (!ft_strcmp(splitted_data[i], "|"))
             heredoc_position++;
-        if (((ft_strlen(splitted_data[i]) == 1) && (splitted_data[i][0] == RED_INPUT)) && ((ft_strlen(splitted_data[i + 1]) == 1) && (splitted_data[i + 1][0] == RED_INPUT)))
+        if (!ft_strcmp(splitted_data[i], "<") && !ft_strcmp(splitted_data[i + 1], "<"))
         {
             i += 2;
             input_fd = here_doc(splitted_data[i]);
-            change_command_input_fd(returned_data, heredoc_position, input_fd);
+            change_command_input_fd(temp, heredoc_position, input_fd);
         }
         i++;
     }
@@ -311,12 +310,12 @@ int heredoc_searcher(char **splitted_data, t_returned_data *returned_data)
 }
 
 
-void    in_a_quote(int *in_quote, int quote)
+void    in_a_quote(int *in_quote, int SINGLE_OR_DOUBLE)
 {
-    if (*in_quote == quote)
+    if (*in_quote == SINGLE_OR_DOUBLE)
         *in_quote = 0;
     else if (*in_quote == 0)
-        *in_quote = quote;
+        *in_quote = SINGLE_OR_DOUBLE;
 }
 
 int check_unclosed_quotes(char *context)
@@ -409,12 +408,12 @@ char    *get_new_context(t_data *entered_data)
     {
         if (entered_data->context[entered_data->index] == SINGLE_QUOTE)
         {
-            // replacing_space(entered_data, SINGLE_QUOTE);
+            // replacing_space(entered_data, SINGLE_QUOTE); // i should replace all spaces inside QUOTES
             in_a_quote(&in_quote, SINGLE_QUOTE);
         }
         else if (entered_data->context[entered_data->index] == DOUBLE_QUOTE)
         {
-            // replacing_space(entered_data, DOUBLE_QUOTE);
+            // replacing_space(entered_data, DOUBLE_QUOTE); // i should replace all spaces inside QUOTES
             in_a_quote(&in_quote, DOUBLE_QUOTE);
         }
         if ((entered_data->context[entered_data->index] == RED_INPUT || entered_data->context[entered_data->index] == RED_OUTPUT) && (in_quote == 0))
@@ -449,12 +448,6 @@ t_list  *remove_redirections(t_list *old_list)
 void    create_returned_nodes(t_returned_data **returned_data, int commands_number)
 {
     t_returned_data *new;
-    t_returned_data *tmp = *returned_data;
-    while (tmp)
-    {
-        printf("%d\n",tmp ->input_fd);
-        tmp = tmp ->next;
-    }
     while(commands_number > 0)
     {
         new = malloc(sizeof(t_returned_data));
@@ -481,37 +474,84 @@ void	returned_data_addback(t_returned_data **returned_data, t_returned_data *new
 		*returned_data = new;
 }
 
+int     find_heredoc_position(char **s)
+{
+    int i;
+
+    i = 0;
+    while (s[i])
+    {
+        if (!ft_strcmp(s[i], "<"))
+        {
+            i++;
+            if (!ft_strcmp(s[i], "<"))
+            {
+                if (!s[i + 2])
+                    return (TRUE);
+            }
+        }
+        i++;
+    }
+    return (FALSE);
+}
+
 void    getting_input_fd(char *str, t_returned_data *returned_data)
 {
     char **s;
     t_returned_data *temp;
-    int already_found;
     int temp_input;
-
     int     i;
     temp = returned_data;
     s = ft_split(str, SPACE);
     i = 0;
-    printf("Before : %d\n", temp->input_fd);
     temp_input = temp->input_fd;
     while (s[i])
     {
-        if ((ft_strlen(s[i]) == 1) && (s[i][0] == RED_INPUT) && (ft_strlen(s[i + 1]) == 1) && (s[i + 1][0] == RED_INPUT))
+        if (!ft_strcmp(s[i], "<") && !ft_strcmp(s[i + 1], "<"))
             i+=2;
-        if ((ft_strlen(s[i]) == 1) && (s[i][0] == RED_INPUT))
+        if (!ft_strcmp(s[i], "<"))
         {
             i++;
             temp->input_fd = open(s[i], O_RDONLY);
             if (temp->input_fd == -1)
             {
+                printf("%s:%s\n", s[i], strerror(errno));
                 temp->is_executable = FALSE;
                 break ;
             }
         }
         i++;
     }
-    if (s[i - 3][0] == RED_INPUT && s[i - 2][0] == RED_INPUT)
+    if (find_heredoc_position(s))
         temp->input_fd = temp_input;
+}
+
+void    getting_output_fd(char *str, t_returned_data *returned_data)
+{
+    char **s;
+    int     i;
+    t_returned_data *temp;
+
+    s = ft_split(str, SPACE);
+    temp = returned_data;
+    i = 0;
+    while (s[i])
+    {
+        if (!ft_strcmp(s[i], ">"))
+        {
+            i++;
+            if (!ft_strcmp(s[i], ">"))
+                temp->output_fd = open(s[i + 1], O_WRONLY | O_CREAT | O_APPEND, 00400| 00200);
+            else
+                temp->output_fd = open(s[i], O_WRONLY | O_CREAT, 00400| 00200);
+            if (temp->output_fd == -1)
+            {
+                printf("%s\n", strerror(errno));
+                break ;
+            }
+        }
+        i++;
+    }
 }
 
 void    preparing(t_data *entered_data, char **env, t_returned_data **returned_data)
@@ -531,16 +571,9 @@ void    preparing(t_data *entered_data, char **env, t_returned_data **returned_d
     pipes_array = malloc(sizeof(int *) * (commands_number - 1));
     splitted_by_space = ft_split(entered_data->context, SPACE);
     create_returned_nodes(returned_data, commands_number);
-    // int j = 0;
-    // while (splitted_by_space[i])
-    //     printf("it Is : %s\n", splitted_by_space[i++]);
     heredoc_searcher(splitted_by_space, *returned_data);
-    t_returned_data *r = *returned_data;
-    // while (r)
-    // {
-    //     printf("input Before is : %d\n", r->input_fd);
-    //     r = r->next;
-    // }
+    t_returned_data *s = *returned_data;
+
     i = 0;
     t_returned_data *temp = *returned_data;
     while (splitted_by_pipe[i])
@@ -549,14 +582,20 @@ void    preparing(t_data *entered_data, char **env, t_returned_data **returned_d
         if (i == 0)
             temp->output_fd = pipes_array[i][STD_OUTPUT];
         else if (i == commands_number - 1)
-            temp->input_fd = pipes_array[i - 1][STD_INPUT];
+        {
+            if (temp->input_fd == 0)
+                temp->input_fd = pipes_array[i - 1][STD_INPUT];
+        }
         else
         {
-            temp->input_fd = pipes_array[i - 1][STD_INPUT];
-            temp->input_fd = pipes_array[i][STD_OUTPUT];
-        }
+            if (temp->input_fd == 0)
+                temp->input_fd = pipes_array[i - 1][STD_INPUT];
+            temp->output_fd = pipes_array[i][STD_OUTPUT];
+        } 
         getting_input_fd(splitted_by_pipe[i], temp);
-        (temp) = (temp)->next;
+        getting_output_fd(splitted_by_pipe[i], temp);
+        // dprintf(temp->output_fd, "Im Here\n");
+        temp = temp->next;
         i++;
     }
     // t_returned_data *d = *returned_data;

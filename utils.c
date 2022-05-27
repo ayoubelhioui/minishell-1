@@ -77,7 +77,10 @@ void	print_list(t_list *en, char	*arg)
 		name_path = split_with_equ(cc->content);  
 		if (cc->criteria == 'e')
 		{
-			if (name_path[1])
+			printf("IT IS %s and %s and %s is %d\n", cc->content, name_path[0], name_path[1], ft_strcmp("\"\"", name_path[1]));
+			if (!ft_strcmp("\"\"", name_path[1]))
+				printf("declare -x %s%c%s\n", name_path[0], '=', name_path[1]);
+			else if (name_path[1])
         		printf("declare -x %s%c\"%s\"\n", name_path[0], '=', name_path[1]);
 			else
 				printf("declare -x %s%c\"\"\n", name_path[0], '=');

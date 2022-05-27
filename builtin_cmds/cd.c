@@ -15,6 +15,7 @@ void	cd(char **paths, t_list **env)
 			{
 				buff = ft_split(curr->content, '=');
 				ret = chdir((const char *) buff[1]);
+
 				ft_free(buff);
 				break;
 			}
