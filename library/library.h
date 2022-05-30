@@ -11,8 +11,6 @@ typedef struct s_list
 	char			*content;
 	int				value;
 	char			criteria;
-	int				exists;
-	int				changed;
 	struct s_list	*next;
 }	t_list;
 
@@ -52,4 +50,5 @@ void		swap(t_list *a, t_list *b);
 int			check_if_valid(char *arg);
 void		add_it_back(char **split_arg, char *arg, t_list **env);
 char		**split_with_equ(char *arg);
+void		ft_free_list(t_list **env);
 #endif

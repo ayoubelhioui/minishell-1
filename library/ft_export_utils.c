@@ -19,10 +19,8 @@ int	check_if_valid(char *arg)
 {
 	int i;
 	int	equal;
-	int	flag;
 
 	equal = 0;
-	flag = 0;
 	i = 0;
 	if (arg[0] >= '0' && arg[0] <= '9')
 		return (0);

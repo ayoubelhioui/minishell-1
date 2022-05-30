@@ -9,4 +9,5 @@ void	pwd(void)
       perror("pwd error");
     else
       printf("%s\n", cwd);
+	free(cwd);
 }

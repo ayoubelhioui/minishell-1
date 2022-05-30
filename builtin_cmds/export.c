@@ -1,6 +1,23 @@
 #include "../minishell.h"
 
+void	changing(t_list **env, char *arg)
+{
+	int		len;
+	int		j;
+	static int l;
 
+	len = ft_strlen(arg);
+	(*env)->content = malloc(len + 1);
+	j = 0;
+	while (arg[j])
+	{
+		(*env)->content[j] = arg[j];
+		j++;
+	}
+	(*env)->content[j] = '\0';
+	(*env)->criteria = 'e';
+	l++;
+}
 void	change_value(char *arg, t_list **env)
 {
 	t_list	*curr;
@@ -15,18 +32,9 @@ void	change_value(char *arg, t_list **env)
 		spl = split_with_equ((*env)->content);
 		split_arg = split_with_equ(arg);
 		if (!ft_strcmp(spl[0], split_arg[0]))
-		{
-			len = ft_strlen(arg);
-			(*env)->content = malloc((len + 1));
-			j = 0;
-			while (arg[j])
-			{
-				(*env)->content[j] = arg[j];
-				j++;
-			}
-			(*env)->content[j] = '\0';
-			(*env)->criteria = 'e';
-		}
+			changing(env, arg);
+		ft_free(spl);
+		ft_free(split_arg);
 		(*env) = (*env)->next;
 	}
 	*env = curr;
@@ -56,6 +64,7 @@ void	add_value(char *arg, t_list **env)
 				(*env)->content = ft_strjoin((*env)->content, split_arg[1]);
 		}
 		ft_free(spl);
+		ft_free(split_arg);
 		(*env) = (*env)->next;
 	}
 	*env = curr;
@@ -78,8 +87,14 @@ int	ft_isnode(t_list **env, char *arg)
 		else
 			split_arg = split_with_equ(arg);
 		if (!ft_strcmp(spl[0], split_arg[0]))
+		{
+			ft_free(spl);
+			ft_free(split_arg);
 			return (1);
+		}
 		curr = curr->next;
+		ft_free(spl);
+		ft_free(split_arg);
 	}
 	return (0);
 }
@@ -109,7 +124,8 @@ void	ft_export(t_list **env, char **args)
 				change_value(args[i], env);
 		}
 		else
-			add_it_back(split_arg, args[i], env);	
+			add_it_back(split_arg, args[i], env);
+		ft_free(split_arg);
 		i++;
 	}
 }

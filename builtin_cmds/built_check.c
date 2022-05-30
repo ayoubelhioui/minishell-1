@@ -6,7 +6,6 @@ void	built_check(char *context, t_list **env)
 	char	*command;
 	char	**args;
 	int		i;
-	static int var;
 
 	full_info = ft_split(context, ' ');
 	command = full_info[0];
@@ -35,4 +34,6 @@ void	built_check(char *context, t_list **env)
 		ft_export(env, args);
 	else if (!strcmp(command, "unset"))
 		ft_unset(env, args);
+	free(args);
+	// ft_free(full_info);
 }

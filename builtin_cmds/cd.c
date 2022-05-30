@@ -15,7 +15,6 @@ void	cd(char **paths, t_list **env)
 			{
 				buff = ft_split(curr->content, '=');
 				ret = chdir((const char *) buff[1]);
-
 				ft_free(buff);
 				break;
 			}
@@ -26,5 +25,4 @@ void	cd(char **paths, t_list **env)
 		ret = chdir((const char *) paths[0]);
 	if (ret != 0)
 		printf("cd: no such file or directory : %s\n", paths[0]);
-	ft_free(paths);
 }
