@@ -108,13 +108,14 @@ int allocation_length(char *context)
     return (counter);
 }
 
-char    *remove_quotes(char *context, int new_string_length)
+char    *remove_quotes(char *context)
 {
     char    *new_string;
     int      i;
     int      j;
-    
-    new_string = malloc(sizeof(char) * (new_string_length + 1));
+
+    int length = allocation_length(context);
+    new_string = malloc(sizeof(char) * (length + 1));
     i = 0;
     j = 0;
     while (context[i])
@@ -150,7 +151,7 @@ void    quotes_final_touch(t_data *entered_data, char **env)
     while (entered_data->command_and_args[i])
     {
         length = allocation_length(entered_data->command_and_args[i]);
-        entered_data->command_and_args[i] = remove_quotes(entered_data->command_and_args[i], length);
+        // entered_data->command_and_args[i] = remove_quotes(entered_data->command_and_args[i], length);
         back_space(entered_data->command_and_args[i]);
         i++;
     }
@@ -201,31 +202,80 @@ void    ft_strcpy(char *s, char *str,int start_position, int length)
     }
     s[i] = '\0';
 }
-
-void     get_cmd_args(t_data *entered_data, t_returned_data *returned_data, char **env)
+int get_args_length(char **data)
 {
     int i;
-    int arguments_length;
+    int counter;
 
     i = 0;
-    entered_data->index = 0;
-   while (entered_data->context[entered_data->index])
+    counter = 0;
+        int j = 0;
+    while (data[j])
+        printf("It Is : %s\n", data[j++]);
+    while (data[i])
     {
-        if (entered_data->context[entered_data->index] == SINGLE_QUOTE)
-            replacing_space(entered_data, SINGLE_QUOTE);
-        else if (entered_data->context[entered_data->index] == DOUBLE_QUOTE)
-            replacing_space(entered_data, DOUBLE_QUOTE);
-        entered_data->index++;
-    }
-    quotes_final_touch(entered_data, env);
-    arguments_length = get_length(entered_data->command_and_args);
-    returned_data->cmd_path = get_command_path(env, entered_data->command_and_args[0]);
-    returned_data->args = malloc(sizeof(char *) * (arguments_length));
-    while (i < arguments_length)
-    {
-        returned_data->args[i] = entered_data->command_and_args[i + 1];
+        if (!ft_strcmp(data[i], "<") || !ft_strcmp(data[i], ">"))
+        {
+            i++;
+            counter+=2;
+            if (!ft_strcmp(data[i], "<") || !ft_strcmp(data[i], ">"))
+            {
+                i++;
+                counter++;
+            }
+        }
         i++;
     }
+    return (counter);
+}
+void     get_cmd_args(char **data, t_returned_data *returned_data)
+{
+    int length;
+    int i;
+    int j;
+
+    length = get_args_length(data);
+    returned_data->args = malloc(sizeof(char *) * (length + 1));
+    j = 0;
+    while (data[i])
+    {
+        if (!ft_strcmp(data[i], "<") || !ft_strcmp(data[i], "<"))
+        {
+            i++;
+            if (!ft_strcmp(data[i], "<") || !ft_strcmp(data[i], ">"))
+                i++;
+        }
+        else
+            returned_data->args[j] = data[i];
+        i++;
+    }
+    returned_data->args[j] = NULL;
+    j = 0;
+    while (returned_data->args[j])
+        printf("Value Is : %s\n", returned_data->args[j++]);
+    // int i;
+    // int arguments_length;
+
+    // i = 0;
+    // entered_data->index = 0;
+    // while (entered_data->context[entered_data->index])
+    // {
+    //     if (entered_data->context[entered_data->index] == SINGLE_QUOTE)
+    //         replacing_space(entered_data, SINGLE_QUOTE);
+    //     else if (entered_data->context[entered_data->index] == DOUBLE_QUOTE)
+    //         replacing_space(entered_data, DOUBLE_QUOTE);
+    //     entered_data->index++;
+    // }
+    // quotes_final_touch(entered_data, env);
+    // arguments_length = get_length(entered_data->command_and_args);
+    // returned_data->cmd_path = get_command_path(env, entered_data->command_and_args[0]);
+    // returned_data->args = malloc(sizeof(char *) * (arguments_length));
+    // while (i < arguments_length)
+    // {
+    //     returned_data->args[i] = entered_data->command_and_args[i + 1];
+    //     i++;
+    // }
+
 }
 
 int redirection_counter(t_list *splitted_data, char redirection)
@@ -253,6 +303,7 @@ int here_doc(char *limiter)
     
     entered_line = readline("> ");
     pipe(p);
+    limiter = remove_quotes(limiter);
     while (entered_line)
     {
         if (ft_strcmp(entered_line, limiter) == 0)
@@ -284,21 +335,35 @@ void    change_command_input_fd(t_returned_data *returned_data, int heredoc_posi
     }
 }
 
+void    in_a_quote(int *in_quote, int SINGLE_OR_DOUBLE)
+{
+    if (*in_quote == SINGLE_OR_DOUBLE)
+        *in_quote = 0;
+    else if (*in_quote == 0)
+        *in_quote = SINGLE_OR_DOUBLE;
+}
+
 int heredoc_searcher(char **splitted_data, t_returned_data *returned_data)
 {
     int     i;
     int     input_fd;
     int     heredoc_position;
     t_returned_data *temp;
+    int         in_quote;
 
     i = 0;
     temp = returned_data;
     heredoc_position = 0;
+    in_quote = 0;
     while (splitted_data[i])
     {
         if (!ft_strcmp(splitted_data[i], "|"))
             heredoc_position++;
-        if (!ft_strcmp(splitted_data[i], "<") && !ft_strcmp(splitted_data[i + 1], "<"))
+        else if (!ft_strcmp(splitted_data[i], "\""))
+            in_a_quote(&in_quote, DOUBLE_QUOTE);
+        else if (!ft_strcmp(splitted_data[i], "'"))
+            in_a_quote(&in_quote, SINGLE_QUOTE);
+        else if (!ft_strcmp(splitted_data[i], "<") && !ft_strcmp(splitted_data[i + 1], "<") && in_quote == 0)
         {
             i += 2;
             input_fd = here_doc(splitted_data[i]);
@@ -310,13 +375,6 @@ int heredoc_searcher(char **splitted_data, t_returned_data *returned_data)
 }
 
 
-void    in_a_quote(int *in_quote, int SINGLE_OR_DOUBLE)
-{
-    if (*in_quote == SINGLE_OR_DOUBLE)
-        *in_quote = 0;
-    else if (*in_quote == 0)
-        *in_quote = SINGLE_OR_DOUBLE;
-}
 
 int check_unclosed_quotes(char *context)
 {
@@ -363,28 +421,36 @@ t_list  *making_a_list(char **s)
     // search_for_token(&ctx);  
 }
 
-char    *add_space(char *context, int start_position, int redirections_counter)
+char    *add_space(char *context, int redirections_counter)
 {
     int i;
     int j;
     int new_string_length;
     char *new_string;
+    int  in_quote;
 
     new_string_length = ft_strlen(context) + redirections_counter + 1;
     new_string = malloc(sizeof(char) * (new_string_length));
     i = 0;
     j = 0;
+    in_quote = 0;
     while (i < new_string_length)
     {
-        if ((context[i] == RED_INPUT || context[i] == RED_OUTPUT) && i >= start_position)
+        if (context[i] == DOUBLE_QUOTE)
+            in_a_quote(&in_quote, DOUBLE_QUOTE);
+        else if (context[i] == SINGLE_QUOTE)
+            in_a_quote(&in_quote, SINGLE_QUOTE);
+        if ((context[i] == RED_INPUT || context[i] == RED_OUTPUT))
         {
             new_string[j++] = context[i];
-            new_string[j++] = SPACE;
+            if (in_quote == 0)
+                new_string[j++] = SPACE;
         }
-        else if ((context[i + 1] == RED_INPUT || context[i + 1] == RED_OUTPUT) && i >= start_position - 1)
+        else if ((context[i + 1] == RED_INPUT || context[i + 1] == RED_OUTPUT))
         {
             new_string[j++] = context[i];
-            new_string[j++] = SPACE;
+            if (in_quote == 0)
+                new_string[j++] = SPACE;
         }
         else
             new_string[j++] = context[i];
@@ -397,34 +463,22 @@ char    *add_space(char *context, int start_position, int redirections_counter)
 char    *get_new_context(t_data *entered_data)
 {
     int counter;
-    int first_red_position;
     int in_quote;
 
     entered_data->index = 0;
     counter = 0;
     in_quote = 0;
-    first_red_position = 0;
     while (entered_data->context[entered_data->index])
     {
         if (entered_data->context[entered_data->index] == SINGLE_QUOTE)
-        {
-            // replacing_space(entered_data, SINGLE_QUOTE); // i should replace all spaces inside QUOTES
-            in_a_quote(&in_quote, SINGLE_QUOTE);
-        }
+            replacing_space(entered_data, SINGLE_QUOTE);
         else if (entered_data->context[entered_data->index] == DOUBLE_QUOTE)
-        {
-            // replacing_space(entered_data, DOUBLE_QUOTE); // i should replace all spaces inside QUOTES
-            in_a_quote(&in_quote, DOUBLE_QUOTE);
-        }
-        if ((entered_data->context[entered_data->index] == RED_INPUT || entered_data->context[entered_data->index] == RED_OUTPUT) && (in_quote == 0))
-        {
+            replacing_space(entered_data, DOUBLE_QUOTE);
+        else if ((entered_data->context[entered_data->index] == RED_INPUT || entered_data->context[entered_data->index] == RED_OUTPUT))
             counter+=2;
-            if (first_red_position == 0)
-                first_red_position = entered_data->index;
-        }
         entered_data->index++;
     }
-    return (add_space(entered_data->context, first_red_position, counter));
+    return (add_space(entered_data->context, counter));
 }
 
 t_list  *remove_redirections(t_list *old_list)
@@ -540,10 +594,11 @@ void    getting_output_fd(char *str, t_returned_data *returned_data)
         if (!ft_strcmp(s[i], ">"))
         {
             i++;
+            // close (temp->output_fd);
             if (!ft_strcmp(s[i], ">"))
-                temp->output_fd = open(s[i + 1], O_WRONLY | O_CREAT | O_APPEND, 00400| 00200);
+                temp->output_fd = open(remove_quotes(s[i + 1]), O_WRONLY | O_CREAT | O_APPEND, 00400 | 00200);
             else
-                temp->output_fd = open(s[i], O_WRONLY | O_CREAT, 00400| 00200);
+                temp->output_fd = open(remove_quotes(s[i]), O_WRONLY | O_CREAT, 00400| 00200);
             if (temp->output_fd == -1)
             {
                 printf("%s\n", strerror(errno));
@@ -570,14 +625,15 @@ void    preparing(t_data *entered_data, char **env, t_returned_data **returned_d
     commands_number = get_length(splitted_by_pipe);
     pipes_array = malloc(sizeof(int *) * (commands_number - 1));
     splitted_by_space = ft_split(entered_data->context, SPACE);
+    // i = 0;
+    // while (splitted_by_space[i])
+    //     printf("It Is : %s\n", splitted_by_space[i++]);
     create_returned_nodes(returned_data, commands_number);
     heredoc_searcher(splitted_by_space, *returned_data);
-    t_returned_data *s = *returned_data;
-
-    i = 0;
     t_returned_data *temp = *returned_data;
     while (splitted_by_pipe[i])
     {
+
         pipe(pipes_array[i]);
         if (i == 0)
             temp->output_fd = pipes_array[i][STD_OUTPUT];
@@ -594,10 +650,12 @@ void    preparing(t_data *entered_data, char **env, t_returned_data **returned_d
         } 
         getting_input_fd(splitted_by_pipe[i], temp);
         getting_output_fd(splitted_by_pipe[i], temp);
-        // dprintf(temp->output_fd, "Im Here\n");
         temp = temp->next;
         i++;
     }
+    get_cmd_args(splitted_by_space, *returned_data);
+    // printf("Length Is : %d\n", get_args_length(splitted_by_space));
+    // remove_redirections
     // t_returned_data *d = *returned_data;
     //  while (d)
     // {
