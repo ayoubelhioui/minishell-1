@@ -10,8 +10,12 @@ int	checkand_deletion(t_list *curr, int pos, char *temp, t_list **env)
 	if (!ft_strcmp(temp, temp2))
 	{
 		delete_node(env, pos);
+		ft_free(spl);
+		free(temp2);
 		return (1);
 	}
+	ft_free(spl);
+	free(temp2);
 	return (0);
 }
 void	ft_unset(t_list **env, char	**args)
@@ -30,11 +34,11 @@ void	ft_unset(t_list **env, char	**args)
 		while (curr)
 		{
 			if (checkand_deletion(curr, pos, temp, env))
-				break;
+				break ;
 			pos++;
 			curr = curr->next;
 		}
-		free(temp);
+			free(temp);
 		i++;
 	}
 }

@@ -657,7 +657,7 @@ int main(int ac, char **av, char **env)
     {
         entered_data.context = readline("minishell : ");
 		if (entered_data.context == NULL)
-			exit(1);
+			break ;
         if (ft_strlen(entered_data.context) == 0)
             continue;
 		built_check(entered_data.context, &env_l);
@@ -671,4 +671,5 @@ int main(int ac, char **av, char **env)
         free (entered_data.context);
         // quotes_handling(&entered_data, &returned_data, env);
     }
+	// ft_free_list(&env_l);
 }
