@@ -209,9 +209,6 @@ int get_args_length(char **data)
 
     i = 0;
     counter = 0;
-        int j = 0;
-    while (data[j])
-        printf("It Is : %s\n", data[j++]);
     while (data[i])
     {
         if (!ft_strcmp(data[i], "<") || !ft_strcmp(data[i], ">"))
@@ -227,55 +224,6 @@ int get_args_length(char **data)
         i++;
     }
     return (counter);
-}
-void     get_cmd_args(char **data, t_returned_data *returned_data)
-{
-    int length;
-    int i;
-    int j;
-
-    length = get_args_length(data);
-    returned_data->args = malloc(sizeof(char *) * (length + 1));
-    j = 0;
-    while (data[i])
-    {
-        if (!ft_strcmp(data[i], "<") || !ft_strcmp(data[i], "<"))
-        {
-            i++;
-            if (!ft_strcmp(data[i], "<") || !ft_strcmp(data[i], ">"))
-                i++;
-        }
-        else
-            returned_data->args[j] = data[i];
-        i++;
-    }
-    returned_data->args[j] = NULL;
-    j = 0;
-    while (returned_data->args[j])
-        printf("Value Is : %s\n", returned_data->args[j++]);
-    // int i;
-    // int arguments_length;
-
-    // i = 0;
-    // entered_data->index = 0;
-    // while (entered_data->context[entered_data->index])
-    // {
-    //     if (entered_data->context[entered_data->index] == SINGLE_QUOTE)
-    //         replacing_space(entered_data, SINGLE_QUOTE);
-    //     else if (entered_data->context[entered_data->index] == DOUBLE_QUOTE)
-    //         replacing_space(entered_data, DOUBLE_QUOTE);
-    //     entered_data->index++;
-    // }
-    // quotes_final_touch(entered_data, env);
-    // arguments_length = get_length(entered_data->command_and_args);
-    // returned_data->cmd_path = get_command_path(env, entered_data->command_and_args[0]);
-    // returned_data->args = malloc(sizeof(char *) * (arguments_length));
-    // while (i < arguments_length)
-    // {
-    //     returned_data->args[i] = entered_data->command_and_args[i + 1];
-    //     i++;
-    // }
-
 }
 
 int redirection_counter(t_list *splitted_data, char redirection)
@@ -609,6 +557,49 @@ void    getting_output_fd(char *str, t_returned_data *returned_data)
     }
 }
 
+void     get_cmd_args(char **data, t_returned_data *returned_data)
+{
+    char *s;
+    int length;
+    int i;
+    int j;
+    int k;
+    t_returned_data *temp;
+
+    temp = returned_data;
+    k = 0;
+    while (temp)
+    {
+        s = ft_split(data[k], SPACE);
+        length = get_args_length(data);
+        temp->args = malloc(sizeof(char *) * (length + 1));
+        j = 0;
+        i = 0;
+        while (data[i])
+        {
+            if (!ft_strcmp(data[i], "<") || !ft_strcmp(data[i], ">"))
+            {
+                i++;
+                if (!ft_strcmp(data[i], "<") || !ft_strcmp(data[i], ">"))
+                    i++;
+            }
+            else
+                temp->args[j++] = data[i];
+            i++;
+        }
+        temp->args[j] = NULL;
+        temp = temp->next;
+    }
+    // t_returned_data *t = returned_data;
+    // i = 0;
+    // while (t)
+    // {
+    //     while (t->args[i])
+    //         printf("It Is : %s\n", t->args[i++]);
+    //     printf("-------\n");
+    //     t = t->next;
+    // }
+}
 void    preparing(t_data *entered_data, char **env, t_returned_data **returned_data)
 {
     t_list          *data_list;
@@ -625,16 +616,13 @@ void    preparing(t_data *entered_data, char **env, t_returned_data **returned_d
     commands_number = get_length(splitted_by_pipe);
     pipes_array = malloc(sizeof(int *) * (commands_number - 1));
     splitted_by_space = ft_split(entered_data->context, SPACE);
-    // i = 0;
-    // while (splitted_by_space[i])
-    //     printf("It Is : %s\n", splitted_by_space[i++]);
     create_returned_nodes(returned_data, commands_number);
     heredoc_searcher(splitted_by_space, *returned_data);
     t_returned_data *temp = *returned_data;
     while (splitted_by_pipe[i])
     {
-
-        pipe(pipes_array[i]);
+        if (i < commands_number - 1)
+            pipe(pipes_array[i]);
         if (i == 0)
             temp->output_fd = pipes_array[i][STD_OUTPUT];
         else if (i == commands_number - 1)
@@ -653,7 +641,15 @@ void    preparing(t_data *entered_data, char **env, t_returned_data **returned_d
         temp = temp->next;
         i++;
     }
-    get_cmd_args(splitted_by_space, *returned_data);
+    get_cmd_args(splitted_by_pipe, *returned_data);
+    // get_cmd_args(splitted_by_space, *returned_data);
+    // printf("The fucking context Is : %s\n", entered_data->context);
+    // get_cmd_args(ft_split(entered_data->context, SPACE), *returned_data);
+    // printf("----> : Sht\n");
+    // int k = 0;
+    // while (splitted_by_space[k])
+    //     printf("It IS : %s\n", splitted_by_space[k++]);
+    // get_cmd_args(splitted_by_space, *returned_data);
     // printf("Length Is : %d\n", get_args_length(splitted_by_space));
     // remove_redirections
     // t_returned_data *d = *returned_data;
@@ -718,14 +714,14 @@ int main(int ac, char **av, char **env)
 			break ;
         if (ft_strlen(entered_data.context) == 0)
             continue;
-		built_check(entered_data.context, &env_l);
+		// built_check(entered_data.context, &env_l);
         add_history(entered_data.context);
         if (check_unclosed_quotes(entered_data.context))
         {
             printf("Missing Quote!\n");
             continue ;
         }
-        // preparing(&entered_data, env, &returned_data);
+        preparing(&entered_data, env, &returned_data);
         free (entered_data.context);
         // quotes_handling(&entered_data, &returned_data, env);
     }
