@@ -33,6 +33,7 @@ typedef struct returned_data
     char    **args;
     int     input_fd;
     int     output_fd;
+    int     str_idx;
     int     is_executable;
     struct returned_data    *next;
 }               t_returned_data;
@@ -47,12 +48,12 @@ typedef struct data
 
 void    ft_free(char **s);
 void	returned_data_addback(t_returned_data **returned_data, t_returned_data *new);
-void    replace_with_real_value(t_data *data, char *real_value, char *saver ,int dollar_sign_position);
-void    remove_the_word(t_data *data, char *saver, int position);
+void    replace_with_real_value(t_returned_data *returned_data, char *real_value, char *saver ,int dollar_position);
+void    remove_the_word(t_returned_data *data, char *saver, int position);
 int     check_unclosed_quotes(char *context);
 void    ft_strcpy(char *s, char *str,int start_position, int length);
 void    double_quotes(t_data *data, char **env, int is_double_quotes);
-void    dollar_sign(t_data *data, char **env);
+void    dollar_sign(t_returned_data *data, char **env, int dollar_position);
 // void    ft_strcpy(char *s, char *str,int start_position, int length);
 char    *search_in_env(char *data, char **env);
 void    replacing_space(t_data *data, char quotes);

@@ -46,33 +46,7 @@ char    *search_in_env(char *entered_data, char **env)
     return (NULL);
 }
 
-void    searching_for_dollar_sign(t_data *entered_data, char **env)
-{
-    int in_a_quote;
 
-    in_a_quote = 0;
-    entered_data->index = 0;
-    while (entered_data->context[entered_data->index])
-    {
-        if (entered_data->context[entered_data->index] == DOUBLE_QUOTE)
-        {
-            if (in_a_quote == DOUBLE_QUOTE)
-                in_a_quote = 0;
-            else if (in_a_quote == 0)
-                in_a_quote = DOUBLE_QUOTE;
-        }
-        else if (entered_data->context[entered_data->index] == SINGLE_QUOTE)
-        {
-            if (in_a_quote == SINGLE_QUOTE)
-                in_a_quote = 0;
-            else if (in_a_quote == 0)
-                in_a_quote = SINGLE_QUOTE;
-        }
-        if ((entered_data->context[entered_data->index] == DOLLAR_SIGN) && (in_a_quote != SINGLE_QUOTE))
-            dollar_sign(entered_data, env);
-        entered_data->index++;
-    }
-}
 
 int quotes_counter(char *context, int *start, char quote)
 {
@@ -146,7 +120,7 @@ void    quotes_final_touch(t_data *entered_data, char **env)
     int length;
 
     i = 0;
-    searching_for_dollar_sign(entered_data, env);
+    // searching_for_dollar_sign(entered_data, env);
     entered_data->command_and_args = ft_split(entered_data->context, SPACE);
     while (entered_data->command_and_args[i])
     {
@@ -429,23 +403,6 @@ char    *get_new_context(t_data *entered_data)
     return (add_space(entered_data->context, counter));
 }
 
-t_list  *remove_redirections(t_list *old_list)
-{
-    int total_redirections;
-    char *saver;
-    int i;
-    t_list *new_list;
-
-    total_redirections = redirection_counter(old_list, STD_INPUT) + redirection_counter(old_list, STD_OUTPUT);
-    new_list = malloc(sizeof(t_list) * (ft_lstsize(old_list) - total_redirections));
-    saver = NULL;
-    i = 0;
-    while (i < ft_lstsize(old_list) && old_list)
-    {
-        // if ()
-    }
-    return (new_list);
-}
 
 void    create_returned_nodes(t_returned_data **returned_data, int commands_number)
 {
@@ -557,49 +514,103 @@ void    getting_output_fd(char *str, t_returned_data *returned_data)
     }
 }
 
+
 void     get_cmd_args(char **data, t_returned_data *returned_data)
 {
-    char *s;
+    char **s;
     int length;
     int i;
     int j;
     int k;
     t_returned_data *temp;
-
     temp = returned_data;
     k = 0;
-    while (temp)
+    while (temp && data[k])
     {
         s = ft_split(data[k], SPACE);
-        length = get_args_length(data);
-        temp->args = malloc(sizeof(char *) * (length + 1));
+        length = get_args_length(s);
+        temp->args = malloc(sizeof(char *) * (get_length(s) - length + 1));
         j = 0;
         i = 0;
-        while (data[i])
+        while (s[i])
         {
-            if (!ft_strcmp(data[i], "<") || !ft_strcmp(data[i], ">"))
+            if (!ft_strcmp(s[i], "<") || !ft_strcmp(s[i], ">"))
             {
                 i++;
-                if (!ft_strcmp(data[i], "<") || !ft_strcmp(data[i], ">"))
+                if (!ft_strcmp(s[i], "<") || !ft_strcmp(s[i], ">"))
                     i++;
-            }
+            }            
             else
-                temp->args[j++] = data[i];
+                temp->args[j++] = s[i];
             i++;
         }
         temp->args[j] = NULL;
         temp = temp->next;
+        k++;
     }
-    // t_returned_data *t = returned_data;
-    // i = 0;
-    // while (t)
-    // {
-    //     while (t->args[i])
-    //         printf("It Is : %s\n", t->args[i++]);
-    //     printf("-------\n");
-    //     t = t->next;
-    // }
 }
+
+void    searching_for_dollar_sign(t_returned_data **data, char **env)
+{
+    int in_a_quote;
+    int j;
+
+    in_a_quote = 0;
+    (*data)->str_idx = 0;
+    while ((*data)->args[(*data)->str_idx])
+    {
+        j = 0;
+        while ((*data)->args[(*data)->str_idx][j])
+        {
+            if ((*data)->args[(*data)->str_idx][j] == DOUBLE_QUOTE)
+            {
+                if (in_a_quote == DOUBLE_QUOTE)
+                    in_a_quote = 0;
+                else if (in_a_quote == 0)
+                    in_a_quote = DOUBLE_QUOTE;
+            }
+            else if ((*data)->args[(*data)->str_idx][j] == SINGLE_QUOTE)
+            {
+                if (in_a_quote == SINGLE_QUOTE)
+                    in_a_quote = 0;
+                else if (in_a_quote == 0)
+                    in_a_quote = SINGLE_QUOTE;
+            }
+            else if (((*data)->args[(*data)->str_idx][j] == DOLLAR_SIGN) && (in_a_quote != SINGLE_QUOTE))
+                dollar_sign((*data), env, j);
+            j++;
+        }
+        (*data)->str_idx+=1;
+    }
+}
+
+void    args_final_touch(t_returned_data *returned_data, char **env)
+{
+    t_returned_data *temp;
+    int i;
+    
+    temp = returned_data;
+    while (temp)
+    {
+        i = 0;
+        printf("---------\n");
+        while (temp->args[i])
+            printf("Before : %s\n", temp->args[i++]);
+        searching_for_dollar_sign(&temp, env);
+        i = 0;
+        while (temp->args[i])
+        {
+            back_space(temp->args[i]);
+            temp->args[i] = remove_quotes(temp->args[i]);
+            i++;
+        }
+        i = 0;
+        while (temp->args[i])
+            printf("After : %s\n", temp->args[i++]);
+        temp = temp->next;
+    }
+}
+
 void    preparing(t_data *entered_data, char **env, t_returned_data **returned_data)
 {
     t_list          *data_list;
@@ -608,7 +619,6 @@ void    preparing(t_data *entered_data, char **env, t_returned_data **returned_d
     int             commands_number;
     int             i;
     int             (*pipes_array)[2];
-
 
 
     entered_data->context = get_new_context(entered_data);
@@ -642,55 +652,9 @@ void    preparing(t_data *entered_data, char **env, t_returned_data **returned_d
         i++;
     }
     get_cmd_args(splitted_by_pipe, *returned_data);
-    // get_cmd_args(splitted_by_space, *returned_data);
-    // printf("The fucking context Is : %s\n", entered_data->context);
-    // get_cmd_args(ft_split(entered_data->context, SPACE), *returned_data);
-    // printf("----> : Sht\n");
-    // int k = 0;
-    // while (splitted_by_space[k])
-    //     printf("It IS : %s\n", splitted_by_space[k++]);
-    // get_cmd_args(splitted_by_space, *returned_data);
-    // printf("Length Is : %d\n", get_args_length(splitted_by_space));
-    // remove_redirections
-    // t_returned_data *d = *returned_data;
-    //  while (d)
-    // {
-    //     printf("input After is : %d\n", d->input_fd);
-    //     d =d->next;
-    // }
-    // data_list = remove_redirections(data_list);
-    // while (*returned_data)
-    // {
-    //     printf("input Is : %d\n", (*returned_data)->input_fd);
-    //     (*returned_data) = (*returned_data)->next;
-    // }
-    // dprintf(returned_data->output_fd, "Hello World\n");
-    // printf("IT Is : %d\n", input_fd);
-    // write (input_fd, "OKKOK", 5);
-    // determination(entered_data);
-    // int i = 0;
-    // while (splitted_by_space[i])
-    //     printf("It Is : %s\n", splitted_by_space[i++]);
-    // ft_free(splitted_by_space);
-    // array_length = get_length(splitted_by_space);
-    // returned_data = malloc(sizeof(t_returned_data) * (array_length));
-    // while (i < array_length)
-    // {
-    //     entered_data->context = splitted_by_space[i];
-    //     get_cmd_args(entered_data, &returned_data[i], env);
-    //     i++;
-    // }
-    // i = 0;
-    // int j = 0;
-    // while (i < array_length)
-    // {
-    //     j = 0;
-    //     printf("Command Is : %s\n", returned_data[i].cmd_path);
-    //     while (returned_data[i].args[j])
-    //         printf("Args Are : %s\n", returned_data[i].args[j++]);
-    //     i++;
-    // }
+    args_final_touch(*returned_data, env);
 }
+
 
 int main(int ac, char **av, char **env)
 {
