@@ -503,10 +503,7 @@ void    args_final_touch(t_returned_data *returned_data, char **env)
     while (temp)
     {
         i = 0;
-<<<<<<< HEAD
-=======
         // searching_for_dollar_sign(&temp, env);
->>>>>>> a1f221951c7f3a32f90dc65d34f9368bcaa26df6
         printf("-------------\n");
         i = 0;
         while (temp->args[i])
