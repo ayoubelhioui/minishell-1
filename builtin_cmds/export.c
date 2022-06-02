@@ -15,7 +15,6 @@ void	changing(t_list **env, char *arg)
 	}
 	(*env)->content[j] = '\0';
 	(*env)->criteria = 'e';
-	// l++;
 }
 void	change_value(char *arg, t_list **env)
 {

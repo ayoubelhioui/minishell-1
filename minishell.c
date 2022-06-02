@@ -503,6 +503,10 @@ void    args_final_touch(t_returned_data *returned_data, char **env)
     while (temp)
     {
         i = 0;
+<<<<<<< HEAD
+=======
+        // searching_for_dollar_sign(&temp, env);
+>>>>>>> a1f221951c7f3a32f90dc65d34f9368bcaa26df6
         printf("-------------\n");
         i = 0;
         while (temp->args[i])
@@ -672,6 +676,7 @@ int main(int ac, char **av, char **env)
     t_returned_data *returned_data;
 	t_list	*env_l;
 	t_returned_data	*en_t;
+	t_returned_data *s;
     
 	if (ac != 1)
         exit (1);
@@ -689,7 +694,7 @@ int main(int ac, char **av, char **env)
 			break ;
         if (ft_strlen(entered_data.context) == 0)
             continue;
-		// built_check(entered_data.context, &env_l);
+		built_check(entered_data.context, &env_l);
         add_history(entered_data.context);
         if (check_unclosed_quotes(entered_data.context))
         {
@@ -697,6 +702,12 @@ int main(int ac, char **av, char **env)
             continue ;
         }
         preparing(&entered_data, env, &returned_data);
+		s = returned_data;
+		while (s)
+		{
+			printf("The input Is : %d and output is : %d\n", s->input_fd, s->output_fd);
+			s = s->next;
+		}
         free (entered_data.context);
         // quotes_handling(&entered_data, &returned_data, env);
     }
