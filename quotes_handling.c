@@ -6,7 +6,7 @@
 /*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/15 15:38:43 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/05/31 20:24:44 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/02 13:28:49 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,4 +96,39 @@ void    double_quotes(t_data *data, char **env, int is_double_quotes)
     data->index = i;
     if (is_double_quotes)
         replacing_space(data, DOUBLE_QUOTE);
+}
+
+
+void    searching_for_dollar_sign(t_returned_data **data, char **env)
+{
+    int in_a_quote;
+    int j;
+
+    in_a_quote = 0;
+    (*data)->str_idx = 0;
+    while ((*data)->args[(*data)->str_idx])
+    {
+        j = 0;
+        while ((*data)->args[(*data)->str_idx][j])
+        {
+            if ((*data)->args[(*data)->str_idx][j] == DOUBLE_QUOTE)
+            {
+                if (in_a_quote == DOUBLE_QUOTE)
+                    in_a_quote = 0;
+                else if (in_a_quote == 0)
+                    in_a_quote = DOUBLE_QUOTE;
+            }
+            else if ((*data)->args[(*data)->str_idx][j] == SINGLE_QUOTE)
+            {
+                if (in_a_quote == SINGLE_QUOTE)
+                    in_a_quote = 0;
+                else if (in_a_quote == 0)
+                    in_a_quote = SINGLE_QUOTE;
+            }
+            else if (((*data)->args[(*data)->str_idx][j] == DOLLAR_SIGN) && (in_a_quote != SINGLE_QUOTE))
+                dollar_sign((*data), env, j);
+            j++;
+        }
+        (*data)->str_idx+=1;
+    }
 }
