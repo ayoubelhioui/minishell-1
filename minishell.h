@@ -46,6 +46,13 @@ typedef struct data
     int     index;   
 }               t_data;
 
+typedef struct expanding
+{
+    char *str;
+    char *new_str;
+    int dollar_index;
+}                   t_expanding;
+
 void    ft_free(char **s);
 void	returned_data_addback(t_returned_data **returned_data, t_returned_data *new);
 void    replace_with_real_value(t_returned_data *returned_data, char *real_value, char *saver ,int dollar_position);
@@ -70,4 +77,5 @@ void	ft_export(t_list **env,char **args);
 void	delete_node(t_list **env, int pos);
 void	ft_unset(t_list **env, char	**args);
 int		ft_equal(char *arg);
+void    searching_for_dollar_sign(t_returned_data **data, char **env);
 #endif

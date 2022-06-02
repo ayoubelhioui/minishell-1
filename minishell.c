@@ -1,5 +1,5 @@
-#include "minishell.h"
 
+#include "minishell.h"
 void    back_space(char *context)
 {
     int i;
@@ -114,22 +114,6 @@ char    *remove_quotes(char *context)
     return (new_string);
 }
 
-void    quotes_final_touch(t_data *entered_data, char **env)
-{
-    int i;
-    int length;
-
-    i = 0;
-    // searching_for_dollar_sign(entered_data, env);
-    entered_data->command_and_args = ft_split(entered_data->context, SPACE);
-    while (entered_data->command_and_args[i])
-    {
-        length = allocation_length(entered_data->command_and_args[i]);
-        // entered_data->command_and_args[i] = remove_quotes(entered_data->command_and_args[i], length);
-        back_space(entered_data->command_and_args[i]);
-        i++;
-    }
-}
 
 char	*get_command_path(char **env_variables, char *command)
 {
@@ -221,19 +205,19 @@ int redirection_counter(t_list *splitted_data, char redirection)
 int here_doc(char *limiter)
 {
     int p[2];
-    char *entered_line;
+    t_returned_data *returned_data;
     
-    entered_line = readline("> ");
+    returned_data->heredoc_data = readline("> ");
     pipe(p);
     limiter = remove_quotes(limiter);
-    while (entered_line)
+    while (returned_data->heredoc_data)
     {
-        if (ft_strcmp(entered_line, limiter) == 0)
+        if (!ft_strcmp(returned_data->heredoc_data, limiter))
             break ;
-        write(p[STD_OUTPUT], entered_line, ft_strlen(entered_line));
+        write(p[STD_OUTPUT], returned_data->heredoc_data, ft_strlen(returned_data->heredoc_data));
         write(p[STD_OUTPUT], "\n", 2);
-        free (entered_line);
-        entered_line = readline("> ");
+        free (returned_data->heredoc_data);
+        returned_data->heredoc_data = readline("> ");
     }
     close(p[STD_OUTPUT]);
     return (p[STD_INPUT]);
@@ -274,7 +258,6 @@ void    heredoc_searcher(char **splitted_data, t_returned_data *returned_data)
         i++;
     }
 }
-
 
 
 int check_unclosed_quotes(char *context)
@@ -369,6 +352,7 @@ char    *get_new_context(t_data *entered_data)
     entered_data->index = 0;
     counter = 0;
     in_quote = 0;
+    // expanding();
     while (entered_data->context[entered_data->index])
     {
         if (entered_data->context[entered_data->index] == SINGLE_QUOTE)
@@ -383,20 +367,6 @@ char    *get_new_context(t_data *entered_data)
 }
 
 
-void    create_returned_nodes(t_returned_data **returned_data, int commands_number)
-{
-    t_returned_data *new;
-    while(commands_number > 0)
-    {
-        new = malloc(sizeof(t_returned_data));
-        new->is_executable = TRUE;
-        new->input_fd = STD_INPUT;
-        new->output_fd = STD_OUTPUT;
-        returned_data_addback(returned_data, new);
-        commands_number--;
-    }
-}
-
 void	returned_data_addback(t_returned_data **returned_data, t_returned_data *new)
 {
 	t_returned_data	*temp;
@@ -410,6 +380,22 @@ void	returned_data_addback(t_returned_data **returned_data, t_returned_data *new
 	}
 	else
 		*returned_data = new;
+}
+
+void    create_returned_nodes(t_returned_data **returned_data, int commands_number)
+{
+    t_returned_data *new;
+    while(commands_number > 0)
+    {
+        new = malloc(sizeof(t_returned_data));
+        new->next = NULL;
+        new->str_idx = 0;
+        new->is_executable = TRUE;
+        new->input_fd = STD_INPUT;
+        new->output_fd = STD_OUTPUT;
+        returned_data_addback(returned_data, new);
+        commands_number--;
+    }
 }
 
 int     find_heredoc_position(char **s)
@@ -531,39 +517,6 @@ void     get_cmd_args(char **data, t_returned_data *returned_data, char **env)
     }
 }
 
-void    searching_for_dollar_sign(t_returned_data **data, char **env)
-{
-    int in_a_quote;
-    int j;
-
-    in_a_quote = 0;
-    (*data)->str_idx = 0;
-    while ((*data)->args[(*data)->str_idx])
-    {
-        j = 0;
-        while ((*data)->args[(*data)->str_idx][j])
-        {
-            if ((*data)->args[(*data)->str_idx][j] == DOUBLE_QUOTE)
-            {
-                if (in_a_quote == DOUBLE_QUOTE)
-                    in_a_quote = 0;
-                else if (in_a_quote == 0)
-                    in_a_quote = DOUBLE_QUOTE;
-            }
-            else if ((*data)->args[(*data)->str_idx][j] == SINGLE_QUOTE)
-            {
-                if (in_a_quote == SINGLE_QUOTE)
-                    in_a_quote = 0;
-                else if (in_a_quote == 0)
-                    in_a_quote = SINGLE_QUOTE;
-            }
-            else if (((*data)->args[(*data)->str_idx][j] == DOLLAR_SIGN) && (in_a_quote != SINGLE_QUOTE))
-                dollar_sign((*data), env, j);
-            j++;
-        }
-        (*data)->str_idx+=1;
-    }
-}
 
 void    args_final_touch(t_returned_data *returned_data, char **env)
 {
@@ -574,7 +527,6 @@ void    args_final_touch(t_returned_data *returned_data, char **env)
     while (temp)
     {
         i = 0;
-        searching_for_dollar_sign(&temp, env);
         printf("-------------\n");
         i = 0;
         while (temp->args[i])
@@ -590,6 +542,68 @@ void    args_final_touch(t_returned_data *returned_data, char **env)
         temp = temp->next;
     }
 }
+void    expanding_join(char *s1, char *s2)
+{
+	size_t	total_len;
+	size_t	i;
+	size_t	j;
+	char	*str;
+
+	if (!s2)
+		return (NULL);
+		
+	i = 0;
+	j = 0;
+	total_len = ft_strlen(s1) + ft_strlen(s2);
+	str = malloc((total_len + 1) * sizeof(char));
+	if (!str)
+		return (NULL);
+	while (i < ft_strlen(s1))
+	{
+		str[i] = s1[i];
+		i++;
+	}
+	while (j < ft_strlen(s2))
+		str[i++] = s2[j++];
+	str[i] = '\0';
+	return (str);
+}
+void    dollar_sign_found(t_data *entered_data, char **env)
+{
+
+}
+
+void    expanding(t_data *entered_data, char **env)
+{
+    int in_a_quote;
+    int is_limiter;
+    int saver;
+
+    in_a_quote = 0;
+    is_limiter = 0;
+    saver = NULL;
+    entered_data->index = 0;
+    while (entered_data->context[entered_data->index])
+    {
+         if (entered_data->context[entered_data->index] == DOUBLE_QUOTE)
+        {
+            if (in_a_quote == DOUBLE_QUOTE)
+                in_a_quote = 0;
+            else if (in_a_quote == 0)
+                in_a_quote = DOUBLE_QUOTE;
+        }
+        else if (entered_data->context[entered_data->index] == SINGLE_QUOTE)
+        {
+            if (in_a_quote == SINGLE_QUOTE)
+                in_a_quote = 0;
+            else if (in_a_quote == 0)
+                in_a_quote = SINGLE_QUOTE;
+        }
+        if ((entered_data->context[entered_data->index] == DOLLAR_SIGN) && (in_a_quote != SINGLE_QUOTE))
+            dollar_sign_found(entered_data, env);
+        entered_data->index++;
+    }
+}
 
 void    preparing(t_data *entered_data, char **env, t_returned_data **returned_data)
 {
@@ -602,6 +616,7 @@ void    preparing(t_data *entered_data, char **env, t_returned_data **returned_d
 
 
     entered_data->context = get_new_context(entered_data);
+    expanding(entered_data, env);
     splitted_by_pipe = ft_split(entered_data->context, PIPE);
     commands_number = get_length(splitted_by_pipe);
     pipes_array = malloc(sizeof(int *) * (commands_number - 1));
@@ -609,6 +624,14 @@ void    preparing(t_data *entered_data, char **env, t_returned_data **returned_d
     create_returned_nodes(returned_data, commands_number);
     heredoc_searcher(splitted_by_space, *returned_data);
     t_returned_data *temp = *returned_data;
+    t_returned_data *temp1 = *returned_data;
+    char s;
+    while (temp1)
+    {
+        while (read(temp1->input_fd, &s, 1))
+            write(1, &s, 1);
+        temp1 = temp1->next;
+    }
     while (splitted_by_pipe[i])
     {
         if (i < commands_number - 1)
@@ -631,7 +654,6 @@ void    preparing(t_data *entered_data, char **env, t_returned_data **returned_d
         temp = temp->next;
         i++;
     }
-    t_returned_data *temp1 = *returned_data;
     get_cmd_args(splitted_by_pipe, *returned_data, env);
     args_final_touch(*returned_data, env);
 }
