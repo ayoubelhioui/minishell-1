@@ -602,38 +602,39 @@ void    preparing(t_data *entered_data, char **env, t_returned_data **returned_d
 
 
     entered_data->context = get_new_context(entered_data);
-    splitted_by_pipe = ft_split(entered_data->context, PIPE);
-    commands_number = get_length(splitted_by_pipe);
-    pipes_array = malloc(sizeof(int *) * (commands_number - 1));
-    splitted_by_space = ft_split(entered_data->context, SPACE);
-    create_returned_nodes(returned_data, commands_number);
-    heredoc_searcher(splitted_by_space, *returned_data);
-    t_returned_data *temp = *returned_data;
-    while (splitted_by_pipe[i])
-    {
-        if (i < commands_number - 1)
-            pipe(pipes_array[i]);
-        if (i == 0)
-            temp->output_fd = pipes_array[i][STD_OUTPUT];
-        else if (i == commands_number - 1)
-        {
-            if (temp->input_fd == 0)
-                temp->input_fd = pipes_array[i - 1][STD_INPUT];
-        }
-        else
-        {
-            if (temp->input_fd == 0)
-                temp->input_fd = pipes_array[i - 1][STD_INPUT];
-            temp->output_fd = pipes_array[i][STD_OUTPUT];
-        } 
-        getting_input_fd(splitted_by_pipe[i], temp);
-        getting_output_fd(splitted_by_pipe[i], temp);
-        temp = temp->next;
-        i++;
-    }
-    t_returned_data *temp1 = *returned_data;
-    get_cmd_args(splitted_by_pipe, *returned_data, env);
-    args_final_touch(*returned_data, env);
+	printf("new : %s\n", entered_data->context);
+    // splitted_by_pipe = ft_split(entered_data->context, PIPE);
+    // commands_number = get_length(splitted_by_pipe);
+    // pipes_array = malloc(sizeof(int *) * (commands_number - 1));
+    // splitted_by_space = ft_split(entered_data->context, SPACE);
+    // create_returned_nodes(returned_data, commands_number);
+    // heredoc_searcher(splitted_by_space, *returned_data);
+    // t_returned_data *temp = *returned_data;
+    // while (splitted_by_pipe[i])
+    // {
+    //     if (i < commands_number - 1)
+    //         pipe(pipes_array[i]);
+    //     if (i == 0)
+    //         temp->output_fd = pipes_array[i][STD_OUTPUT];
+    //     else if (i == commands_number - 1)
+    //     {
+    //         if (temp->input_fd == 0)
+    //             temp->input_fd = pipes_array[i - 1][STD_INPUT];
+    //     }
+    //     else
+    //     {
+    //         if (temp->input_fd == 0)
+    //             temp->input_fd = pipes_array[i - 1][STD_INPUT];
+    //         temp->output_fd = pipes_array[i][STD_OUTPUT];
+    //     } 
+    //     getting_input_fd(splitted_by_pipe[i], temp);
+    //     getting_output_fd(splitted_by_pipe[i], temp);
+    //     temp = temp->next;
+    //     i++;
+    // }
+    // t_returned_data *temp1 = *returned_data;
+    // get_cmd_args(splitted_by_pipe, *returned_data, env);
+    // args_final_touch(*returned_data, env);
 }
 
 
@@ -643,7 +644,7 @@ int main(int ac, char **av, char **env)
     t_data entered_data;
     t_returned_data *returned_data;
 	t_list	*env_l;
-	t_returned_data	*en_t;
+	t_returned_data	*en;
     
 	if (ac != 1)
         exit (1);
@@ -653,7 +654,6 @@ int main(int ac, char **av, char **env)
 	// signal(SIGQUIT, SIG_IGN);
     returned_data = NULL;
 	create_list(env, &env_l);
-	fill_list(&en_t);
     while (TRUE)
     {
         entered_data.context = readline("minishell : ");
@@ -669,6 +669,8 @@ int main(int ac, char **av, char **env)
             continue ;
         }
         preparing(&entered_data, env, &returned_data);
+		en = returned_data;
+		// fill_list(en);
         free (entered_data.context);
         // quotes_handling(&entered_data, &returned_data, env);
     }
