@@ -4,7 +4,6 @@ void	changing(t_list **env, char *arg)
 {
 	int		len;
 	int		j;
-	static int l;
 
 	len = ft_strlen(arg);
 	(*env)->content = malloc(len + 1);

@@ -662,6 +662,7 @@ int main(int ac, char **av, char **env)
     t_data entered_data;
     t_returned_data *returned_data;
 	t_list	*env_l;
+	t_returned_data	*en_t;
     
 	if (ac != 1)
         exit (1);
@@ -671,6 +672,7 @@ int main(int ac, char **av, char **env)
 	// signal(SIGQUIT, SIG_IGN);
     returned_data = NULL;
 	create_list(env, &env_l);
+	fill_list(&en_t);
     while (TRUE)
     {
         entered_data.context = readline("minishell : ");
