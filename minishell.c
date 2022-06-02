@@ -235,27 +235,10 @@ int here_doc(char *limiter)
         free (entered_line);
         entered_line = readline("> ");
     }
+    close(p[STD_OUTPUT]);
     return (p[STD_INPUT]);
 }
 
-void    change_command_input_fd(t_returned_data *returned_data, int heredoc_position, int input_fd)
-{
-    t_returned_data *temp;
-    int i;
-
-    i = 0;
-    temp = returned_data;
-    while(temp)
-    {
-        if (i == heredoc_position)
-        {
-            temp->input_fd = input_fd;
-            return ;
-        }
-        i++;
-        temp = temp->next;
-    }
-}
 
 void    in_a_quote(int *in_quote, int SINGLE_OR_DOUBLE)
 {
@@ -265,22 +248,20 @@ void    in_a_quote(int *in_quote, int SINGLE_OR_DOUBLE)
         *in_quote = SINGLE_OR_DOUBLE;
 }
 
-int heredoc_searcher(char **splitted_data, t_returned_data *returned_data)
+void    heredoc_searcher(char **splitted_data, t_returned_data *returned_data)
 {
     int     i;
     int     input_fd;
-    int     heredoc_position;
     t_returned_data *temp;
     int         in_quote;
 
     i = 0;
     temp = returned_data;
-    heredoc_position = 0;
     in_quote = 0;
     while (splitted_data[i])
     {
         if (!ft_strcmp(splitted_data[i], "|"))
-            heredoc_position++;
+            temp = temp->next;
         else if (!ft_strcmp(splitted_data[i], "\""))
             in_a_quote(&in_quote, DOUBLE_QUOTE);
         else if (!ft_strcmp(splitted_data[i], "'"))
@@ -288,12 +269,10 @@ int heredoc_searcher(char **splitted_data, t_returned_data *returned_data)
         else if (!ft_strcmp(splitted_data[i], "<") && !ft_strcmp(splitted_data[i + 1], "<") && in_quote == 0)
         {
             i += 2;
-            input_fd = here_doc(splitted_data[i]);
-            change_command_input_fd(temp, heredoc_position, input_fd);
+            temp->input_fd = here_doc(splitted_data[i]);
         }
         i++;
     }
-    return (input_fd);
 }
 
 
@@ -362,13 +341,13 @@ char    *add_space(char *context, int redirections_counter)
             in_a_quote(&in_quote, DOUBLE_QUOTE);
         else if (context[i] == SINGLE_QUOTE)
             in_a_quote(&in_quote, SINGLE_QUOTE);
-        if ((context[i] == RED_INPUT || context[i] == RED_OUTPUT))
+        if ((context[i] == RED_INPUT || context[i] == RED_OUTPUT || context[i] == PIPE))
         {
             new_string[j++] = context[i];
             if (in_quote == 0)
                 new_string[j++] = SPACE;
         }
-        else if ((context[i + 1] == RED_INPUT || context[i + 1] == RED_OUTPUT))
+        else if ((context[i + 1] == RED_INPUT || context[i + 1] == RED_OUTPUT || context[i + 1] == PIPE))
         {
             new_string[j++] = context[i];
             if (in_quote == 0)
@@ -396,7 +375,7 @@ char    *get_new_context(t_data *entered_data)
             replacing_space(entered_data, SINGLE_QUOTE);
         else if (entered_data->context[entered_data->index] == DOUBLE_QUOTE)
             replacing_space(entered_data, DOUBLE_QUOTE);
-        else if ((entered_data->context[entered_data->index] == RED_INPUT || entered_data->context[entered_data->index] == RED_OUTPUT))
+        else if ((entered_data->context[entered_data->index] == RED_INPUT || entered_data->context[entered_data->index] == RED_OUTPUT || entered_data->context[entered_data->index] == PIPE))
             counter+=2;
         entered_data->index++;
     }
@@ -499,7 +478,8 @@ void    getting_output_fd(char *str, t_returned_data *returned_data)
         if (!ft_strcmp(s[i], ">"))
         {
             i++;
-            // close (temp->output_fd);
+            if (temp->output_fd != 1)
+                close (temp->output_fd);
             if (!ft_strcmp(s[i], ">"))
                 temp->output_fd = open(remove_quotes(s[i + 1]), O_WRONLY | O_CREAT | O_APPEND, 00400 | 00200);
             else
@@ -515,7 +495,7 @@ void    getting_output_fd(char *str, t_returned_data *returned_data)
 }
 
 
-void     get_cmd_args(char **data, t_returned_data *returned_data)
+void     get_cmd_args(char **data, t_returned_data *returned_data, char **env)
 {
     char **s;
     int length;
@@ -529,9 +509,10 @@ void     get_cmd_args(char **data, t_returned_data *returned_data)
     {
         s = ft_split(data[k], SPACE);
         length = get_args_length(s);
-        temp->args = malloc(sizeof(char *) * (get_length(s) - length + 1));
+        temp->args = malloc(sizeof(char *) * (get_length(s) - length));
         j = 0;
-        i = 0;
+        i = 1;
+        temp->cmd_path = get_command_path(env, s[0]);
         while (s[i])
         {
             if (!ft_strcmp(s[i], "<") || !ft_strcmp(s[i], ">"))
@@ -593,10 +574,8 @@ void    args_final_touch(t_returned_data *returned_data, char **env)
     while (temp)
     {
         i = 0;
-        printf("---------\n");
-        while (temp->args[i])
-            printf("Before : %s\n", temp->args[i++]);
         searching_for_dollar_sign(&temp, env);
+        printf("-------------\n");
         i = 0;
         while (temp->args[i])
         {
@@ -605,6 +584,7 @@ void    args_final_touch(t_returned_data *returned_data, char **env)
             i++;
         }
         i = 0;
+        printf("The cmd Is : %s\n", temp->cmd_path);
         while (temp->args[i])
             printf("After : %s\n", temp->args[i++]);
         temp = temp->next;
@@ -651,7 +631,8 @@ void    preparing(t_data *entered_data, char **env, t_returned_data **returned_d
         temp = temp->next;
         i++;
     }
-    get_cmd_args(splitted_by_pipe, *returned_data);
+    t_returned_data *temp1 = *returned_data;
+    get_cmd_args(splitted_by_pipe, *returned_data, env);
     args_final_touch(*returned_data, env);
 }
 
