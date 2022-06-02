@@ -519,54 +519,54 @@ void    args_final_touch(t_returned_data *returned_data, char **env)
     }
 }
 
-char    *expanding_join(char *s1, char *s2)
-{
-	size_t	total_len;
-	size_t	i;
-	size_t	j;
-	char	*str;
+// char    *expanding_join(char *s1, char *s2)
+// {
+// 	size_t	total_len;
+// 	size_t	i;
+// 	size_t	j;
+// 	char	*str;
 
-	if (!s2)
-		return (NULL);
+// 	if (!s2)
+// 		return (NULL);
 		
-	i = 0;
-	j = 0;
-	total_len = ft_strlen(s1) + ft_strlen(s2);
-	str = malloc((total_len + 1) * sizeof(char));
-	if (!str)
-		return (NULL);
-	while (i < ft_strlen(s1))
-	{
-		str[i] = s1[i];
-		i++;
-	}
-	while (j < ft_strlen(s2))
-		str[i++] = s2[j++];
-	str[i] = '\0';
-	return (str);
-}
+// 	i = 0;
+// 	j = 0;
+// 	total_len = ft_strlen(s1) + ft_strlen(s2);
+// 	str = malloc((total_len + 1) * sizeof(char));
+// 	if (!str)
+// 		return (NULL);
+// 	while (i < ft_strlen(s1))
+// 	{
+// 		str[i] = s1[i];
+// 		i++;
+// 	}
+// 	while (j < ft_strlen(s2))
+// 		str[i++] = s2[j++];
+// 	str[i] = '\0';
+// 	return (str);
+// }
 
-char    *search_in_env(char *entered_data, char **env)
-{
-    int i;
-    char **holder;
+// char    *search_in_env(char *entered_data, char **env)
+// {
+//     int i;
+//     char **holder;
 
-    if (ft_isdigit(entered_data[0]))
-        return (entered_data + 1);
-    if (!ft_isalnum(entered_data[0]) && entered_data[0] != UNDER_SCORE)
-        return (ft_strjoin("$",entered_data));
-    i = 0;
-    holder = malloc(sizeof(char *) * 3);
-    holder[2] = NULL;
-    while (env[i])
-    {
-        holder = ft_split(env[i], EQUAL);
-        if (ft_strcmp(holder[0], entered_data) == 0)
-            return (holder[1]);
-        i++;
-    }
-    return (NULL);
-}
+//     if (ft_isdigit(entered_data[0]))
+//         return (entered_data + 1);
+//     if (!ft_isalnum(entered_data[0]) && entered_data[0] != UNDER_SCORE)
+//         return (ft_strjoin("$",entered_data));
+//     i = 0;
+//     holder = malloc(sizeof(char *) * 3);
+//     holder[2] = NULL;
+//     while (env[i])
+//     {
+//         holder = ft_split(env[i], EQUAL);
+//         if (ft_strcmp(holder[0], entered_data) == 0)
+//             return (holder[1]);
+//         i++;
+//     }
+//     return (NULL);
+// }
 
 // char *dollar_sign_found(t_data *data, char **env, char *saver)
 // {
@@ -621,47 +621,47 @@ void    preparing(t_data *entered_data, char **env, t_returned_data **returned_d
 
 
     entered_data->context = get_new_context(entered_data);
-    printf("%s\n", entered_data->context);
+    // printf("%s\n", entered_data->context);
     // entered_data->context = expanding(entered_data->context, env);
-    // splitted_by_pipe = ft_split(entered_data->context, PIPE);
-    // commands_number = get_length(splitted_by_pipe);
-    // pipes_array = malloc(sizeof(int *) * (commands_number - 1));
-    // splitted_by_space = ft_split(entered_data->context, SPACE);
-    // create_returned_nodes(returned_data, commands_number);
-    // heredoc_searcher(splitted_by_space, *returned_data);
-    // t_returned_data *temp = *returned_data;
-    // t_returned_data *temp1 = *returned_data;
-    // char s;
-    // while (temp1)
-    // {
-    //     while (read(temp1->input_fd, &s, 1))
-    //         write(1, &s, 1);
-    //     temp1 = temp1->next;
-    // }
-    // while (splitted_by_pipe[i])
-    // {
-    //     if (i < commands_number - 1)
-    //         pipe(pipes_array[i]);
-    //     if (i == 0)
-    //         temp->output_fd = pipes_array[i][STD_OUTPUT];
-    //     else if (i == commands_number - 1)
-    //     {
-    //         if (temp->input_fd == 0)
-    //             temp->input_fd = pipes_array[i - 1][STD_INPUT];
-    //     }
-    //     else
-    //     {
-    //         if (temp->input_fd == 0)
-    //             temp->input_fd = pipes_array[i - 1][STD_INPUT];
-    //         temp->output_fd = pipes_array[i][STD_OUTPUT];
-    //     } 
-    //     getting_input_fd(splitted_by_pipe[i], temp);
-    //     getting_output_fd(splitted_by_pipe[i], temp);
-    //     temp = temp->next;
-    //     i++;
-    // }
-    // get_cmd_args(splitted_by_pipe, *returned_data, env);
-    // args_final_touch(*returned_data, env);
+    splitted_by_pipe = ft_split(entered_data->context, PIPE);
+    commands_number = get_length(splitted_by_pipe);
+    pipes_array = malloc(sizeof(int *) * (commands_number - 1));
+    splitted_by_space = ft_split(entered_data->context, SPACE);
+    create_returned_nodes(returned_data, commands_number);
+    heredoc_searcher(splitted_by_space, *returned_data);
+    t_returned_data *temp = *returned_data;
+    t_returned_data *temp1 = *returned_data;
+    char s;
+    while (temp1)
+    {
+        while (read(temp1->input_fd, &s, 1))
+            write(1, &s, 1);
+        temp1 = temp1->next;
+    }
+    while (splitted_by_pipe[i])
+    {
+        if (i < commands_number - 1)
+            pipe(pipes_array[i]);
+        if (i == 0)
+            temp->output_fd = pipes_array[i][STD_OUTPUT];
+        else if (i == commands_number - 1)
+        {
+            if (temp->input_fd == 0)
+                temp->input_fd = pipes_array[i - 1][STD_INPUT];
+        }
+        else
+        {
+            if (temp->input_fd == 0)
+                temp->input_fd = pipes_array[i - 1][STD_INPUT];
+            temp->output_fd = pipes_array[i][STD_OUTPUT];
+        } 
+        getting_input_fd(splitted_by_pipe[i], temp);
+        getting_output_fd(splitted_by_pipe[i], temp);
+        temp = temp->next;
+        i++;
+    }
+    get_cmd_args(splitted_by_pipe, *returned_data, env);
+    args_final_touch(*returned_data, env);
 }
 
 
