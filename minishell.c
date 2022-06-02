@@ -24,30 +24,6 @@ void    replacing_space(t_data *entered_data, char quote)
     }
 }
 
-char    *search_in_env(char *entered_data, char **env)
-{
-    int i;
-    char **holder;
-
-    if (ft_isdigit(entered_data[0]))
-        return (entered_data + 1);
-    if (!ft_isalnum(entered_data[0]) && entered_data[0] != UNDER_SCORE)
-        return (ft_strjoin("$",entered_data));
-    i = 0;
-    holder = malloc(sizeof(char *) * 3);
-    holder[2] = NULL;
-    while (env[i])
-    {
-        holder = ft_split(env[i], EQUAL);
-        if (ft_strcmp(holder[0], entered_data) == 0)
-            return (holder[1]);
-        i++;
-    }
-    return (NULL);
-}
-
-
-
 int quotes_counter(char *context, int *start, char quote)
 {
     int counter;
@@ -205,19 +181,19 @@ int redirection_counter(t_list *splitted_data, char redirection)
 int here_doc(char *limiter)
 {
     int p[2];
-    t_returned_data *returned_data;
-    
-    returned_data->heredoc_data = readline("> ");
+    // t_returned_data *returned_data;
+    char *entered_data;
+    entered_data = readline("> ");
     pipe(p);
     limiter = remove_quotes(limiter);
-    while (returned_data->heredoc_data)
+    while (entered_data)
     {
-        if (!ft_strcmp(returned_data->heredoc_data, limiter))
+        if (!ft_strcmp(entered_data, limiter))
             break ;
-        write(p[STD_OUTPUT], returned_data->heredoc_data, ft_strlen(returned_data->heredoc_data));
+        write(p[STD_OUTPUT], entered_data, ft_strlen(entered_data));
         write(p[STD_OUTPUT], "\n", 2);
-        free (returned_data->heredoc_data);
-        returned_data->heredoc_data = readline("> ");
+        free (entered_data);
+        entered_data = readline("> ");
     }
     close(p[STD_OUTPUT]);
     return (p[STD_INPUT]);
@@ -318,7 +294,7 @@ char    *add_space(char *context, int redirections_counter)
     i = 0;
     j = 0;
     in_quote = 0;
-    while (i < new_string_length)
+    while (context[i])
     {
         if (context[i] == DOUBLE_QUOTE)
             in_a_quote(&in_quote, DOUBLE_QUOTE);
@@ -542,7 +518,8 @@ void    args_final_touch(t_returned_data *returned_data, char **env)
         temp = temp->next;
     }
 }
-void    expanding_join(char *s1, char *s2)
+
+char    *expanding_join(char *s1, char *s2)
 {
 	size_t	total_len;
 	size_t	i;
@@ -568,46 +545,74 @@ void    expanding_join(char *s1, char *s2)
 	str[i] = '\0';
 	return (str);
 }
-void    dollar_sign_found(t_data *entered_data, char **env)
+
+char    *search_in_env(char *entered_data, char **env)
 {
+    int i;
+    char **holder;
 
-}
-
-void    expanding(t_data *entered_data, char **env)
-{
-    int in_a_quote;
-    int is_limiter;
-    int saver;
-
-    in_a_quote = 0;
-    is_limiter = 0;
-    saver = NULL;
-    entered_data->index = 0;
-    while (entered_data->context[entered_data->index])
+    if (ft_isdigit(entered_data[0]))
+        return (entered_data + 1);
+    if (!ft_isalnum(entered_data[0]) && entered_data[0] != UNDER_SCORE)
+        return (ft_strjoin("$",entered_data));
+    i = 0;
+    holder = malloc(sizeof(char *) * 3);
+    holder[2] = NULL;
+    while (env[i])
     {
-         if (entered_data->context[entered_data->index] == DOUBLE_QUOTE)
-        {
-            if (in_a_quote == DOUBLE_QUOTE)
-                in_a_quote = 0;
-            else if (in_a_quote == 0)
-                in_a_quote = DOUBLE_QUOTE;
-        }
-        else if (entered_data->context[entered_data->index] == SINGLE_QUOTE)
-        {
-            if (in_a_quote == SINGLE_QUOTE)
-                in_a_quote = 0;
-            else if (in_a_quote == 0)
-                in_a_quote = SINGLE_QUOTE;
-        }
-        if ((entered_data->context[entered_data->index] == DOLLAR_SIGN) && (in_a_quote != SINGLE_QUOTE))
-            dollar_sign_found(entered_data, env);
-        entered_data->index++;
+        holder = ft_split(env[i], EQUAL);
+        if (ft_strcmp(holder[0], entered_data) == 0)
+            return (holder[1]);
+        i++;
     }
+    return (NULL);
 }
+
+// char *dollar_sign_found(t_data *data, char **env, char *saver)
+// {
+//     int index_saver;
+
+//     data->index++;
+//     index_saver = data->index;
+//      if (!(ft_isalnum(data->context[data->index])) && (data->context[data->index] != UNDER_SCORE))
+//         return (NULL);
+//     while (data->context[data->index] && data->context[data->index] != SPACE)
+//         data->index++;
+//     saver = expanding_join(ft_substr(data->context, 0, index_saver), search_in_env(ft_substr(data->context, index_saver, data->index), env));
+    
+// }
+
+// char    *expanding(char *str, char **env)
+// {
+//     int in_quote;
+//     int is_limiter;
+//     char    *saver;
+//     t_data data;
+
+//     in_quote = 0;
+//     is_limiter = FALSE;
+//     saver = NULL;
+//     data.context = str;
+//     data.index = 0;
+//     while (data.context[data.index])
+//     {
+//         if ((data.context[data.index] == RED_INPUT) && (data.context[data.index + 1] == RED_INPUT))
+//             is_limiter = TRUE;
+//         else if (data.context[data.index] == SPACE)
+//             is_limiter = FALSE;
+//         else if (data.context[data.index] == DOUBLE_QUOTE)
+//             in_a_quote(&in_quote, DOUBLE_QUOTE);
+//         else if (data.context[data.index] == SINGLE_QUOTE)
+//             in_a_quote(&in_quote, SINGLE_QUOTE);
+//         else if ((data.context[data.index] == DOLLAR_SIGN) && (in_quote != SINGLE_QUOTE) && (is_limiter == FALSE))
+//             dollar_sign_found(&data, env, saver);
+//         data.index++;
+//     }
+//     return (data.context);
+// }
 
 void    preparing(t_data *entered_data, char **env, t_returned_data **returned_data)
 {
-    t_list          *data_list;
     char            **splitted_by_space;
     char            **splitted_by_pipe;
     int             commands_number;
@@ -616,46 +621,47 @@ void    preparing(t_data *entered_data, char **env, t_returned_data **returned_d
 
 
     entered_data->context = get_new_context(entered_data);
-    expanding(entered_data, env);
-    splitted_by_pipe = ft_split(entered_data->context, PIPE);
-    commands_number = get_length(splitted_by_pipe);
-    pipes_array = malloc(sizeof(int *) * (commands_number - 1));
-    splitted_by_space = ft_split(entered_data->context, SPACE);
-    create_returned_nodes(returned_data, commands_number);
-    heredoc_searcher(splitted_by_space, *returned_data);
-    t_returned_data *temp = *returned_data;
-    t_returned_data *temp1 = *returned_data;
-    char s;
-    while (temp1)
-    {
-        while (read(temp1->input_fd, &s, 1))
-            write(1, &s, 1);
-        temp1 = temp1->next;
-    }
-    while (splitted_by_pipe[i])
-    {
-        if (i < commands_number - 1)
-            pipe(pipes_array[i]);
-        if (i == 0)
-            temp->output_fd = pipes_array[i][STD_OUTPUT];
-        else if (i == commands_number - 1)
-        {
-            if (temp->input_fd == 0)
-                temp->input_fd = pipes_array[i - 1][STD_INPUT];
-        }
-        else
-        {
-            if (temp->input_fd == 0)
-                temp->input_fd = pipes_array[i - 1][STD_INPUT];
-            temp->output_fd = pipes_array[i][STD_OUTPUT];
-        } 
-        getting_input_fd(splitted_by_pipe[i], temp);
-        getting_output_fd(splitted_by_pipe[i], temp);
-        temp = temp->next;
-        i++;
-    }
-    get_cmd_args(splitted_by_pipe, *returned_data, env);
-    args_final_touch(*returned_data, env);
+    printf("%s\n", entered_data->context);
+    // entered_data->context = expanding(entered_data->context, env);
+    // splitted_by_pipe = ft_split(entered_data->context, PIPE);
+    // commands_number = get_length(splitted_by_pipe);
+    // pipes_array = malloc(sizeof(int *) * (commands_number - 1));
+    // splitted_by_space = ft_split(entered_data->context, SPACE);
+    // create_returned_nodes(returned_data, commands_number);
+    // heredoc_searcher(splitted_by_space, *returned_data);
+    // t_returned_data *temp = *returned_data;
+    // t_returned_data *temp1 = *returned_data;
+    // char s;
+    // while (temp1)
+    // {
+    //     while (read(temp1->input_fd, &s, 1))
+    //         write(1, &s, 1);
+    //     temp1 = temp1->next;
+    // }
+    // while (splitted_by_pipe[i])
+    // {
+    //     if (i < commands_number - 1)
+    //         pipe(pipes_array[i]);
+    //     if (i == 0)
+    //         temp->output_fd = pipes_array[i][STD_OUTPUT];
+    //     else if (i == commands_number - 1)
+    //     {
+    //         if (temp->input_fd == 0)
+    //             temp->input_fd = pipes_array[i - 1][STD_INPUT];
+    //     }
+    //     else
+    //     {
+    //         if (temp->input_fd == 0)
+    //             temp->input_fd = pipes_array[i - 1][STD_INPUT];
+    //         temp->output_fd = pipes_array[i][STD_OUTPUT];
+    //     } 
+    //     getting_input_fd(splitted_by_pipe[i], temp);
+    //     getting_output_fd(splitted_by_pipe[i], temp);
+    //     temp = temp->next;
+    //     i++;
+    // }
+    // get_cmd_args(splitted_by_pipe, *returned_data, env);
+    // args_final_touch(*returned_data, env);
 }
 
 
@@ -675,7 +681,7 @@ int main(int ac, char **av, char **env)
 	// signal(SIGQUIT, SIG_IGN);
     returned_data = NULL;
 	create_list(env, &env_l);
-	fill_list(&en_t);
+	// fill_list(&en_t);
     while (TRUE)
     {
         entered_data.context = readline("minishell : ");
