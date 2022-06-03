@@ -407,9 +407,10 @@ void    getting_input_fd(char *str, t_returned_data *returned_data)
     temp_input = temp->input_fd;
     while (s[i])
     {
+        // printf("the String is : %s and :%s\n", s[i], s[i + 1]);
         if (!ft_strcmp(s[i], "<") && !ft_strcmp(s[i + 1], "<"))
             i+=2;
-        if (!ft_strcmp(s[i], "<"))
+        else if (!ft_strcmp(s[i], "<"))
         {
             i++;
             temp->input_fd = open(s[i], O_RDONLY);
@@ -422,8 +423,8 @@ void    getting_input_fd(char *str, t_returned_data *returned_data)
         }
         i++;
     }
-    if (find_heredoc_position(s))
-        temp->input_fd = temp_input;
+    // if (find_heredoc_position(s))
+    //     temp->input_fd = temp_input;
 }
 
 void    getting_output_fd(char *str, t_returned_data *returned_data)
@@ -445,7 +446,7 @@ void    getting_output_fd(char *str, t_returned_data *returned_data)
             if (!ft_strcmp(s[i], ">"))
                 temp->output_fd = open(remove_quotes(s[i + 1]), O_WRONLY | O_CREAT | O_APPEND, 00400 | 00200);
             else
-                temp->output_fd = open(remove_quotes(s[i]), O_WRONLY | O_CREAT, 00400| 00200);
+                temp->output_fd = open(remove_quotes(s[i]), O_WRONLY | O_CREAT, 00400 | 00200);
             if (temp->output_fd == -1)
             {
                 printf("%s\n", strerror(errno));
@@ -502,12 +503,9 @@ void    args_final_touch(t_returned_data *returned_data, char **env)
     temp = returned_data;
     while (temp)
     {
-        i = 0;
-<<<<<<< HEAD
-=======
+        // i = 0;
         // searching_for_dollar_sign(&temp, env);
->>>>>>> a1f221951c7f3a32f90dc65d34f9368bcaa26df6
-        printf("-------------\n");
+        // printf("-------------\n");
         i = 0;
         while (temp->args[i])
         {
@@ -515,105 +513,114 @@ void    args_final_touch(t_returned_data *returned_data, char **env)
             temp->args[i] = remove_quotes(temp->args[i]);
             i++;
         }
-        i = 0;
-        printf("The cmd Is : %s\n", temp->cmd_path);
-        while (temp->args[i])
-            printf("After : %s\n", temp->args[i++]);
+        // i = 0;
+        // printf("The cmd Is : %s\n", temp->cmd_path);
+        // while (temp->args[i])
+        //     printf("After : %s\n", temp->args[i++]);
         temp = temp->next;
     }
 }
 
-// char    *expanding_join(char *s1, char *s2)
-// {
-// 	size_t	total_len;
-// 	size_t	i;
-// 	size_t	j;
-// 	char	*str;
+char    *expanding_join(char *s1, char *s2)
+{
+	size_t	total_len;
+	size_t	i;
+	size_t	j;
+	char	*str;
 
-// 	if (!s2)
-// 		return (NULL);
+	if (!s2)
+		return (NULL);
 		
-// 	i = 0;
-// 	j = 0;
-// 	total_len = ft_strlen(s1) + ft_strlen(s2);
-// 	str = malloc((total_len + 1) * sizeof(char));
-// 	if (!str)
-// 		return (NULL);
-// 	while (i < ft_strlen(s1))
-// 	{
-// 		str[i] = s1[i];
-// 		i++;
-// 	}
-// 	while (j < ft_strlen(s2))
-// 		str[i++] = s2[j++];
-// 	str[i] = '\0';
-// 	return (str);
-// }
+	i = 0;
+	j = 0;
+	total_len = ft_strlen(s1) + ft_strlen(s2);
+	str = malloc((total_len + 1) * sizeof(char));
+	if (!str)
+		return (NULL);
+	while (i < ft_strlen(s1))
+	{
+		str[i] = s1[i];
+		i++;
+	}
+	while (j < ft_strlen(s2))
+		str[i++] = s2[j++];
+	str[i] = '\0';
+	return (str);
+}
 
-// char    *search_in_env(char *entered_data, char **env)
-// {
-//     int i;
-//     char **holder;
+char    *search_in_env(char *entered_data, char **env)
+{
+    int i;
+    char **holder;
 
-//     if (ft_isdigit(entered_data[0]))
-//         return (entered_data + 1);
-//     if (!ft_isalnum(entered_data[0]) && entered_data[0] != UNDER_SCORE)
-//         return (ft_strjoin("$",entered_data));
-//     i = 0;
-//     holder = malloc(sizeof(char *) * 3);
-//     holder[2] = NULL;
-//     while (env[i])
-//     {
-//         holder = ft_split(env[i], EQUAL);
-//         if (ft_strcmp(holder[0], entered_data) == 0)
-//             return (holder[1]);
-//         i++;
-//     }
-//     return (NULL);
-// }
+    if (ft_isdigit(entered_data[0]))
+        return (entered_data + 1);
+    if (!ft_isalnum(entered_data[0]) && entered_data[0] != UNDER_SCORE)
+        return (ft_strjoin("$",entered_data));
+    i = 0;
+    holder = malloc(sizeof(char *) * 3);
+    holder[2] = NULL;
+    while (env[i])
+    {
+        holder = ft_split(env[i], EQUAL);
+        if (ft_strcmp(holder[0], entered_data) == 0)
+            return (holder[1]);
+        i++;
+    }
+    return (NULL);
+}
 
-// char *dollar_sign_found(t_data *data, char **env, char *saver)
-// {
-//     int index_saver;
+char *dollar_sign_found(t_data *data, char **env, char *saver, int *i)
+{
+    int index_saver;
+    char *env_value;
 
-//     data->index++;
-//     index_saver = data->index;
-//      if (!(ft_isalnum(data->context[data->index])) && (data->context[data->index] != UNDER_SCORE))
-//         return (NULL);
-//     while (data->context[data->index] && data->context[data->index] != SPACE)
-//         data->index++;
-//     saver = expanding_join(ft_substr(data->context, 0, index_saver), search_in_env(ft_substr(data->context, index_saver, data->index), env));
-    
-// }
+    data->index++;
+    index_saver = data->index;
+     if (!(ft_isalnum(data->context[data->index])) && (data->context[data->index] != UNDER_SCORE))
+        return (NULL);
+    while ((data->context[data->index]) && ((ft_isalnum(data->context[data->index])) || (data->context[data->index] == UNDER_SCORE)))
+        data->index++;
+    char *s1 = ft_substr(data->context, *i, index_saver - *i - 1);
+    *i = data->index;
+    char *s2 = ft_substr(data->context, index_saver, data->index - index_saver);
+    char *s3 = search_in_env(s2, env);
+    saver = expanding_join(saver, expanding_join(s1, s3));
+    return (saver);
+}
 
-// char    *expanding(char *str, char **env)
-// {
-//     int in_quote;
-//     int is_limiter;
-//     char    *saver;
-//     t_data data;
+char    *expanding(char *str, char **env)
+{
+    int in_quote;
+    int is_limiter;
+    char    *saver;
+    t_data data;
 
-//     in_quote = 0;
-//     is_limiter = FALSE;
-//     saver = NULL;
-//     data.context = str;
-//     data.index = 0;
-//     while (data.context[data.index])
-//     {
-//         if ((data.context[data.index] == RED_INPUT) && (data.context[data.index + 1] == RED_INPUT))
-//             is_limiter = TRUE;
-//         else if (data.context[data.index] == SPACE)
-//             is_limiter = FALSE;
-//         else if (data.context[data.index] == DOUBLE_QUOTE)
-//             in_a_quote(&in_quote, DOUBLE_QUOTE);
-//         else if (data.context[data.index] == SINGLE_QUOTE)
-//             in_a_quote(&in_quote, SINGLE_QUOTE);
-//         else if ((data.context[data.index] == DOLLAR_SIGN) && (in_quote != SINGLE_QUOTE) && (is_limiter == FALSE))
-//             dollar_sign_found(&data, env, saver);
-//         data.index++;
-//     }
-//     return (data.context);
-// }
+    in_quote = 0;
+    is_limiter = FALSE;
+    saver = NULL;
+    data.context = str;
+    data.index = 0;
+    int j = 0;
+    while (data.context[data.index])
+    {
+        if ((data.context[data.index] == RED_INPUT) && (data.context[data.index + 1] == RED_INPUT))
+            is_limiter = TRUE;
+        else if (data.context[data.index] == SPACE)
+            is_limiter = FALSE;
+        else if (data.context[data.index] == DOUBLE_QUOTE)
+            in_a_quote(&in_quote, DOUBLE_QUOTE);
+        else if (data.context[data.index] == SINGLE_QUOTE)
+            in_a_quote(&in_quote, SINGLE_QUOTE);
+        else if ((data.context[data.index] == DOLLAR_SIGN) && (in_quote != SINGLE_QUOTE) && (is_limiter == FALSE))
+            saver = dollar_sign_found(&data, env, saver, &j);
+        if (!data.context[data.index])
+            break ;
+        data.index++;
+    }
+    printf("The Saver Is : %s\n", saver);
+    return (data.context);
+}
 
 void    preparing(t_data *entered_data, char **env, t_returned_data **returned_data)
 {
@@ -624,9 +631,8 @@ void    preparing(t_data *entered_data, char **env, t_returned_data **returned_d
     int             (*pipes_array)[2];
 
 
-    entered_data->context = get_new_context(entered_data);
-    // printf("%s\n", entered_data->context);
     // entered_data->context = expanding(entered_data->context, env);
+    entered_data->context = get_new_context(entered_data);
     splitted_by_pipe = ft_split(entered_data->context, PIPE);
     commands_number = get_length(splitted_by_pipe);
     pipes_array = malloc(sizeof(int *) * (commands_number - 1));
@@ -635,13 +641,7 @@ void    preparing(t_data *entered_data, char **env, t_returned_data **returned_d
     heredoc_searcher(splitted_by_space, *returned_data);
     t_returned_data *temp = *returned_data;
     t_returned_data *temp1 = *returned_data;
-    char s;
-    while (temp1)
-    {
-        while (read(temp1->input_fd, &s, 1))
-            write(1, &s, 1);
-        temp1 = temp1->next;
-    }
+    i = 0;
     while (splitted_by_pipe[i])
     {
         if (i < commands_number - 1)
@@ -702,12 +702,6 @@ int main(int ac, char **av, char **env)
             continue ;
         }
         preparing(&entered_data, env, &returned_data);
-		s = returned_data;
-		while (s)
-		{
-			printf("The input Is : %d and output is : %d\n", s->input_fd, s->output_fd);
-			s = s->next;
-		}
         free (entered_data.context);
         // quotes_handling(&entered_data, &returned_data, env);
     }

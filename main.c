@@ -6,16 +6,14 @@
 /*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 18:46:50 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/06/02 18:48:35 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/03 18:33:00 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
 int main()
-{
-    char *s = malloc(sizeof(char) * 3);
-    s[0] = 'a';
-    s[1] = 'a';
-    s[2] = 'c';
-    printf("%s\n", s);
+{	char *s = "HelloWorld OK DUDE";
+	int i = 0;
+	char **s1 = ft_spli
 }
