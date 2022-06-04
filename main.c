@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 18:46:50 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/06/04 13:57:20 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/04 18:48:45 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,7 @@
 
 int main()
 {
-	char *s = malloc(sizeof(char) * 3);
-	s[0] = 'a';
-	s[1] = 'b';
-	printf("It Is : %p\n", s[2]);
+	char *s = "/bin/ls";
+	char *s1[] = {"ls", "-la", NULL};
+	execve(s, s1, NULL);
 }

@@ -1,32 +1,99 @@
 #include "../minishell.h"
 
-void	fill_list(t_returned_data *env)
+void	close_all_pipes(t_returned_data *head)
 {
-	int	*id;
+	while (head)
+	{
+		if (head->input_fd != STD_INPUT)
+		{
+			printf("WAS HERE\n");
+			close(head->input_fd);
+		}
+		if (head->output_fd != STD_OUTPUT)
+		{
+			printf("WAS HERE\n");	
+			close(head->output_fd);
+		}
+		head = head->next;
+	}
+}
+void	close_unused_pipes(t_returned_data *head, t_returned_data *curr, char **env)
+{
 	int	i;
 
-	id = malloc(ft_lstsize((t_list *) env) * sizeof(int));
 	i = 0;
-	while (env)
+	static int j;
+	while (head)
 	{
-		id[i] = fork();
-		if (id[i] == 0)
+		if (head != curr)
 		{
-			if (env->is_executable)
+			if (head->input_fd != STD_INPUT)
 			{
-				dup2(0, env->input_fd);
-				close(env->input_fd);
-				dup2(1, env->output_fd);
-				close(env->output_fd);
-				execve(env->cmd_path, env->args, NULL);
+				printf("WAS HERE in %d\n", j);
+				close(head->input_fd);
+			}
+			if (head->output_fd != STD_OUTPUT)
+			{
+				printf("WAS HERE in %d\n", j);
+				close(head->output_fd);
 			}
 		}
-		close(env->input_fd);
-		close(env->output_fd);
-		env = env->next;
-		i++;
+		head = head->next;
 	}
-	i = 0;
-	while (id[i])
-		waitpid(id[i++], NULL, 0);
+	j++;
+}
+
+void	fill_list(t_returned_data *data, char **env)
+{
+	int	*id;
+	int	counter;
+	char *path;
+	t_returned_data *t = data;
+	t_returned_data *temp = data;
+	char *s[] = {""}
+	// int j = 0;
+	// while (temp)
+	// {
+	// 	printf("COMMAND IS : %s\n", temp->cmd_path);
+	// 	j = 0;
+	// 	while (temp->args[j])
+	// 		printf("ARGS IS : %s\n", temp->args[j++]);
+	// 	temp = temp->next;
+	// }
+	counter = 0;
+	while (temp)
+	{
+		counter++;
+		temp = temp->next;
+	}
+	id = malloc(counter * sizeof(int));
+	while (data)
+	{
+		id[counter] = fork();
+		if (id[counter] == 0)
+		{	
+			if (data->is_executable)
+			{
+				close_unused_pipes(t, data, env);
+				if (data->input_fd != STD_INPUT)
+					dup2(data->input_fd, STD_INPUT);
+				if (data->input_fd != STD_INPUT)
+					close (data->input_fd);
+				if (data->output_fd != STD_OUTPUT)
+					dup2(data->output_fd, STD_OUTPUT);
+				if (data->output_fd != STD_OUTPUT)
+					close (data->output_fd);
+				path = get_command_path(env, data->cmd_path);
+				// dprintf(2, "CMD is %s, ARGS ARE %s %s %s\n", path, data->args[0], data->args[1], data->args[2]);
+				if (execve(path, data->args, NULL) == -1)
+					dprintf(2, "HEY \n");
+			}
+		}
+		data = data->next;
+		counter++;
+	}
+	counter = 0;
+	close_all_pipes(t);
+	while (id[counter])
+	 	waitpid(id[counter++], NULL, 0);
 }
