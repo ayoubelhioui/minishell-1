@@ -78,7 +78,7 @@ void	fill_list(t_returned_data *data, char **env)
 			{
 				close_unused_pipes(t, data, env);
 				// if (data->input_fd != STD_INPUT)
-				// {
+				// {git 
 					dup2(data->input_fd, STD_INPUT);
 					close (data->input_fd);
 				// }
