@@ -50,7 +50,7 @@ void	fill_list(t_returned_data *data, char **env)
 	char *path;
 	t_returned_data *t = data;
 	t_returned_data *temp = data;
-	char *s[] = {""}
+	int	len;
 	// int j = 0;
 	// while (temp)
 	// {
@@ -66,7 +66,9 @@ void	fill_list(t_returned_data *data, char **env)
 		counter++;
 		temp = temp->next;
 	}
+	len = counter;
 	id = malloc(counter * sizeof(int));
+	counter = 0;
 	while (data)
 	{
 		id[counter] = fork();
@@ -75,25 +77,36 @@ void	fill_list(t_returned_data *data, char **env)
 			if (data->is_executable)
 			{
 				close_unused_pipes(t, data, env);
-				if (data->input_fd != STD_INPUT)
+				// if (data->input_fd != STD_INPUT)
+				// {
 					dup2(data->input_fd, STD_INPUT);
-				if (data->input_fd != STD_INPUT)
 					close (data->input_fd);
-				if (data->output_fd != STD_OUTPUT)
+				// }
+				// if (data->output_fd != STD_OUTPUT)
+				// {
 					dup2(data->output_fd, STD_OUTPUT);
-				if (data->output_fd != STD_OUTPUT)
 					close (data->output_fd);
+				// }
 				path = get_command_path(env, data->cmd_path);
 				// dprintf(2, "CMD is %s, ARGS ARE %s %s %s\n", path, data->args[0], data->args[1], data->args[2]);
 				if (execve(path, data->args, NULL) == -1)
 					dprintf(2, "HEY \n");
-			}
+			}	
 		}
+			// else
+			// {
+			// 		dprintf(2, "hi %i\n",counter);
+			//         waitpid(id[counter], NULL, 0);
+			// }
 		data = data->next;
 		counter++;
 	}
-	counter = 0;
 	close_all_pipes(t);
-	while (id[counter])
-	 	waitpid(id[counter++], NULL, 0);
+	counter = 0;
+	while(counter < len)
+	{
+		printf("OO\n");
+		waitpid(id[counter], NULL, 0);
+		counter++;
+	}
 }
