@@ -50,7 +50,7 @@ void	fill_list(t_returned_data *data, char **env)
 	char *path;
 	t_returned_data *t = data;
 	t_returned_data *temp = data;
-	char *s[] = {""}
+	// char *s[] = {""}
 	// int j = 0;
 	// while (temp)
 	// {
