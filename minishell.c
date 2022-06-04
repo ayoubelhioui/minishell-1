@@ -365,6 +365,7 @@ void    create_returned_nodes(t_returned_data **returned_data, int commands_numb
     {
         new = malloc(sizeof(t_returned_data));
         new->next = NULL;
+        new->args = NULL;
         new->str_idx = 0;
         new->is_executable = TRUE;
         new->input_fd = STD_INPUT;
@@ -456,26 +457,48 @@ void    getting_output_fd(char *str, t_returned_data *returned_data)
         i++;
     }
 }
+char    *get_command(char **s, t_returned_data *returned_data, char **env)
+{
+    int i;
+    t_returned_data *temp;
 
+    temp = returned_data;
+    i = 0;
+    while (s[i])
+    {
+        if (!ft_strcmp(s[i], "<") || !ft_strcmp(s[i], ">"))
+        {
+            i++;
+            if (!ft_strcmp(s[i], "<") || !ft_strcmp(s[i], ">"))
+                i++;
+        }
+        else
+            break;
+        i++;
+    }
+    return (s[i]);
+}
 
 void     get_cmd_args(char **data, t_returned_data *returned_data, char **env)
 {
     char **s;
-    int length;
     int i;
-    int j;
     int k;
+    int j;
+    int whole_length;
+    whole_length = 0;
     t_returned_data *temp;
+
     temp = returned_data;
     k = 0;
-    while (temp && data[k])
+    while (temp)
     {
-        s = ft_split(data[k], SPACE);
-        length = get_args_length(s);
-        temp->args = malloc(sizeof(char *) * (get_length(s) - length));
         j = 0;
-        i = 1;
-        temp->cmd_path = get_command_path(env, s[0]);
+        i = 0;
+        s = ft_split(data[k++], SPACE);
+        whole_length = get_length(s) - get_args_length(s);
+        temp->args = malloc(sizeof(char *) * (whole_length));
+        temp->cmd_path = get_command(s, temp, env);
         while (s[i])
         {
             if (!ft_strcmp(s[i], "<") || !ft_strcmp(s[i], ">"))
@@ -483,14 +506,25 @@ void     get_cmd_args(char **data, t_returned_data *returned_data, char **env)
                 i++;
                 if (!ft_strcmp(s[i], "<") || !ft_strcmp(s[i], ">"))
                     i++;
-            }            
+            }
             else
-                temp->args[j++] = s[i];
+            {
+                if (ft_strcmp(temp->cmd_path, s[i]))
+                    temp->args[j++] = s[i];
+            }
             i++;
         }
         temp->args[j] = NULL;
         temp = temp->next;
-        k++;
+    }
+    temp = returned_data;
+    while (temp)
+    {
+        j = 0;
+        printf("command is : %s\n", temp->cmd_path);
+        while (temp->args[j])
+            printf("It Is : %s\n", temp->args[j++]);
+        temp = temp->next;
     }
 }
 
@@ -504,7 +538,6 @@ void    args_final_touch(t_returned_data *returned_data, char **env)
     while (temp)
     {
         i = 0;
-        // searching_for_dollar_sign(&temp, env);
         printf("-------------\n");
         i = 0;
         while (temp->args[i])
@@ -513,10 +546,6 @@ void    args_final_touch(t_returned_data *returned_data, char **env)
             temp->args[i] = remove_quotes(temp->args[i]);
             i++;
         }
-        // i = 0;
-        // printf("The cmd Is : %s\n", temp->cmd_path);
-        // while (temp->args[i])
-        //     printf("After : %s\n", temp->args[i++]);
         temp = temp->next;
     }
 }
@@ -527,9 +556,6 @@ char    *expanding_join(char *s1, char *s2)
 	size_t	i;
 	size_t	j;
 	char	*str;
-
-	if (!s2)
-		return (NULL);
 		
 	i = 0;
 	j = 0;
@@ -574,18 +600,25 @@ char *dollar_sign_found(t_data *data, char **env, char *saver, int *i)
 {
     int index_saver;
     char *env_value;
+    char *s1;
+    char *s2;
+
 
     data->index++;
+    env_value = NULL;
     index_saver = data->index;
      if (!(ft_isalnum(data->context[data->index])) && (data->context[data->index] != UNDER_SCORE))
         return (NULL);
     while ((data->context[data->index]) && ((ft_isalnum(data->context[data->index])) || (data->context[data->index] == UNDER_SCORE)))
         data->index++;
-    char *s1 = ft_substr(data->context, *i, index_saver - *i - 1);
+    s1 = ft_substr(data->context, *i, index_saver - *i - 1);
     *i = data->index;
-    char *s2 = ft_substr(data->context, index_saver, data->index - index_saver);
-    char *s3 = search_in_env(s2, env);
-    saver = expanding_join(saver, expanding_join(s1, s3));
+    s2 = ft_substr(data->context, index_saver, data->index - index_saver);
+    env_value = search_in_env(s2, env);
+    // if (env)
+    saver = expanding_join(saver, expanding_join(s1, env_value));
+    // else
+
     return (saver);
 }
 
@@ -631,7 +664,7 @@ void    preparing(t_data *entered_data, char **env, t_returned_data **returned_d
     int             (*pipes_array)[2];
 
 
-    // entered_data->context = expanding(entered_data->context, env);
+    entered_data->context = expanding(entered_data->context, env);
     entered_data->context = get_new_context(entered_data);
     splitted_by_pipe = ft_split(entered_data->context, PIPE);
     commands_number = get_length(splitted_by_pipe);
