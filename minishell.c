@@ -114,7 +114,7 @@ char	*get_command_path(char **env_variables, char *command)
 	return (command);
 }
 
-int get_length(char **args)
+int	get_length(char **args)
 {
     int i;
 
