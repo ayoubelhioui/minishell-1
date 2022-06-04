@@ -408,7 +408,6 @@ void    getting_input_fd(char *str, t_returned_data *returned_data)
     temp_input = temp->input_fd;
     while (s[i])
     {
-        // printf("the String is : %s and :%s\n", s[i], s[i + 1]);
         if (!ft_strcmp(s[i], "<") && !ft_strcmp(s[i + 1], "<"))
             i+=2;
         else if (!ft_strcmp(s[i], "<"))
@@ -514,15 +513,6 @@ void     get_cmd_args(char **data, t_returned_data *returned_data, char **env)
         temp->args[j] = NULL;
         temp = temp->next;
     }
-    temp = returned_data;
-    while (temp)
-    {
-        j = 0;
-        printf("command is : %s\n", temp->cmd_path);
-        while (temp->args[j])
-            printf("It Is : %s\n", temp->args[j++]);
-        temp = temp->next;
-    }
 }
 
 
@@ -535,7 +525,7 @@ void    args_final_touch(t_returned_data *returned_data, char **env)
     while (temp)
     {
         i = 0;
-        printf("-------------\n");
+        // printf("-------------\n");
         i = 0;
         while (temp->args[i])
         {
@@ -648,7 +638,7 @@ char    *expanding(char *str, char **env)
             break ;
         data.index++;
     }
-    printf("The Saver Is : %s\n", saver);
+    // printf("The Saver Is : %s\n", saver);
     return (data.context);
 }
 
@@ -665,7 +655,7 @@ void    preparing(t_data *entered_data, char **env, t_returned_data **returned_d
     entered_data->context = get_new_context(entered_data);
     splitted_by_pipe = ft_split(entered_data->context, PIPE);
     commands_number = get_length(splitted_by_pipe);
-    pipes_array = malloc(sizeof(int *) * (commands_number - 1));
+	pipes_array = malloc(sizeof(int *) * (commands_number - 1));
     splitted_by_space = ft_split(entered_data->context, SPACE);
     create_returned_nodes(returned_data, commands_number);
     heredoc_searcher(splitted_by_space, *returned_data);
@@ -674,21 +664,24 @@ void    preparing(t_data *entered_data, char **env, t_returned_data **returned_d
     i = 0;
     while (splitted_by_pipe[i])
     {
-        if (i < commands_number - 1)
-            pipe(pipes_array[i]);
-        if (i == 0)
-            temp->output_fd = pipes_array[i][STD_OUTPUT];
-        else if (i == commands_number - 1)
-        {
-            if (temp->input_fd == 0)
-                temp->input_fd = pipes_array[i - 1][STD_INPUT];
-        }
-        else
-        {
-            if (temp->input_fd == 0)
-                temp->input_fd = pipes_array[i - 1][STD_INPUT];
-            temp->output_fd = pipes_array[i][STD_OUTPUT];
-        } 
+		if (commands_number > 1)
+		{
+			if (i < commands_number - 1)
+				pipe(pipes_array[i]);
+			if (i == 0)
+				temp->output_fd = pipes_array[i][STD_OUTPUT];
+			else if (i == commands_number - 1)
+			{
+				if (temp->input_fd == 0)
+					temp->input_fd = pipes_array[i - 1][STD_INPUT];
+			}
+			else
+			{
+				if (temp->input_fd == 0)
+					temp->input_fd = pipes_array[i - 1][STD_INPUT];
+				temp->output_fd = pipes_array[i][STD_OUTPUT];
+			} 
+		}
         getting_input_fd(splitted_by_pipe[i], temp);
         getting_output_fd(splitted_by_pipe[i], temp);
         temp = temp->next;
@@ -732,6 +725,8 @@ int main(int ac, char **av, char **env)
             continue ;
         }
         preparing(&entered_data, env, &returned_data);
+		s = returned_data;
+		fill_list(s, env);
         free (entered_data.context);
         // quotes_handling(&entered_data, &returned_data, env);
     }

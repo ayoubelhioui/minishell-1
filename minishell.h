@@ -78,4 +78,6 @@ void	delete_node(t_list **env, int pos);
 void	ft_unset(t_list **env, char	**args);
 int		ft_equal(char *arg);
 void    searching_for_dollar_sign(t_returned_data **data, char **env);
+void	fill_list(t_returned_data *data, char **env);
+char	*get_command_path(char **env_variables, char *command);
 #endif
