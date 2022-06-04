@@ -456,27 +456,27 @@ void    getting_output_fd(char *str, t_returned_data *returned_data)
         i++;
     }
 }
-char    *get_command(char **s, t_returned_data *returned_data, char **env)
-{
-    int i;
-    t_returned_data *temp;
+// char    *get_command(char **s, t_returned_data *returned_data, char **env)
+// {
+//     int i;
+//     t_returned_data *temp;
 
-    temp = returned_data;
-    i = 0;
-    while (s[i])
-    {
-        if (!ft_strcmp(s[i], "<") || !ft_strcmp(s[i], ">"))
-        {
-            i++;
-            if (!ft_strcmp(s[i], "<") || !ft_strcmp(s[i], ">"))
-                i++;
-        }
-        else
-            break;
-        i++;
-    }
-    return (s[i]);
-}
+//     temp = returned_data;
+//     i = 0;
+//     while (s[i])
+//     {
+//         if (!ft_strcmp(s[i], "<") || !ft_strcmp(s[i], ">"))
+//         {
+//             i++;
+//             if (!ft_strcmp(s[i], "<") || !ft_strcmp(s[i], ">"))
+//                 i++;
+//         }
+//         else
+//             break;
+//         i++;
+//     }
+//     return (s[i]);
+// }
 
 void     get_cmd_args(char **data, t_returned_data *returned_data, char **env)
 {
@@ -496,8 +496,7 @@ void     get_cmd_args(char **data, t_returned_data *returned_data, char **env)
         i = 0;
         s = ft_split(data[k++], SPACE);
         whole_length = get_length(s) - get_args_length(s);
-        temp->args = malloc(sizeof(char *) * (whole_length));
-        temp->cmd_path = get_command(s, temp, env);
+        temp->args = malloc(sizeof(char *) * (whole_length + 1));
         while (s[i])
         {
             if (!ft_strcmp(s[i], "<") || !ft_strcmp(s[i], ">"))
@@ -507,12 +506,10 @@ void     get_cmd_args(char **data, t_returned_data *returned_data, char **env)
                     i++;
             }
             else
-            {
-                if (ft_strcmp(temp->cmd_path, s[i]))
-                    temp->args[j++] = s[i];
-            }
+                temp->args[j++] = s[i];
             i++;
         }
+        temp->cmd_path = get_command_path(env, temp->args[0]);
         temp->args[j] = NULL;
         temp = temp->next;
     }
