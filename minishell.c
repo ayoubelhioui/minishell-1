@@ -456,27 +456,6 @@ void    getting_output_fd(char *str, t_returned_data *returned_data)
         i++;
     }
 }
-// char    *get_command(char **s, t_returned_data *returned_data, char **env)
-// {
-//     int i;
-//     t_returned_data *temp;
-
-//     temp = returned_data;
-//     i = 0;
-//     while (s[i])
-//     {
-//         if (!ft_strcmp(s[i], "<") || !ft_strcmp(s[i], ">"))
-//         {
-//             i++;
-//             if (!ft_strcmp(s[i], "<") || !ft_strcmp(s[i], ">"))
-//                 i++;
-//         }
-//         else
-//             break;
-//         i++;
-//     }
-//     return (s[i]);
-// }
 
 void     get_cmd_args(char **data, t_returned_data *returned_data, char **env)
 {
@@ -594,18 +573,19 @@ char *dollar_sign_found(t_data *data, char **env, char *saver, int *i)
     data->index++;
     env_value = NULL;
     index_saver = data->index;
-     if (!(ft_isalnum(data->context[data->index])) && (data->context[data->index] != UNDER_SCORE))
+    if (!(ft_isalnum(data->context[data->index])) && (data->context[data->index] != UNDER_SCORE))
         return (NULL);
     while ((data->context[data->index]) && ((ft_isalnum(data->context[data->index])) || (data->context[data->index] == UNDER_SCORE)))
         data->index++;
     s1 = ft_substr(data->context, *i, index_saver - *i - 1);
     *i = data->index;
     s2 = ft_substr(data->context, index_saver, data->index - index_saver);
-    env_value = search_in_env(s2, env);
-    // if (env)
+    if (s2[0] == ZERO)
+        env_value = ft_strjoin(ft_strdup("minishell"), ft_substr(data->context, index_saver + 1, data->index - index_saver));
+    else
+        env_value = search_in_env(s2, env);
     saver = expanding_join(saver, expanding_join(s1, env_value));
-    // else
-
+    data->index--;
     return (saver);
 }
 
@@ -615,6 +595,7 @@ char    *expanding(char *str, char **env)
     int is_limiter;
     char    *saver;
     t_data data;
+    int x = 0;
 
     in_quote = 0;
     is_limiter = FALSE;
@@ -633,16 +614,20 @@ char    *expanding(char *str, char **env)
         else if (data.context[data.index] == SINGLE_QUOTE)
             in_a_quote(&in_quote, SINGLE_QUOTE);
         else if ((data.context[data.index] == DOLLAR_SIGN) && (in_quote != SINGLE_QUOTE) && (is_limiter == FALSE))
+        {
             saver = dollar_sign_found(&data, env, saver, &j);
+            x = data.index + 1;
+        }
         if (!data.context[data.index])
             break ;
         data.index++;
     }
-    // printf("The Saver Is : %s\n", saver);
-    return (data.context);
+    if (x < data.index)
+        saver = expanding_join(saver, ft_substr(data.context, x, ft_strlen(data.context) - x));
+    return (saver);
 }
 
-void    preparing(t_data *entered_data, char **env, t_returned_data **returned_data)
+void     preparing(t_data *entered_data, char **env, t_returned_data **returned_data)
 {
     char            **splitted_by_space;
     char            **splitted_by_pipe;
@@ -692,6 +677,46 @@ void    preparing(t_data *entered_data, char **env, t_returned_data **returned_d
 }
 
 
+int error_handling(char *context)
+{
+    int i;
+
+    i = 0;
+    if (check_unclosed_quotes(context))
+        return (TRUE);
+    while (context[i])
+    {
+        if (context[i] == RED_INPUT)
+        {
+            i++;
+            if (context[i] == RED_OUTPUT || context[i] == '\0')
+                return (TRUE);
+            if(context[i] == RED_INPUT)
+            {
+                i++;
+                if (context[i] == '\0' || context[i] == RED_INPUT || context[i] == RED_OUTPUT)
+                    return (TRUE);
+            }
+        }
+        if (context[i] == RED_OUTPUT)
+        {
+            i++;
+            if (context[i] == RED_INPUT || context[i] == '\0')
+                return (TRUE);
+            if(context[i] == RED_OUTPUT)
+            {
+                i++;
+                if (context[i] == '\0' || context[i] == RED_OUTPUT || context[i] == RED_INPUT)
+                    return (TRUE);
+            }
+        }
+        if (context[i] == '\0')
+            return (FALSE);            
+        i++;
+    }
+    return (FALSE);
+}
+
 int main(int ac, char **av, char **env)
 {
 	struct sigaction sa;
@@ -703,15 +728,14 @@ int main(int ac, char **av, char **env)
     
 	if (ac != 1)
         exit (1);
-	// sa.sa_handler = &sig_handler;
-	// sa.sa_flags =  SA_RESTART;
-	// sigaction (SIGINT, &sa, NULL);
-	// signal(SIGQUIT, SIG_IGN);
-    returned_data = NULL;
+	sa.sa_handler = &sig_handler;
+	sa.sa_flags =  SA_RESTART;
+	sigaction (SIGINT, &sa, NULL);
+	signal(SIGQUIT, SIG_IGN);
 	create_list(env, &env_l);
-	// fill_list(&en_t);
     while (TRUE)
     {
+        returned_data = NULL;
         entered_data.context = readline("minishell : ");
 		if (entered_data.context == NULL)
 			break ;
@@ -719,9 +743,9 @@ int main(int ac, char **av, char **env)
             continue;
 		built_check(entered_data.context, &env_l);
         add_history(entered_data.context);
-        if (check_unclosed_quotes(entered_data.context))
+        if (error_handling(entered_data.context))
         {
-            printf("Missing Quote!\n");
+            printf("error occured\n");
             continue ;
         }
         preparing(&entered_data, env, &returned_data);

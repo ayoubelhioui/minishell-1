@@ -31,7 +31,7 @@ void	close_unused_pipes(t_returned_data *head, t_returned_data *curr, char **env
 	j++;
 }
 
-void	fill_list(t_returned_data *data, char **env)
+void 	fill_list(t_returned_data *data, char **env)
 {
 	int	*id;
 	int	counter;
