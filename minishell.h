@@ -26,6 +26,7 @@
 # define RED_OUTPUT '>'
 # define STD_INPUT 0
 # define STD_OUTPUT 1
+# define ZERO '0'
 
 typedef struct returned_data
 {
@@ -41,7 +42,6 @@ typedef struct returned_data
 typedef struct data
 {
     char    *context;
-    char    **command_and_args;
     int     value;
     int     index;   
 }               t_data;
