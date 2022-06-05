@@ -39,15 +39,6 @@ void	fill_list(t_returned_data *data, char **env)
 	t_returned_data *t = data;
 	t_returned_data *temp = data;
 	int	len;
-	// int j = 0;
-	// while (temp)
-	// {
-	// 	printf("COMMAND IS : %s\n", temp->cmd_path);
-	// 	j = 0;
-	// 	while (temp->args[j])
-	// 		printf("ARGS IS : %s\n", temp->args[j++]);
-	// 	temp = temp->next;
-	// }
 	counter = 0;
 	while (temp)
 	{
@@ -62,10 +53,9 @@ void	fill_list(t_returned_data *data, char **env)
 		id[counter] = fork();
 		if (id[counter] == 0)
 		{	
+			close_unused_pipes(t, data, env);
 			if (data->is_executable)
 			{
-				close_unused_pipes(t, data, env);
-				if (counter == 3)
 					if (data->input_fd != 0)
 					{
 						dup2(data->input_fd, STD_INPUT);
@@ -76,9 +66,9 @@ void	fill_list(t_returned_data *data, char **env)
 						dup2(data->output_fd, STD_OUTPUT);
 						close (data->output_fd);
 					}
-				path = get_command_path(env, data->cmd_path);
-				if (execve(path, data->args, NULL) == -1)
-					dprintf(2, "HEY \n");
+					path = get_command_path(env, data->cmd_path);
+					if (execve(path, data->args, NULL) == -1)
+						dprintf(2, "HEY \n");
 			}	
 		}
 		data = data->next;
