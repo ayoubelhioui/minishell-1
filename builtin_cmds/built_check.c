@@ -2,7 +2,6 @@
 
 int	built_check(t_returned_data *ret, t_list **env)
 {
-	// printf("cmd is %s\n", ret->cmd_path);
 	if (!ft_strcmp(ret->cmd_path, "/usr/bin/cd"))
 		cd(&ret->args[1], env);
 	else if (!ft_strcmp(ret->cmd_path, "/bin/pwd"))
