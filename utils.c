@@ -35,7 +35,6 @@ void	create_list(char **env, t_list **env_l)
 		(*env_l) = (*env_l)->next;
 	}
 }
-
 void	delete_node(t_list **env, int pos)
 {
 	t_list	*del;
