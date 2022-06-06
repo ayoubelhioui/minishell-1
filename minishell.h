@@ -36,6 +36,7 @@ typedef struct returned_data
     int     output_fd;
     int     str_idx;
     int     is_executable;
+    char    **new_env;
     struct returned_data    *next;
 }               t_returned_data;
 

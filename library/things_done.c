@@ -69,7 +69,6 @@ void 	fill_list(t_returned_data *data, char **env, t_list **env_l)
 						close (data->output_fd);
 					}
 					if (built_check(data, env_l));
-						// dprintf(2, "ok\n");
 					else if (execve(get_command_path(env, data->cmd_path), data->args, env) == -1)
 						dprintf(2, "HEY \n");
 			}	
