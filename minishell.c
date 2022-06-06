@@ -497,7 +497,7 @@ void    getting_output_fd(char *str, t_returned_data *returned_data)
             if (!ft_strcmp(s[i], ">"))
                 temp->output_fd = open(remove_quotes(s[i + 1]), O_WRONLY | O_CREAT | O_APPEND, 00400 | 00200);
             else
-                temp->output_fd = open(remove_quotes(s[i]), O_WRONLY | O_CREAT, 00400 | 00200);
+                temp->output_fd = open(remove_quotes(s[i]), O_WRONLY | O_CREAT | O_TRUNC, 00400 | 00200);
             if (temp->output_fd == -1)
             {
                 returned_data->is_executable = FALSE;
@@ -731,7 +731,7 @@ void     preparing(t_data *entered_data, char **env, t_returned_data **returned_
 
 
 
-int main(int ac, char **av, char **env)
+int main(int ac, char **av,  char **env)
 {
 	struct sigaction sa;
     t_data entered_data;
@@ -739,13 +739,13 @@ int main(int ac, char **av, char **env)
 	t_list	*env_l;
 	t_returned_data	*en_t;
 	t_returned_data *s;
-    
+
 	if (ac != 1)
         exit (1);
-	sa.sa_handler = &sig_handler;
-	sa.sa_flags =  SA_RESTART;
-	sigaction (SIGINT, &sa, NULL);
-	signal(SIGQUIT, SIG_IGN);
+	// sa.sa_handler = &sig_handler;
+	// sa.sa_flags =  SA_RESTART;
+	// sigaction (SIGINT, &sa, NULL);
+	// signal(SIGQUIT, SIG_IGN);
 	create_list(env, &env_l);
     while (TRUE)
     {
@@ -755,7 +755,6 @@ int main(int ac, char **av, char **env)
 			break ;
         if (ft_strlen(entered_data.context) == 0)
             continue;
-		built_check(entered_data.context, &env_l);
         add_history(entered_data.context);
         if (error_handling(entered_data.context))
         {
@@ -765,8 +764,7 @@ int main(int ac, char **av, char **env)
         preparing(&entered_data, env, &returned_data);
         int x = 0;
 		s = returned_data;
-        // t_returned_data *m = returned_data;
-		fill_list(s, env);
+		fill_list(s, env, &env_l);
         free (entered_data.context);
         // quotes_handling(&entered_data, &returned_data, env);
     }

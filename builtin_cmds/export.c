@@ -77,6 +77,7 @@ int	ft_isnode(t_list **env, char *arg)
 
 	curr = *env;
 	check = there_is_plus(arg);
+	int k = 0;
 	while (curr)
 	{
 		spl = split_with_equ(curr->content);

@@ -31,7 +31,7 @@ void	close_unused_pipes(t_returned_data *head, t_returned_data *curr, char **env
 	j++;
 }
 
-void 	fill_list(t_returned_data *data, char **env)
+void 	fill_list(t_returned_data *data, char **env, t_list **env_l)
 {
 	int	*id;
 	int	counter;
@@ -42,6 +42,10 @@ void 	fill_list(t_returned_data *data, char **env)
 	counter = 0;
 	while (temp)
 	{
+		int k = 0;
+		printf("cmd is %s\n", temp->cmd_path);
+		while (temp->args[k])
+			printf("args is %s\n", temp->args[k++]);
 		counter++;
 		temp = temp->next;
 	}
@@ -50,7 +54,14 @@ void 	fill_list(t_returned_data *data, char **env)
 	counter = 0;
 	while (data)
 	{
-		id[counter] = fork();
+		// printf("cmd is %s\n", data->cmd_path);
+		if (built_check(data, env_l))
+		{
+			printf("is built\n");
+		}
+		else
+		{
+			id[counter] = fork();
 		if (id[counter] == 0)
 		{	
 			close_unused_pipes(t, data, env);
@@ -67,10 +78,11 @@ void 	fill_list(t_returned_data *data, char **env)
 						close (data->output_fd);
 					}
 					path = get_command_path(env, data->cmd_path);
-					if (execve(path, data->args, NULL) == -1)
+					if (execve(path, data->args, env) == -1)
 						dprintf(2, "HEY \n");
 			}	
 		}
+			}
 		data = data->next;
 		counter++;
 	}

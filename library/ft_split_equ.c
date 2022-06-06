@@ -66,10 +66,13 @@ char	**split_with_equ(char *arg)
 	int		len;
 	int		len2;
 	char	**s;
+	static int e = 0;
 
 	len2 = 0;
 	len	= len_e1(arg);
 	len2 = len_e2(arg, len);
+
 	s = malloc((len + len2 + 1) * sizeof(char *));
+	e++;
 	return (fill_it(arg, s, len, len2));
 }
