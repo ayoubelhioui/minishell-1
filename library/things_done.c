@@ -40,6 +40,11 @@ void 	fill_list(t_returned_data *data, char **env, t_list **env_l)
 	t_returned_data *temp = data;
 	int	len;
 	counter = 0;
+	while (*env_l)
+	{
+		printf("DNCC %s\n", (*env_l)->content);
+		(*env_l) = (*env_l)->next;
+	}
 	while (temp)
 	{
 		counter++;
@@ -48,8 +53,11 @@ void 	fill_list(t_returned_data *data, char **env, t_list **env_l)
 	len = counter;
 	id = malloc(counter * sizeof(int));
 	counter = 0;
+	if (!data)
+		printf("Fuck you\n");
 	while (data)
 	{
+
 		// printf("cmd is %s\n", data->cmd_path);
 		id[counter] = fork();
 		if (id[counter] == 0)

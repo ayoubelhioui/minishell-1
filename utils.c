@@ -29,12 +29,11 @@ void	create_list(char **env, t_list **env_l)
 	i++;
 	while (env[i])
 		ft_lstadd_back (env_l, ft_lstnew(env[i++]));
-	while (head)
+	while ((*env_l))
 	{
-		printf("node q %s\n", head->content);
-		head = head->next;
+		printf("%s\n", (*env_l)->content);
+		(*env_l) = (*env_l)->next;
 	}
-	
 }
 void	delete_node(t_list **env, int pos)
 {

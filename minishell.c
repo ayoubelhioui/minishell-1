@@ -762,10 +762,10 @@ int main(int ac, char **av,  char **env)
 
 	if (ac != 1)
         exit (1);
-	// sa.sa_handler = &sig_handler;
-	// sa.sa_flags =  SA_RESTART;
-	// sigaction (SIGINT, &sa, NULL);
-	// signal(SIGQUIT, SIG_IGN);
+	sa.sa_handler = &sig_handler;
+	sa.sa_flags =  SA_RESTART;
+	sigaction (SIGINT, &sa, NULL);
+	signal(SIGQUIT, SIG_IGN);
 	create_list(env, &new_env);
     while (TRUE)
     {
