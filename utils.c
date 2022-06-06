@@ -20,7 +20,8 @@ int	is_int(char *str)
 
 void	create_list(char **env, t_list **env_l)
 {
-	int	i;
+	int		i;
+	t_list 	*head;
 
 	i = 0;
 	*env_l = ft_lstnew (env[i]);
