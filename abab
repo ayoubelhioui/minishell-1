@@ -1,0 +1,20 @@
+total 224
+-rw-r--r--   1 ijmari  2019   1076 Jun  6 14:13 Makefile
+-rw-------   1 ijmari  2019      0 Jun  6 16:05 abab
+drwxr-xr-x  11 ijmari  2019    374 Jun  6 10:23 builtin_cmds
+drwxr-xr-x  29 ijmari  2019    986 Jun  6 11:47 library
+-rw-r--r--   1 ijmari  2019      9 Jun  6 15:42 lol.txt
+-rw-r--r--   1 ijmari  2019   1069 Jun  5 18:20 main.c
+-rwxr-xr-x   1 ijmari  2019  39364 Jun  6 16:04 minishell
+-rw-r--r--   1 ijmari  2019  19333 Jun  6 16:04 minishell.c
+-rw-r--r--   1 ijmari  2019   2575 Jun  6 14:29 minishell.h
+-rw-------   1 ijmari  2019   1076 Jun  6 16:04 okokok
+-rw-------   1 ijmari  2019   2152 Jun  6 16:05 okokok.txt
+-rw-------   1 ijmari  2019   2386 Jun  6 16:00 ol
+-rw-------   1 ijmari  2019     58 Jun  6 15:55 pl
+-rw-------   1 ijmari  2019   1217 Jun  6 15:44 ppp
+-rw-r--r--   1 ijmari  2019   4582 Jun  4 15:23 quotes_handling.c
+-rw-r--r--   1 ijmari  2019    132 May 22 14:50 signals.c
+-rw-r--r--   1 ijmari  2019   1562 Jun  6 14:36 utils.c
+kqssm
+[?2004hminishell : [?2004l

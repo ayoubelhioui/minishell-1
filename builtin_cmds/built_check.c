@@ -9,9 +9,7 @@ int	built_exist(t_returned_data *ret, t_list **env)
 	else if (!ft_strcmp(ret->cmd_path, "/usr/bin/env"))
 		return (1);
 	else if (!ft_strcmp(ret->cmd_path, "/bin/echo"))
-	{
 		return (1);
-	}
 	else if (!ft_strcmp(ret->cmd_path, "exit"))
 		return (1);
 	else if (!ft_strcmp(ret->cmd_path, "export"))

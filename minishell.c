@@ -693,6 +693,7 @@ char    **get_new_env(t_list *env)
     {
         new_env[i] = env->content;
         env = env->next;
+		i++;
     }
     new_env[i] = NULL;
     return (new_env);
@@ -784,6 +785,7 @@ int main(int ac, char **av,  char **env)
         preparing(&entered_data, new_env, &returned_data);
 		s = returned_data;
 		fill_list(s, env, &new_env);
+
         free (entered_data.context);
         // quotes_handling(&entered_data, &returned_data, env);
     }

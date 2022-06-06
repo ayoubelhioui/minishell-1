@@ -8,7 +8,7 @@ library/ft_export_utils.c library/ft_split_equ.c library/things_done.c signals.c
 CC = cc
 # CFLAGS = -Wextra -Werror -Wall
 NAME = minishell
-READLINE = -lreadline -L ~/goinfre/.brew/opt/readline/lib -I ~/goinfre/.brew/opt/readline/include
+READLINE = -lreadline -L /Users/ijmari/Desktop/brew/opt/readline/lib -I /Users/ijmari/Desktop/brew/opt/readline/include
 #
 SRC_O = $(SRC:.c=.o)
 
