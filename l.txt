@@ -1,0 +1,20 @@
+| HELLO WORLD <<'OK'
+ok
+minishell : total 200
+drwxr-xr-x  17 ijmari  2019    578 Jun  6 10:34 .
+drwxr-xr-x   9 ijmari  2019    306 Jun  5 20:31 ..
+drwxr-xr-x  15 ijmari  2019    510 Jun  6 10:23 .git
+drwxr-xr-x   4 ijmari  2019    136 Jun  6 10:23 .vscode
+-rw-r--r--   1 ijmari  2019   1045 Jun  6 09:22 Makefile
+-rwxr-xr-x   1 ijmari  2019   8844 Jun  6 10:23 a.out
+drwxr-xr-x  11 ijmari  2019    374 Jun  6 10:23 builtin_cmds
+-rw-------   1 ijmari  2019     36 Jun  6 10:35 l.txt
+drwxr-xr-x  29 ijmari  2019    986 Jun  6 10:23 library
+-rw-r--r--   1 ijmari  2019   1069 Jun  5 18:20 main.c
+-rw-------   1 ijmari  2019      0 Jun  5 20:22 man
+-rwxr-xr-x   1 ijmari  2019  34860 Jun  6 10:34 minishell
+-rw-r--r--   1 ijmari  2019  18890 Jun  6 10:23 minishell.c
+-rw-r--r--   1 ijmari  2019   2455 Jun  6 09:55 minishell.h
+-rw-r--r--   1 ijmari  2019   4582 Jun  4 15:23 quotes_handling.c
+-rw-r--r--   1 ijmari  2019    132 May 22 14:50 signals.c
+-rw-r--r--   1 ijmari  2019   1547 Jun  6 09:40 utils.c
