@@ -19,7 +19,7 @@ void	ft_echo(const char **s)
 		else if (c == 'n' && !s[i + 1])
 			printf("%s", s[i]);
 		else
-			printf("%s ", s[i]);
+			printf("shit : %s ", s[i]);
 		i++;
 	}
 }

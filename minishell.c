@@ -1,5 +1,76 @@
 
 #include "minishell.h"
+void    in_a_quote(int *in_quote, int SINGLE_OR_DOUBLE)
+{
+    if (*in_quote == SINGLE_OR_DOUBLE)
+        *in_quote = 0;
+    else if (*in_quote == 0)
+        *in_quote = SINGLE_OR_DOUBLE;
+}
+
+int check_unclosed_quotes(char *context)
+{
+    int in_quote;
+    int i;
+
+    in_quote = 0;
+    i = 0;
+    while (context[i])
+    {
+        if (context[i] == DOUBLE_QUOTE)
+            in_a_quote(&in_quote, DOUBLE_QUOTE);
+        else if (context[i] == SINGLE_QUOTE)
+            in_a_quote(&in_quote, SINGLE_QUOTE);
+        i++;
+    }
+    return (in_quote);
+}
+
+int error_handling(char *context)
+{
+    int i;
+
+    i = 0;
+    if (check_unclosed_quotes(context))
+        return (TRUE);
+    while (context[i])
+    {
+        if (context[i] == PIPE)
+        {
+            i++;
+            if (context[i] == PIPE || context[i] == '\0')
+                return (TRUE);
+        }
+        if (context[i] == RED_INPUT)
+        {
+            i++;
+            if (context[i] == RED_OUTPUT || context[i] == '\0')
+                return (TRUE);
+            if(context[i] == RED_INPUT)
+            {
+                i++;
+                if (context[i] == '\0' || context[i] == RED_INPUT || context[i] == RED_OUTPUT)
+                    return (TRUE);
+            }
+        }
+        if (context[i] == RED_OUTPUT)
+        {
+            i++;
+            if (context[i] == RED_INPUT || context[i] == '\0')
+                return (TRUE);
+            if(context[i] == RED_OUTPUT)
+            {
+                i++;
+                if (context[i] == '\0' || context[i] == RED_OUTPUT || context[i] == RED_INPUT)
+                    return (TRUE);
+            }
+        }
+        if (context[i] == '\0')
+            return (FALSE);            
+        i++;
+    }
+    return (FALSE);
+}
 void    back_space(char *context)
 {
     int i;
@@ -9,6 +80,8 @@ void    back_space(char *context)
     {
         if (context[i] == -1)
             context[i] = SPACE;
+        else if (context[i] == -2)
+            context[i] = PIPE;
         i++;
     }
 }
@@ -19,7 +92,9 @@ void    replacing_space(t_data *entered_data, char quote)
     while (entered_data->context[entered_data->index] && entered_data->context[entered_data->index] != quote)
     {
         if (entered_data->context[entered_data->index] == ' ')
-            (entered_data->context[entered_data->index]) = -1;
+            entered_data->context[entered_data->index] = -1;
+        else if (entered_data->context[entered_data->index] == PIPE)
+            entered_data->context[entered_data->index] = -2;
         entered_data->index++;
     }
 }
@@ -200,13 +275,7 @@ int here_doc(char *limiter)
 }
 
 
-void    in_a_quote(int *in_quote, int SINGLE_OR_DOUBLE)
-{
-    if (*in_quote == SINGLE_OR_DOUBLE)
-        *in_quote = 0;
-    else if (*in_quote == 0)
-        *in_quote = SINGLE_OR_DOUBLE;
-}
+
 
 void    heredoc_searcher(char **splitted_data, t_returned_data *returned_data)
 {
@@ -235,24 +304,6 @@ void    heredoc_searcher(char **splitted_data, t_returned_data *returned_data)
     }
 }
 
-
-int check_unclosed_quotes(char *context)
-{
-    int in_quote;
-    int i;
-
-    in_quote = 0;
-    i = 0;
-    while (context[i])
-    {
-        if (context[i] == DOUBLE_QUOTE)
-            in_a_quote(&in_quote, DOUBLE_QUOTE);
-        else if (context[i] == SINGLE_QUOTE)
-            in_a_quote(&in_quote, SINGLE_QUOTE);
-        i++;
-    }
-    return (in_quote);
-}
 
 void    add_to_list(t_list  **head, char *string)
 {
@@ -449,6 +500,7 @@ void    getting_output_fd(char *str, t_returned_data *returned_data)
                 temp->output_fd = open(remove_quotes(s[i]), O_WRONLY | O_CREAT, 00400 | 00200);
             if (temp->output_fd == -1)
             {
+                returned_data->is_executable = FALSE;
                 printf("%s\n", strerror(errno));
                 break ;
             }
@@ -677,45 +729,7 @@ void     preparing(t_data *entered_data, char **env, t_returned_data **returned_
 }
 
 
-int error_handling(char *context)
-{
-    int i;
 
-    i = 0;
-    if (check_unclosed_quotes(context))
-        return (TRUE);
-    while (context[i])
-    {
-        if (context[i] == RED_INPUT)
-        {
-            i++;
-            if (context[i] == RED_OUTPUT || context[i] == '\0')
-                return (TRUE);
-            if(context[i] == RED_INPUT)
-            {
-                i++;
-                if (context[i] == '\0' || context[i] == RED_INPUT || context[i] == RED_OUTPUT)
-                    return (TRUE);
-            }
-        }
-        if (context[i] == RED_OUTPUT)
-        {
-            i++;
-            if (context[i] == RED_INPUT || context[i] == '\0')
-                return (TRUE);
-            if(context[i] == RED_OUTPUT)
-            {
-                i++;
-                if (context[i] == '\0' || context[i] == RED_OUTPUT || context[i] == RED_INPUT)
-                    return (TRUE);
-            }
-        }
-        if (context[i] == '\0')
-            return (FALSE);            
-        i++;
-    }
-    return (FALSE);
-}
 
 int main(int ac, char **av, char **env)
 {
@@ -749,7 +763,9 @@ int main(int ac, char **av, char **env)
             continue ;
         }
         preparing(&entered_data, env, &returned_data);
+        int x = 0;
 		s = returned_data;
+        // t_returned_data *m = returned_data;
 		fill_list(s, env);
         free (entered_data.context);
         // quotes_handling(&entered_data, &returned_data, env);
