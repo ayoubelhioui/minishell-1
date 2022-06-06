@@ -57,7 +57,7 @@ void 	fill_list(t_returned_data *data, char **env, t_list **env_l)
 			close_unused_pipes(t, data, env);
 			if (data->is_executable)
 			{
-				printf("in %d and out %d in arg %s\n", data->input_fd, data->output_fd, data->cmd_path);
+				// printf("in %d and out %d in arg %s\n", data->input_fd, data->output_fd, data->cmd_path);
 					if (data->input_fd != 0)
 					{
 						dup2(data->input_fd, STD_INPUT);
