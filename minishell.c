@@ -753,7 +753,7 @@ int main(int ac, char **av,  char **env)
         entered_data.context = readline("minishell : ");
 		if (entered_data.context == NULL)
 			break ;
-        if (ft_strlen(entered_data.context) == 0)
+		if (ft_strlen(entered_data.context) == 0)
             continue;
         add_history(entered_data.context);
         if (error_handling(entered_data.context))

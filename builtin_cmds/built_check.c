@@ -11,7 +11,7 @@ int	built_check(t_returned_data *ret, t_list **env)
 		ft_env(env);
 	else if (!ft_strcmp(ret->cmd_path, "/bin/echo"))
 	{
-		ft_echo((const char **) &ret->args[0]);
+		ft_echo((const char **) &ret->args[1]);
 	}
 	else if (!ft_strcmp(ret->cmd_path, "exit"))
 		ft_exit();

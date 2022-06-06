@@ -1,0 +1,17 @@
+ | hbqsh ' ' 
+Makefile
+a.out
+builtin_cmds
+k.txt
+l.txt
+library
+main.c
+man
+minishell
+minishell.c
+minishell.h
+pl.txt
+quotes_handling.c
+signals.c
+utils.c
+minishell : 

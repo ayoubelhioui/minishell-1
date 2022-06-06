@@ -42,10 +42,6 @@ void 	fill_list(t_returned_data *data, char **env, t_list **env_l)
 	counter = 0;
 	while (temp)
 	{
-		int k = 0;
-		printf("cmd is %s\n", temp->cmd_path);
-		while (temp->args[k])
-			printf("args is %s\n", temp->args[k++]);
 		counter++;
 		temp = temp->next;
 	}
@@ -55,18 +51,13 @@ void 	fill_list(t_returned_data *data, char **env, t_list **env_l)
 	while (data)
 	{
 		// printf("cmd is %s\n", data->cmd_path);
-		if (built_check(data, env_l))
-		{
-			printf("is built\n");
-		}
-		else
-		{
-			id[counter] = fork();
+		id[counter] = fork();
 		if (id[counter] == 0)
 		{	
 			close_unused_pipes(t, data, env);
 			if (data->is_executable)
 			{
+				printf("in %d and out %d in arg %s\n", data->input_fd, data->output_fd, data->cmd_path);
 					if (data->input_fd != 0)
 					{
 						dup2(data->input_fd, STD_INPUT);
@@ -77,12 +68,12 @@ void 	fill_list(t_returned_data *data, char **env, t_list **env_l)
 						dup2(data->output_fd, STD_OUTPUT);
 						close (data->output_fd);
 					}
-					path = get_command_path(env, data->cmd_path);
-					if (execve(path, data->args, env) == -1)
+					if (built_check(data, env_l))
+						dprintf(2, "ok\n");
+					else if (execve(get_command_path(env, data->cmd_path), data->args, env) == -1)
 						dprintf(2, "HEY \n");
 			}	
 		}
-			}
 		data = data->next;
 		counter++;
 	}
