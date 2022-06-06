@@ -5,6 +5,9 @@ void	ft_echo(const char **s)
 	int		i;
 	char	c;
 
+	c = 'a';
+	if (!s[i])
+		printf("\n");
 	if (!ft_strcmp(s[0], "-n"))
 	{
 		c = 'n';
@@ -12,8 +15,7 @@ void	ft_echo(const char **s)
 	}
 	else
 		i = 0;
-	if (!s[i])
-		printf("\n");
+	printf("%s and %s\n", s[0], s[1]);
 	while (s[i])
 	{
 		if (c != 'n' && !s[i + 1])

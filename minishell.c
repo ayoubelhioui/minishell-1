@@ -693,6 +693,7 @@ char    **get_new_env(t_list *env)
     {
         new_env[i] = env->content;
         env = env->next;
+		i++;
     }
     new_env[i] = NULL;
     return (new_env);
@@ -708,44 +709,44 @@ void     preparing(t_data *entered_data, t_list *env, t_returned_data **returned
 
 
     new_env = get_new_env(env);
-    // entered_data->context = expanding(entered_data->context, new_env);
-    // entered_data->context = get_new_context(entered_data);
-    // splitted_by_pipe = ft_split(entered_data->context, PIPE);
-    // commands_number = get_length(splitted_by_pipe);
-	// pipes_array = malloc(sizeof(int *) * (commands_number - 1));
-    // splitted_by_space = ft_split(entered_data->context, SPACE);
-    // create_returned_nodes(returned_data, commands_number);
-    // heredoc_searcher(splitted_by_space, *returned_data, new_env);
-    // t_returned_data *temp = *returned_data;
-    // t_returned_data *temp1 = *returned_data;
-    // i = 0;
-    // while (splitted_by_pipe[i])
-    // {
-	// 	if (commands_number > 1)
-	// 	{
-	// 		if (i < commands_number - 1)
-	// 			pipe(pipes_array[i]);
-	// 		if (i == 0)
-	// 			temp->output_fd = pipes_array[i][STD_OUTPUT];
-	// 		else if (i == commands_number - 1)
-	// 		{
-	// 			if (temp->input_fd == 0)
-	// 				temp->input_fd = pipes_array[i - 1][STD_INPUT];
-	// 		}
-	// 		else
-	// 		{
-	// 			if (temp->input_fd == 0)
-	// 				temp->input_fd = pipes_array[i - 1][STD_INPUT];
-	// 			temp->output_fd = pipes_array[i][STD_OUTPUT];
-	// 		} 
-	// 	}
-    //     getting_input_fd(splitted_by_pipe[i], temp);
-    //     getting_output_fd(splitted_by_pipe[i], temp);
-    //     temp = temp->next;
-    //     i++;
-    // }
-    // get_cmd_args(splitted_by_pipe, *returned_data, new_env);
-    // args_final_touch(*returned_data, new_env);
+    entered_data->context = expanding(entered_data->context, new_env);
+    entered_data->context = get_new_context(entered_data);
+    splitted_by_pipe = ft_split(entered_data->context, PIPE);
+    commands_number = get_length(splitted_by_pipe);
+	pipes_array = malloc(sizeof(int *) * (commands_number - 1));
+    splitted_by_space = ft_split(entered_data->context, SPACE);
+    create_returned_nodes(returned_data, commands_number);
+    heredoc_searcher(splitted_by_space, *returned_data, new_env);
+    t_returned_data *temp = *returned_data;
+    t_returned_data *temp1 = *returned_data;
+    i = 0;
+    while (splitted_by_pipe[i])
+    {
+		if (commands_number > 1)
+		{
+			if (i < commands_number - 1)
+				pipe(pipes_array[i]);
+			if (i == 0)
+				temp->output_fd = pipes_array[i][STD_OUTPUT];
+			else if (i == commands_number - 1)
+			{
+				if (temp->input_fd == 0)
+					temp->input_fd = pipes_array[i - 1][STD_INPUT];
+			}
+			else
+			{
+				if (temp->input_fd == 0)
+					temp->input_fd = pipes_array[i - 1][STD_INPUT];
+				temp->output_fd = pipes_array[i][STD_OUTPUT];
+			} 
+		}
+        getting_input_fd(splitted_by_pipe[i], temp);
+        getting_output_fd(splitted_by_pipe[i], temp);
+        temp = temp->next;
+        i++;
+    }
+    get_cmd_args(splitted_by_pipe, *returned_data, new_env);
+    args_final_touch(*returned_data, new_env);
 }
 
 
@@ -784,6 +785,7 @@ int main(int ac, char **av,  char **env)
         preparing(&entered_data, new_env, &returned_data);
 		s = returned_data;
 		fill_list(s, env, &new_env);
+
         free (entered_data.context);
         // quotes_handling(&entered_data, &returned_data, env);
     }
