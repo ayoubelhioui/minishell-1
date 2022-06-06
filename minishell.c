@@ -253,12 +253,12 @@ int redirection_counter(t_list *splitted_data, char redirection)
     return (counter);
 }
 
-int here_doc(char *limiter)
+int here_doc(char *limiter, char **env)
 {
     int p[2];
     // t_returned_data *returned_data;
     char *entered_data;
-    entered_data = readline("> ");
+    entered_data = expanding(readline("> "), env);
     pipe(p);
     limiter = remove_quotes(limiter);
     while (entered_data)
@@ -268,7 +268,7 @@ int here_doc(char *limiter)
         write(p[STD_OUTPUT], entered_data, ft_strlen(entered_data));
         write(p[STD_OUTPUT], "\n", 2);
         free (entered_data);
-        entered_data = readline("> ");
+        entered_data = expanding(readline("> "), env);
     }
     close(p[STD_OUTPUT]);
     return (p[STD_INPUT]);
@@ -277,7 +277,7 @@ int here_doc(char *limiter)
 
 
 
-void    heredoc_searcher(char **splitted_data, t_returned_data *returned_data)
+void    heredoc_searcher(char **splitted_data, t_returned_data *returned_data, char **env)
 {
     int     i;
     int     input_fd;
@@ -298,7 +298,7 @@ void    heredoc_searcher(char **splitted_data, t_returned_data *returned_data)
         else if (!ft_strcmp(splitted_data[i], "<") && !ft_strcmp(splitted_data[i + 1], "<") && in_quote == 0)
         {
             i += 2;
-            temp->input_fd = here_doc(splitted_data[i]);
+            temp->input_fd = here_doc(splitted_data[i], env);
         }
         i++;
     }
@@ -689,13 +689,14 @@ void     preparing(t_data *entered_data, char **env, t_returned_data **returned_
 
 
     entered_data->context = expanding(entered_data->context, env);
+    printf("After Is : %s\n", entered_data->context);
     entered_data->context = get_new_context(entered_data);
     splitted_by_pipe = ft_split(entered_data->context, PIPE);
     commands_number = get_length(splitted_by_pipe);
 	pipes_array = malloc(sizeof(int *) * (commands_number - 1));
     splitted_by_space = ft_split(entered_data->context, SPACE);
     create_returned_nodes(returned_data, commands_number);
-    heredoc_searcher(splitted_by_space, *returned_data);
+    heredoc_searcher(splitted_by_space, *returned_data, env);
     t_returned_data *temp = *returned_data;
     t_returned_data *temp1 = *returned_data;
     i = 0;

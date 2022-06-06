@@ -54,6 +54,7 @@ typedef struct expanding
 }                   t_expanding;
 
 void    ft_free(char **s);
+char    *expanding(char *str, char **env);
 void	returned_data_addback(t_returned_data **returned_data, t_returned_data *new);
 void    replace_with_real_value(t_returned_data *returned_data, char *real_value, char *saver ,int dollar_position);
 void    remove_the_word(t_returned_data *data, char *saver, int position);

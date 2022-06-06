@@ -58,7 +58,6 @@ void 	fill_list(t_returned_data *data, char **env, t_list **env_l)
 			if (data->is_executable)
 			{
 				// printf("in %d and out %d in arg %s\n", data->input_fd, data->output_fd, data->cmd_path);
-
 					if (data->input_fd != 0  && !built_exist(data, env_l))
 					{
 						dup2(data->input_fd, STD_INPUT);
