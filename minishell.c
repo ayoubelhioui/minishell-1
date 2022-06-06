@@ -737,7 +737,7 @@ int main(int ac, char **av,  char **env)
 	struct sigaction sa;
     t_data entered_data;
     t_returned_data *returned_data;
-	t_list	*env_l;
+	t_list	*new_env;
 	t_returned_data	*en_t;
 	t_returned_data *s;
 
@@ -747,7 +747,7 @@ int main(int ac, char **av,  char **env)
 	// sa.sa_flags =  SA_RESTART;
 	// sigaction (SIGINT, &sa, NULL);
 	// signal(SIGQUIT, SIG_IGN);
-	create_list(env, &env_l);
+	create_list(env, &new_env);
     while (TRUE)
     {
         returned_data = NULL;
@@ -762,10 +762,9 @@ int main(int ac, char **av,  char **env)
             printf("error occured\n");
             continue ;
         }
-        preparing(&entered_data, env, &returned_data);
-        int x = 0;
+        preparing(&entered_data, new_env, &returned_data);
 		s = returned_data;
-		fill_list(s, env, &env_l);
+		fill_list(s, env, &new_env);
         free (entered_data.context);
         // quotes_handling(&entered_data, &returned_data, env);
     }

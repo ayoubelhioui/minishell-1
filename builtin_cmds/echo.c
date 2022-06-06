@@ -12,6 +12,8 @@ void	ft_echo(const char **s)
 	}
 	else
 		i = 0;
+	if (!s[i])
+		printf("\n");
 	while (s[i])
 	{
 		if (c != 'n' && !s[i + 1])
