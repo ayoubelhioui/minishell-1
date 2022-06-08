@@ -474,8 +474,8 @@ void    getting_input_fd(char *str, t_returned_data *returned_data)
         }
         i++;
     }
-    // if (find_heredoc_position(s))
-    //     temp->input_fd = temp_input;
+    if (find_heredoc_position(s))
+        temp->input_fd = temp_input;
 }
 
 void    getting_output_fd(char *str, t_returned_data *returned_data)
@@ -747,6 +747,14 @@ void     preparing(t_data *entered_data, t_list *env, t_returned_data **returned
     }
     get_cmd_args(splitted_by_pipe, *returned_data, new_env);
     args_final_touch(*returned_data, new_env);
+    // while (temp1)
+    // {
+    //     printf("Command Is : %s\n", temp1->cmd_path);
+    //     i = 0;
+    //     while (temp1->args[i])
+    //         printf("Args Are : %s\n", temp1->args[i++]);
+    //     temp1 = temp1->next;
+    // }
 }
 
 

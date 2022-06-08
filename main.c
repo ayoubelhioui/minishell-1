@@ -6,7 +6,7 @@
 /*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 18:46:50 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/06/05 11:50:56 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/07 16:49:02 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,9 @@
 
 int main()
 {
-	char *s ="ls -la \"HELLO $USER\" TIS HS $SHELL | wc -l \"'$COMMAND_MODE'  $0\" HELLO $0USER DUDE SHni FIhA"
-	printf("length is : %d\n", )
+	char **s = malloc(sizeof(char *) * 3);
+	s[0] = 'a';
+	s[1] = 'b';
+	s[2] = 'b';
+	printf("%s\n", s);
 }
