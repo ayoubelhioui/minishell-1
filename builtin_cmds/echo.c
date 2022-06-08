@@ -15,7 +15,6 @@ void	ft_echo(const char **s)
 	}
 	else
 		i = 0;
-	printf("%s and %s\n", s[0], s[1]);
 	while (s[i])
 	{
 		if (c != 'n' && !s[i + 1])
