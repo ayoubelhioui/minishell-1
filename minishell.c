@@ -785,7 +785,6 @@ int main(int ac, char **av,  char **env)
         preparing(&entered_data, new_env, &returned_data);
 		s = returned_data;
 		fill_list(s, env, &new_env);
-
         free (entered_data.context);
         // quotes_handling(&entered_data, &returned_data, env);
     }
