@@ -2,7 +2,7 @@
 
 void	close_all_pipes(t_returned_data *head)
 {
-	printf("OKKK\n");
+	// printf("OKKK\n");
 	while (head)
 	{
 		if (head->input_fd != STD_INPUT)
@@ -23,7 +23,7 @@ void	close_unused_pipes(t_returned_data *head, t_returned_data *curr, char **env
 	int	i;
 
 	i = 0;
-	printf("OKKK\n");
+	// printf("OKKK\n");
 	static int j;
 	while (head)
 	{
