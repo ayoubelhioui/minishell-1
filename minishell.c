@@ -770,6 +770,7 @@ int main(int ac, char **av,  char **env)
 	t_list	*new_env;
 	t_returned_data	*en_t;
 	t_returned_data *s;
+	static int k;
 
 	if (ac != 1)
         exit (1);
@@ -798,5 +799,8 @@ int main(int ac, char **av,  char **env)
         free (entered_data.context);
         // quotes_handling(&entered_data, &returned_data, env);
     }
+	k++;
 	// ft_free_list(&env_l);
 }
+
+//export a="asdasd" >lol <lasdasd >hi | ls

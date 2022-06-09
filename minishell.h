@@ -53,7 +53,7 @@ typedef struct expanding
     char *new_str;
     int dollar_index;
 }                   t_expanding;
-
+int	g_exit_stat;
 void    ft_free(char **s);
 char    *expanding(char *str, char **env);
 void	returned_data_addback(t_returned_data **returned_data, t_returned_data *new);
