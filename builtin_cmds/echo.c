@@ -1,10 +1,11 @@
 #include "../minishell.h"
 
-void	ft_echo(const char **s)
+void	ft_echo(char **s)
 {
 	int		i;
 	char	c;
 
+	int j = 0;
 	c = 'a';
 	if (!s[i])
 		printf("\n");
