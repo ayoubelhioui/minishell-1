@@ -1,0 +1,13 @@
+Makefile
+a.out
+builtin_cmds
+k.txt
+library
+main.c
+minishell
+minishell.c
+minishell.h
+p.txt
+quotes_handling.c
+signals.c
+utils.c

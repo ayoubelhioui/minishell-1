@@ -53,44 +53,49 @@ void 	fill_list(t_returned_data *data, char **env, t_list **env_l)
 	len = counter;
 	id = malloc(counter * sizeof(int));
 	counter = 0;
-	while (data)
+	if (len == 1 && built_exist(data, env_l) && data->is_executable)
+		built_check(data, env_l);
+	else
 	{
-		if (data->is_executable)
+		while (data)
 		{
-			id[counter] = fork();
-			if (id[counter] == 0)
-			{	
-				close_unused_pipes(t, data, env, id[counter]);
-				{
-					check = built_exist(data, env_l);
-					if (data->input_fd != 0 && !check)
-					{
-						dup2(data->input_fd, STD_INPUT);
-						close (data->input_fd);
-					}
-					if (check)
-						if (data->input_fd)
-							close (data->input_fd);
-					if (data->output_fd != 1)
-					{
-						dup2(data->output_fd, STD_OUTPUT);
-						close (data->output_fd);
-					}
-					if (built_check(data, env_l))
-						exit(1);
-					else if (execve(get_command_path(env, data->cmd_path), data->args, env) == -1)
-					{
-						printf("command not found\n");
-						exit(1);
-					}
-				}
+			if (data->is_executable)
+			{
+				id[counter] = fork();
+				if (id[counter] == 0)
+				{		
+					close_unused_pipes(t, data, env, id[counter]);
+			{
+			check = built_exist(data, env_l);
+			if (data->input_fd != 0 && !check)
+			{
+				dup2(data->input_fd, STD_INPUT);
+				close (data->input_fd);
+			}
+			if (check)
+				if (data->input_fd)
+					close (data->input_fd);
+			if (data->output_fd != 1)
+			{
+				dup2(data->output_fd, STD_OUTPUT);
+				close (data->output_fd);
+			}
+			if (built_check(data, env_l))
+				exit(1);
+			else if (execve(get_command_path(env, data->cmd_path), data->args, env) == -1)
+			{
+				printf("command not found\n");
+				exit(1);
 			}
 		}
+	}
+	}
 		counter++;
 		data = data->next;
+	}
 	}
 	close_all_pipes(t);
 	counter = 0;
 	while (counter < len)
-		waitpid(id[counter++], NULL, 0);
+		waitpid(id[counter++], &g_exit_stat, 0);
 }
