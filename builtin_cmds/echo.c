@@ -8,6 +8,8 @@ void	ft_echo(char **s)
 	int j = 0;
 	c = 'a';
 	i = 0;
+	if (!ft_strcmp("$?", s[1]))
+		printf("%d\n", 99);
 	if (*s == NULL)
 		printf("\n");
 	if (!ft_strcmp(s[0], "-n"))

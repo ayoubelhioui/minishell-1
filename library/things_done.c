@@ -85,7 +85,7 @@ void 	fill_list(t_returned_data *data, char **env, t_list **env_l)
 			else if (execve(get_command_path(env, data->cmd_path), data->args, env) == -1)
 			{
 				printf("command not found\n");
-				exit(1);
+				ft_exit(127);
 			}
 		}
 	}
@@ -97,5 +97,14 @@ void 	fill_list(t_returned_data *data, char **env, t_list **env_l)
 	close_all_pipes(t);
 	counter = 0;
 	while (counter < len)
-		waitpid(id[counter++], &g_exit_stat, 0);
+	{
+		int status;
+		wait(&status);
+		if (WIFEXITED(status))
+		{
+			g_exit_stat = WEXITSTATUS(status);
+			g_exit_stat = 127;
+		}
+		counter++;
+	}
 }

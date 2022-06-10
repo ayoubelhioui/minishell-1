@@ -2,12 +2,15 @@
 
 void sig_handler(int flag)
 {
-	if (flag == 0)
+	if (!flag)
 	{
 		printf("\n");
 		rl_on_new_line();
 		rl_replace_line("", 0);
 		rl_redisplay();
 	}
-	// int saver = dup(0);
+	else
+	{
+		
+	}
 }
