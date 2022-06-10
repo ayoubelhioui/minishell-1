@@ -380,6 +380,7 @@ char    *get_new_context(t_data *entered_data)
     counter = 0;
     in_quote = 0;
     // expanding();
+	printf("%s\n", entered_data->context);
     while (entered_data->context[entered_data->index])
     {
         if (entered_data->context[entered_data->index] == SINGLE_QUOTE)
@@ -768,15 +769,14 @@ int main(int ac, char **av,  char **env)
 	t_list	*new_env;
 	t_returned_data	*en_t;
 	t_returned_data *s;
-	static int k;
 
 	if (ac != 1)
         exit (1);
+	create_list(env, &new_env);
 	sa.sa_handler = &sig_handler;
 	sa.sa_flags =  SA_RESTART;
 	sigaction (SIGINT, &sa, NULL);
 	signal(SIGQUIT, SIG_IGN);
-	create_list(env, &new_env);
     while (TRUE)
     {
         returned_data = NULL;
@@ -797,7 +797,6 @@ int main(int ac, char **av,  char **env)
         free (entered_data.context);
         // quotes_handling(&entered_data, &returned_data, env);
     }
-	k++;
 	// ft_free_list(&env_l);
 }
 

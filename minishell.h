@@ -1,5 +1,6 @@
 #ifndef MINISHELL_H
 #define MINISHELL_H
+int	g_exit_stat;
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -53,7 +54,7 @@ typedef struct expanding
     char *new_str;
     int dollar_index;
 }                   t_expanding;
-int	g_exit_stat;
+
 void    ft_free(char **s);
 char    *expanding(char *str, char **env);
 void	returned_data_addback(t_returned_data **returned_data, t_returned_data *new);
@@ -70,7 +71,7 @@ void	sig_handler(int sig);
 void	cd(char **paths, t_list **env);
 int		ft_strstr(const char *s1, const char *s2);
 void	pwd(void);
-void	ft_exit(void);
+void	ft_exit(int c);
 int		is_int(char *str);
 void	ft_echo(const char **s);
 void	ft_env(t_list **env);

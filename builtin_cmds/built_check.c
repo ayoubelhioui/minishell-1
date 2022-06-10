@@ -32,7 +32,7 @@ int	built_check(t_returned_data *ret, t_list **env)
 		ft_echo((const char **) &ret->args[1]);
 	}
 	else if (!ft_strcmp(ret->cmd_path, "exit"))
-		ft_exit();
+		ft_exit(1);
 	else if (!ft_strcmp(ret->cmd_path, "export"))
 	{
 		ft_export(env, &ret->args[1]);
