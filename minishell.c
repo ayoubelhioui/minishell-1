@@ -29,19 +29,24 @@ int check_unclosed_quotes(char *context)
 int error_handling(char *context)
 {
     int i;
+    int in_quote = 0;
 
     i = 0;
     if (check_unclosed_quotes(context))
         return (TRUE);
     while (context[i])
     {
-        if (context[i] == PIPE)
+        if (context[i] == DOUBLE_QUOTE)
+            in_a_quote(&in_quote, DOUBLE_QUOTE);
+        else if (context[i] == SINGLE_QUOTE)
+            in_a_quote(&in_quote, SINGLE_QUOTE);
+        if (context[i] == PIPE && in_quote == 0)
         {
             i++;
             if (context[i] == PIPE || context[i] == '\0')
                 return (TRUE);
         }
-        if (context[i] == RED_INPUT)
+        if (context[i] == RED_INPUT && in_quote == 0)
         {
             i++;
             if (context[i] == RED_OUTPUT || context[i] == '\0')
@@ -53,7 +58,7 @@ int error_handling(char *context)
                     return (TRUE);
             }
         }
-        if (context[i] == RED_OUTPUT)
+        if (context[i] == RED_OUTPUT && in_quote == 0)
         {
             i++;
             if (context[i] == RED_INPUT || context[i] == '\0')
@@ -256,7 +261,6 @@ int redirection_counter(t_list *splitted_data, char redirection)
 int here_doc(char *limiter, char **env)
 {
     int p[2];
-    // t_returned_data *returned_data;
     char *entered_data;
     entered_data = expanding(readline("> "), env);
     pipe(p);
@@ -268,7 +272,11 @@ int here_doc(char *limiter, char **env)
         write(p[STD_OUTPUT], entered_data, ft_strlen(entered_data));
         write(p[STD_OUTPUT], "\n", 2);
         free (entered_data);
-        entered_data = expanding(readline("> "), env);
+        entered_data = readline("> ");
+        if (!ft_strcmp(entered_data, limiter))
+            continue;
+        else
+            entered_data = expanding(entered_data, env);
     }
     close(p[STD_OUTPUT]);
     return (p[STD_INPUT]);
@@ -448,7 +456,7 @@ int     find_heredoc_position(char **s)
     return (FALSE);
 }
 
-void    getting_input_fd(char *str, t_returned_data *returned_data)
+int getting_input_fd(char *str, t_returned_data *returned_data)
 {
     char **s;
     t_returned_data *temp;
@@ -470,13 +478,14 @@ void    getting_input_fd(char *str, t_returned_data *returned_data)
             {
                 printf("%s:%s\n", s[i], strerror(errno));
                 temp->is_executable = FALSE;
-                break ;
+                return (FALSE);
             }
         }
         i++;
     }
     if (find_heredoc_position(s))
         temp->input_fd = temp_input;
+    return (TRUE);
 }
 
 void    getting_output_fd(char *str, t_returned_data *returned_data)
@@ -707,6 +716,7 @@ void     preparing(t_data *entered_data, t_list *env, t_returned_data **returned
     int             i;
     int             (*pipes_array)[2];
     char            **new_env;
+    int             is_valid_cmd = 0;
 
 
     new_env = get_new_env(env);
@@ -719,7 +729,6 @@ void     preparing(t_data *entered_data, t_list *env, t_returned_data **returned
     create_returned_nodes(returned_data, commands_number);
     heredoc_searcher(splitted_by_space, *returned_data, new_env);
     t_returned_data *temp = *returned_data;
-    t_returned_data *temp1 = *returned_data;
     i = 0;
     while (splitted_by_pipe[i])
     {
@@ -741,21 +750,14 @@ void     preparing(t_data *entered_data, t_list *env, t_returned_data **returned
 				temp->output_fd = pipes_array[i][STD_OUTPUT];
 			} 
 		}
-        getting_input_fd(splitted_by_pipe[i], temp);
-        getting_output_fd(splitted_by_pipe[i], temp);
+        is_valid_cmd = getting_input_fd(splitted_by_pipe[i], temp);
+        if (is_valid_cmd)
+            getting_output_fd(splitted_by_pipe[i], temp);
         temp = temp->next;
         i++;
     }
     get_cmd_args(splitted_by_pipe, *returned_data, new_env);
     args_final_touch(*returned_data, new_env);
-    // while (temp1)
-    // {
-    //     printf("Command Is : %s\n", temp1->cmd_path);
-    //     i = 0;
-    //     while (temp1->args[i])
-    //         printf("Args Are : %s\n", temp1->args[i++]);
-    //     temp1 = temp1->next;
-    // }
 }
 
 

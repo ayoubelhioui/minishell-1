@@ -73,7 +73,7 @@ int		ft_strstr(const char *s1, const char *s2);
 void	pwd(void);
 void	ft_exit(int c);
 int		is_int(char *str);
-void	ft_echo(const char **s);
+void	ft_echo(char **s);
 void	ft_env(t_list **env);
 int		built_check(t_returned_data *ret, t_list **env);
 void	ft_export(t_list **env,char **args);

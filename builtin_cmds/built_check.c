@@ -28,11 +28,13 @@ int	built_check(t_returned_data *ret, t_list **env)
 	else if (!ft_strcmp(ret->cmd_path, "/usr/bin/env"))
 		ft_env(env);
 	else if (!ft_strcmp(ret->cmd_path, "/bin/echo"))
-	{
-		ft_echo((const char **) &ret->args[1]);
-	}
+		ft_echo(&ret->args[1]);
+
 	else if (!ft_strcmp(ret->cmd_path, "exit"))
-		ft_exit(1);
+	{
+		printf("OK\n");
+		ft_exit();
+	}
 	else if (!ft_strcmp(ret->cmd_path, "export"))
 	{
 		ft_export(env, &ret->args[1]);
