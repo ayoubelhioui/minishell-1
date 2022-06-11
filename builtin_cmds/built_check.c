@@ -29,16 +29,18 @@ int	built_check(t_returned_data *ret, t_list **env)
 		ft_env(env);
 	else if (!ft_strcmp(ret->cmd_path, "/bin/echo"))
 		ft_echo(&ret->args[1]);
-
 	else if (!ft_strcmp(ret->cmd_path, "exit"))
 	{
-		printf("OK\n");
-		ft_exit();
+		if (ret->args[1])
+		{
+			key.exit_stat = atoi(ret->args[1]);
+			ft_exit(ret->exit_stat);
+		}
+		else
+			ft_exit(0);
 	}
 	else if (!ft_strcmp(ret->cmd_path, "export"))
-	{
 		ft_export(env, &ret->args[1]);
-	}
 	else if (!ft_strcmp(ret->cmd_path, "unset"))
 		ft_unset(env, &ret->args[1]);
 	else

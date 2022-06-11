@@ -35,7 +35,7 @@ void	close_unused_pipes(t_returned_data *head, t_returned_data *curr, char **env
 	k++;
 }
 
-void 	fill_list(t_returned_data *data, char **env, t_list **env_l)
+void	fill_list(t_returned_data *data, char **env, t_list **env_l)
 {
 	int	*id;
 	int	counter;
@@ -81,11 +81,12 @@ void 	fill_list(t_returned_data *data, char **env, t_list **env_l)
 				close (data->output_fd);
 			}
 			if (built_check(data, env_l))
-				exit(1);
+				ft_exit(0);
 			else if (execve(get_command_path(env, data->cmd_path), data->args, env) == -1)
 			{
 				printf("command not found\n");
-				ft_exit(127);
+				key.exit_stat = 127;
+				ft_exit(key.exit_stat);
 			}
 		}
 	}
@@ -101,10 +102,7 @@ void 	fill_list(t_returned_data *data, char **env, t_list **env_l)
 		int status;
 		wait(&status);
 		if (WIFEXITED(status))
-		{
-			g_exit_stat = WEXITSTATUS(status);
-			g_exit_stat = 127;
-		}
+			key.exit_stat = WEXITSTATUS(status);
 		counter++;
 	}
 }

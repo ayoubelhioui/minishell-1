@@ -1,5 +1,6 @@
 
 #include "minishell.h"
+
 void    in_a_quote(int *in_quote, int SINGLE_OR_DOUBLE)
 {
     if (*in_quote == SINGLE_OR_DOUBLE)
@@ -264,6 +265,7 @@ void    here_doc(char *limiter, char **env)
     int p[2];
     char *entered_data;
     entered_data = expanding(readline("> "), env);
+	key.flag_for_here = 1;
     if (entered_data == NULL)
         entered_data = limiter;
     // signal(SIGINT, &here_doc_sigint);
@@ -310,6 +312,7 @@ void    heredoc_searcher(char **splitted_data, t_returned_data *returned_data, c
         {
             i += 2;
             here_doc(splitted_data[i], env);
+			key.flag_for_here = 0;
             // temp->input_fd = p[STD_INPUT];
         }
         i++;
@@ -392,7 +395,6 @@ char    *get_new_context(t_data *entered_data)
     counter = 0;
     in_quote = 0;
     // expanding();
-	printf("%s\n", entered_data->context);
     while (entered_data->context[entered_data->index])
     {
         if (entered_data->context[entered_data->index] == SINGLE_QUOTE)
@@ -779,10 +781,9 @@ int main(int ac, char **av,  char **env)
 	if (ac != 1)
         exit (1);
 	create_list(env, &new_env);
-	sa.sa_handler = &sig_handler;
-	sa.sa_flags =  SA_RESTART;
-	sigaction (SIGINT, &sa, NULL);
+	signal (SIGINT, &sig_handler);
 	signal(SIGQUIT, SIG_IGN);
+	key.flag_for_here = 0;
     while (TRUE)
     {
         returned_data = NULL;
