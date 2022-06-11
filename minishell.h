@@ -29,6 +29,7 @@ int	g_exit_stat;
 # define STD_OUTPUT 1
 # define ZERO '0'
 
+
 typedef struct returned_data
 {
     char    *cmd_path;
@@ -38,6 +39,7 @@ typedef struct returned_data
     int     str_idx;
     int     is_executable;
     char    **new_env;
+	int		exit_stat;
     struct returned_data    *next;
 }               t_returned_data;
 
@@ -45,7 +47,7 @@ typedef struct data
 {
     char    *context;
     int     value;
-    int     index;   
+    int     index;
 }               t_data;
 
 typedef struct expanding
@@ -54,7 +56,12 @@ typedef struct expanding
     char *new_str;
     int dollar_index;
 }                   t_expanding;
-
+typedef struct g_str
+{
+	int	exit_stat;
+	int	flag_for_here;
+} t_str ;
+t_str key;
 void    ft_free(char **s);
 char    *expanding(char *str, char **env);
 void	returned_data_addback(t_returned_data **returned_data, t_returned_data *new);
