@@ -60,6 +60,8 @@ typedef struct g_str
 {
 	int	exit_stat;
 	int	flag_for_here;
+	int	sig;
+	int	saver;
 } t_str ;
 t_str key;
 void    ft_free(char **s);

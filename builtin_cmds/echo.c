@@ -10,7 +10,7 @@ void	print_string(char *s, char c, int flag)
 	{
 		if (s[i] == '$' && s[i + 1] == '?')
 		{
-			printf("%d", key.exit_stat);
+			printf("%d\n", key.exit_stat);
 			i++;
 		}
 		else if (c == 'n' && flag && !s[i + 1])

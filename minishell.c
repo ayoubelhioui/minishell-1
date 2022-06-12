@@ -261,37 +261,38 @@ int redirection_counter(t_list *splitted_data, char redirection)
 }
 
 
-void    here_doc(char *limiter, char **env)
+int here_doc(char *limiter, char **env)
 {
     int p[2];
+	char	*s;
+    // t_returned_data *returned_data;
     char *entered_data;
-    entered_data = expanding(readline("> "), env);
+	s = readline("> ");
+	if (s)
+    	entered_data = expanding(s, env);
+	else
+		return (p[STD_INPUT]);
 	key.flag_for_here = 1;
-    if (entered_data == NULL)
-        entered_data = limiter;
-    // signal(SIGINT, &here_doc_sigint);
-    // signal(SIGQUIT, SIG_IGN);
-    limiter = remove_quotes(limiter);
     pipe(p);
+    limiter = remove_quotes(limiter);
     while (entered_data)
-    {   
+    {
         if (!ft_strcmp(entered_data, limiter))
             break ;
         write(p[STD_OUTPUT], entered_data, ft_strlen(entered_data));
         write(p[STD_OUTPUT], "\n", 2);
         free (entered_data);
-        entered_data = readline("> ");
-        if (!ft_strcmp(entered_data, limiter))
-            continue;
-        else
-            entered_data = expanding(entered_data, env);
-        if (entered_data == NULL)
-            entered_data = limiter;
-    }
-    close (p[STD_OUTPUT]);
+        s = readline("> ");
+		if (s)
+    		entered_data = expanding(s, env);
+		else
+			return (p[STD_INPUT]);
+	}
+    close(p[STD_OUTPUT]);
+    return (p[STD_INPUT]);
 }
 
-void    heredoc_searcher(char **splitted_data, t_returned_data *returned_data, char **env)
+void	heredoc_searcher(char **splitted_data, t_returned_data *returned_data, char **env)
 {
     int     i;
     int     input_fd;
@@ -312,9 +313,8 @@ void    heredoc_searcher(char **splitted_data, t_returned_data *returned_data, c
         else if (!ft_strcmp(splitted_data[i], "<") && !ft_strcmp(splitted_data[i + 1], "<") && in_quote == 0)
         {
             i += 2;
-            here_doc(splitted_data[i], env);
+            temp->input_fd =  here_doc(splitted_data[i], env);
 			key.flag_for_here = 0;
-            // temp->input_fd = p[STD_INPUT];
         }
         i++;
     }
@@ -651,7 +651,6 @@ char *dollar_sign_found(t_data *data, char **env, char *saver, int *i)
     while ((data->context[data->index]) && ((ft_isalnum(data->context[data->index])) || (data->context[data->index] == UNDER_SCORE)))
         data->index++;
     s1 = ft_substr(data->context, *i, index_saver - *i - 1);
-    printf("s1 : %s\n", s1);
     *i = data->index;
     s2 = ft_substr(data->context, index_saver, data->index - index_saver);
     if (s2[0] == ZERO)
@@ -723,7 +722,7 @@ char    **get_new_env(t_list *env)
     new_env[i] = NULL;
     return (new_env);
 }
-void     preparing(t_data *entered_data, t_list *env, t_returned_data **returned_data)
+void	preparing(t_data *entered_data, t_list *env, t_returned_data **returned_data)
 {
     char            **splitted_by_space;
     char            **splitted_by_pipe;
@@ -797,8 +796,8 @@ int main(int ac, char **av,  char **env)
 	if (ac != 1)
         exit (1);
 	create_list(env, &new_env);
-	// signal (SIGINT, &sig_handler);
-	// signal(SIGQUIT, SIG_IGN);
+	signal (SIGINT, &sig_handler);
+	signal(SIGQUIT, SIG_IGN);
 	key.flag_for_here = 0;
     while (TRUE)
     {
