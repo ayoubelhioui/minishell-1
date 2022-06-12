@@ -260,35 +260,38 @@ int redirection_counter(t_list *splitted_data, char redirection)
 }
 
 
-void	here_doc(char *limiter, char **env)
+int here_doc(char *limiter, char **env)
 {
     int p[2];
+	char	*s;
+    // t_returned_data *returned_data;
     char *entered_data;
-    entered_data = expanding(readline("> "), env);
+	s = readline("> ");
+	if (s)
+    	entered_data = expanding(s, env);
+	else
+		return (p[STD_INPUT]);
 	key.flag_for_here = 1;
-    if (entered_data == NULL)
-        entered_data = limiter;
-    limiter = remove_quotes(limiter);
     pipe(p);
+    limiter = remove_quotes(limiter);
     while (entered_data)
-    {   
+    {
         if (!ft_strcmp(entered_data, limiter))
             break ;
         write(p[STD_OUTPUT], entered_data, ft_strlen(entered_data));
         write(p[STD_OUTPUT], "\n", 2);
         free (entered_data);
-        entered_data = readline("> ");
-        if (!ft_strcmp(entered_data, limiter))
-            continue;
-        else
-            entered_data = expanding(entered_data, env);
-        if (entered_data == NULL)
-            entered_data = limiter;
-    }
-    close (p[STD_OUTPUT]);
+        s = readline("> ");
+		if (s)
+    		entered_data = expanding(s, env);
+		else
+			return (p[STD_INPUT]);
+	}
+    close(p[STD_OUTPUT]);
+    return (p[STD_INPUT]);
 }
 
-void    heredoc_searcher(char **splitted_data, t_returned_data *returned_data, char **env)
+void	heredoc_searcher(char **splitted_data, t_returned_data *returned_data, char **env)
 {
     int     i;
     int     input_fd;
@@ -309,9 +312,8 @@ void    heredoc_searcher(char **splitted_data, t_returned_data *returned_data, c
         else if (!ft_strcmp(splitted_data[i], "<") && !ft_strcmp(splitted_data[i + 1], "<") && in_quote == 0)
         {
             i += 2;
-            here_doc(splitted_data[i], env);
+            temp->input_fd =  here_doc(splitted_data[i], env);
 			key.flag_for_here = 0;
-            // temp->input_fd = p[STD_INPUT];
         }
         i++;
     }
@@ -393,7 +395,6 @@ char    *get_new_context(t_data *entered_data)
     counter = 0;
     in_quote = 0;
     // expanding();
-    printf("Here : %s\n", entered_data->context);
     while (entered_data->context[entered_data->index])
     {
         if (entered_data->context[entered_data->index] == SINGLE_QUOTE)
@@ -645,7 +646,6 @@ char *dollar_sign_found(t_data *data, char **env, char *saver, int *i)
     while ((data->context[data->index]) && ((ft_isalnum(data->context[data->index])) || (data->context[data->index] == UNDER_SCORE)))
         data->index++;
     s1 = ft_substr(data->context, *i, index_saver - *i - 1);
-    printf("s1 : %s\n", s1);
     *i = data->index;
     s2 = ft_substr(data->context, index_saver, data->index - index_saver);
     if (s2[0] == ZERO)
@@ -693,7 +693,7 @@ char    *expanding(char *str, char **env)
     if (x < data.index)
     {
         saver = expanding_join(saver, ft_substr(data.context, x, ft_strlen(data.context) - x));
-        printf("It Is : %s\n", saver);
+        // printf("It Is : %s\n", saver);
     }
     return (saver);
 }
@@ -717,7 +717,7 @@ char    **get_new_env(t_list *env)
     new_env[i] = NULL;
     return (new_env);
 }
-void     preparing(t_data *entered_data, t_list *env, t_returned_data **returned_data)
+void	preparing(t_data *entered_data, t_list *env, t_returned_data **returned_data)
 {
     char            **splitted_by_space;
     char            **splitted_by_pipe;
@@ -730,43 +730,43 @@ void     preparing(t_data *entered_data, t_list *env, t_returned_data **returned
 
     new_env = get_new_env(env);
     entered_data->context = expanding(entered_data->context, new_env);
-    // entered_data->context = get_new_context(entered_data);
-    // splitted_by_pipe = ft_split(entered_data->context, PIPE);
-    // commands_number = get_length(splitted_by_pipe);
-	// pipes_array = malloc(sizeof(int *) * (commands_number - 1));
-    // splitted_by_space = ft_split(entered_data->context, SPACE);
-    // create_returned_nodes(returned_data, commands_number);
-    // heredoc_searcher(splitted_by_space, *returned_data, new_env);
-    // t_returned_data *temp = *returned_data;
-    // i = 0;
-    // while (splitted_by_pipe[i])
-    // {
-	// 	if (commands_number > 1)
-	// 	{
-	// 		if (i < commands_number - 1)
-	// 			pipe(pipes_array[i]);
-	// 		if (i == 0)
-	// 			temp->output_fd = pipes_array[i][STD_OUTPUT];
-	// 		else if (i == commands_number - 1)
-	// 		{
-	// 			if (temp->input_fd == 0)
-	// 				temp->input_fd = pipes_array[i - 1][STD_INPUT];
-	// 		}
-	// 		else
-	// 		{
-	// 			if (temp->input_fd == 0)
-	// 				temp->input_fd = pipes_array[i - 1][STD_INPUT];
-	// 			temp->output_fd = pipes_array[i][STD_OUTPUT];
-	// 		} 
-	// 	}
-    //     is_valid_cmd = getting_input_fd(splitted_by_pipe[i], temp);
-    //     if (is_valid_cmd)
-    //         getting_output_fd(splitted_by_pipe[i], temp);
-    //     temp = temp->next;
-    //     i++;
-    // }
-    // get_cmd_args(splitted_by_pipe, *returned_data, new_env);
-    // args_final_touch(*returned_data, new_env);
+    entered_data->context = get_new_context(entered_data);
+    splitted_by_pipe = ft_split(entered_data->context, PIPE);
+    commands_number = get_length(splitted_by_pipe);
+	pipes_array = malloc(sizeof(int *) * (commands_number - 1));
+    splitted_by_space = ft_split(entered_data->context, SPACE);
+    create_returned_nodes(returned_data, commands_number);
+    heredoc_searcher(splitted_by_space, *returned_data, new_env);
+    t_returned_data *temp = *returned_data;
+    i = 0;
+    while (splitted_by_pipe[i])
+    {
+		if (commands_number > 1)
+		{
+			if (i < commands_number - 1)
+				pipe(pipes_array[i]);
+			if (i == 0)
+				temp->output_fd = pipes_array[i][STD_OUTPUT];
+			else if (i == commands_number - 1)
+			{
+				if (temp->input_fd == 0)
+					temp->input_fd = pipes_array[i - 1][STD_INPUT];
+			}
+			else
+			{
+				if (temp->input_fd == 0)
+					temp->input_fd = pipes_array[i - 1][STD_INPUT];
+				temp->output_fd = pipes_array[i][STD_OUTPUT];
+			} 
+		}
+        is_valid_cmd = getting_input_fd(splitted_by_pipe[i], temp);
+        if (is_valid_cmd)
+            getting_output_fd(splitted_by_pipe[i], temp);
+        temp = temp->next;
+        i++;
+    }
+    get_cmd_args(splitted_by_pipe, *returned_data, new_env);
+    args_final_touch(*returned_data, new_env);
 }
 
 
@@ -784,8 +784,8 @@ int main(int ac, char **av,  char **env)
 	if (ac != 1)
         exit (1);
 	create_list(env, &new_env);
-	// signal (SIGINT, &sig_handler);
-	// signal(SIGQUIT, SIG_IGN);
+	signal (SIGINT, &sig_handler);
+	signal(SIGQUIT, SIG_IGN);
 	key.flag_for_here = 0;
     while (TRUE)
     {

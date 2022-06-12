@@ -13,7 +13,8 @@ void sig_handler(int sig)
 	}
 	else
 	{
-		saver = dup(0);
-		printf("%d\n", saver);
+		key.saver = dup(0);
+		close(0);
+		dup2(key.saver, 0);
 	}
 }
