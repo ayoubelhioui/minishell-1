@@ -2,6 +2,7 @@
 
 void sig_handler(int sig)
 {
+	int saver;
 	if (key.flag_for_here == 0)
 	{
 		key.exit_stat = 1;
@@ -12,6 +13,7 @@ void sig_handler(int sig)
 	}
 	else
 	{
-
+		saver = dup(0);
+		printf("%d\n", saver);
 	}
 }

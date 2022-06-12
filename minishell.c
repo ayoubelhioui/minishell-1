@@ -260,7 +260,7 @@ int redirection_counter(t_list *splitted_data, char redirection)
 }
 
 
-void    here_doc(char *limiter, char **env)
+void	here_doc(char *limiter, char **env)
 {
     int p[2];
     char *entered_data;
@@ -268,8 +268,6 @@ void    here_doc(char *limiter, char **env)
 	key.flag_for_here = 1;
     if (entered_data == NULL)
         entered_data = limiter;
-    // signal(SIGINT, &here_doc_sigint);
-    // signal(SIGQUIT, SIG_IGN);
     limiter = remove_quotes(limiter);
     pipe(p);
     while (entered_data)
