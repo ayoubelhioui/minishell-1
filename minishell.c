@@ -393,6 +393,7 @@ char    *get_new_context(t_data *entered_data)
     counter = 0;
     in_quote = 0;
     // expanding();
+    printf("Here : %s\n", entered_data->context);
     while (entered_data->context[entered_data->index])
     {
         if (entered_data->context[entered_data->index] == SINGLE_QUOTE)
@@ -639,11 +640,12 @@ char *dollar_sign_found(t_data *data, char **env, char *saver, int *i)
     data->index++;
     env_value = NULL;
     index_saver = data->index;
-    if (!(ft_isalnum(data->context[data->index])) && (data->context[data->index] != UNDER_SCORE))
-        return (data->context);
+    // if (!(ft_isalnum(data->context[data->index])) && (data->context[data->index] != UNDER_SCORE))
+    //     return (NULL)
     while ((data->context[data->index]) && ((ft_isalnum(data->context[data->index])) || (data->context[data->index] == UNDER_SCORE)))
         data->index++;
     s1 = ft_substr(data->context, *i, index_saver - *i - 1);
+    printf("s1 : %s\n", s1);
     *i = data->index;
     s2 = ft_substr(data->context, index_saver, data->index - index_saver);
     if (s2[0] == ZERO)
@@ -679,7 +681,7 @@ char    *expanding(char *str, char **env)
             in_a_quote(&in_quote, DOUBLE_QUOTE);
         else if (data.context[data.index] == SINGLE_QUOTE)
             in_a_quote(&in_quote, SINGLE_QUOTE);
-        else if ((data.context[data.index] == DOLLAR_SIGN) && (in_quote != SINGLE_QUOTE) && (is_limiter == FALSE))
+        else if ((data.context[data.index] == DOLLAR_SIGN) && (in_quote != SINGLE_QUOTE) && (is_limiter == FALSE) && (ft_isalnum(data.context[data.index]) == 0) && (data.context[data.index] != UNDER_SCORE))
         {
             saver = dollar_sign_found(&data, env, saver, &j);
             x = data.index + 1;
@@ -689,7 +691,10 @@ char    *expanding(char *str, char **env)
         data.index++;
     }
     if (x < data.index)
+    {
         saver = expanding_join(saver, ft_substr(data.context, x, ft_strlen(data.context) - x));
+        printf("It Is : %s\n", saver);
+    }
     return (saver);
 }
 
@@ -725,43 +730,43 @@ void     preparing(t_data *entered_data, t_list *env, t_returned_data **returned
 
     new_env = get_new_env(env);
     entered_data->context = expanding(entered_data->context, new_env);
-    entered_data->context = get_new_context(entered_data);
-    splitted_by_pipe = ft_split(entered_data->context, PIPE);
-    commands_number = get_length(splitted_by_pipe);
-	pipes_array = malloc(sizeof(int *) * (commands_number - 1));
-    splitted_by_space = ft_split(entered_data->context, SPACE);
-    create_returned_nodes(returned_data, commands_number);
-    heredoc_searcher(splitted_by_space, *returned_data, new_env);
-    t_returned_data *temp = *returned_data;
-    i = 0;
-    while (splitted_by_pipe[i])
-    {
-		if (commands_number > 1)
-		{
-			if (i < commands_number - 1)
-				pipe(pipes_array[i]);
-			if (i == 0)
-				temp->output_fd = pipes_array[i][STD_OUTPUT];
-			else if (i == commands_number - 1)
-			{
-				if (temp->input_fd == 0)
-					temp->input_fd = pipes_array[i - 1][STD_INPUT];
-			}
-			else
-			{
-				if (temp->input_fd == 0)
-					temp->input_fd = pipes_array[i - 1][STD_INPUT];
-				temp->output_fd = pipes_array[i][STD_OUTPUT];
-			} 
-		}
-        is_valid_cmd = getting_input_fd(splitted_by_pipe[i], temp);
-        if (is_valid_cmd)
-            getting_output_fd(splitted_by_pipe[i], temp);
-        temp = temp->next;
-        i++;
-    }
-    get_cmd_args(splitted_by_pipe, *returned_data, new_env);
-    args_final_touch(*returned_data, new_env);
+    // entered_data->context = get_new_context(entered_data);
+    // splitted_by_pipe = ft_split(entered_data->context, PIPE);
+    // commands_number = get_length(splitted_by_pipe);
+	// pipes_array = malloc(sizeof(int *) * (commands_number - 1));
+    // splitted_by_space = ft_split(entered_data->context, SPACE);
+    // create_returned_nodes(returned_data, commands_number);
+    // heredoc_searcher(splitted_by_space, *returned_data, new_env);
+    // t_returned_data *temp = *returned_data;
+    // i = 0;
+    // while (splitted_by_pipe[i])
+    // {
+	// 	if (commands_number > 1)
+	// 	{
+	// 		if (i < commands_number - 1)
+	// 			pipe(pipes_array[i]);
+	// 		if (i == 0)
+	// 			temp->output_fd = pipes_array[i][STD_OUTPUT];
+	// 		else if (i == commands_number - 1)
+	// 		{
+	// 			if (temp->input_fd == 0)
+	// 				temp->input_fd = pipes_array[i - 1][STD_INPUT];
+	// 		}
+	// 		else
+	// 		{
+	// 			if (temp->input_fd == 0)
+	// 				temp->input_fd = pipes_array[i - 1][STD_INPUT];
+	// 			temp->output_fd = pipes_array[i][STD_OUTPUT];
+	// 		} 
+	// 	}
+    //     is_valid_cmd = getting_input_fd(splitted_by_pipe[i], temp);
+    //     if (is_valid_cmd)
+    //         getting_output_fd(splitted_by_pipe[i], temp);
+    //     temp = temp->next;
+    //     i++;
+    // }
+    // get_cmd_args(splitted_by_pipe, *returned_data, new_env);
+    // args_final_touch(*returned_data, new_env);
 }
 
 
@@ -779,8 +784,8 @@ int main(int ac, char **av,  char **env)
 	if (ac != 1)
         exit (1);
 	create_list(env, &new_env);
-	signal (SIGINT, &sig_handler);
-	signal(SIGQUIT, SIG_IGN);
+	// signal (SIGINT, &sig_handler);
+	// signal(SIGQUIT, SIG_IGN);
 	key.flag_for_here = 0;
     while (TRUE)
     {
