@@ -188,6 +188,7 @@ char	*get_command_path(char **env_variables, char *command)
 	i = -1;
 	while (path[++i])
 	{
+        // printf("Here : %s\n", command);
 		full_path = ft_strjoin(ft_strjoin(path[i], "/"), command);
 		if (access(full_path, F_OK) == 0)
 			return (full_path);
@@ -395,7 +396,7 @@ char    *get_new_context(t_data *entered_data)
     counter = 0;
     in_quote = 0;
     // expanding();
-    printf("Here : %s\n", entered_data->context);
+    // printf("Here : %s\n", entered_data->context);
     while (entered_data->context[entered_data->index])
     {
         if (entered_data->context[entered_data->index] == SINGLE_QUOTE)
@@ -526,7 +527,7 @@ void    getting_output_fd(char *str, t_returned_data *returned_data)
     }
 }
 
-void     get_cmd_args(char **data, t_returned_data *returned_data, char **env)
+int get_cmd_args(char **data, t_returned_data *returned_data, char **env)
 {
     char **s;
     int i;
@@ -544,6 +545,8 @@ void     get_cmd_args(char **data, t_returned_data *returned_data, char **env)
         i = 0;
         s = ft_split(data[k++], SPACE);
         whole_length = get_length(s) - get_args_length(s);
+        if (whole_length == 0)
+            return (FALSE);
         temp->args = malloc(sizeof(char *) * (whole_length + 1));
         while (s[i])
         {
@@ -557,10 +560,12 @@ void     get_cmd_args(char **data, t_returned_data *returned_data, char **env)
                 temp->args[j++] = s[i];
             i++;
         }
+
         temp->cmd_path = get_command_path(env, temp->args[0]);
         temp->args[j] = NULL;
         temp = temp->next;
     }
+    return (TRUE);
 }
 
 
@@ -573,7 +578,6 @@ void    args_final_touch(t_returned_data *returned_data, char **env)
     while (temp)
     {
         i = 0;
-        // printf("-------------\n");
         i = 0;
         while (temp->args[i])
         {
@@ -695,7 +699,7 @@ char    *expanding(char *str, char **env)
     if (x < data.index)
     {
         saver = expanding_join(saver, ft_substr(data.context, x, ft_strlen(data.context) - x));
-        printf("It Is : %s\n", saver);
+        // printf("It Is : %s\n", saver);
     }
     return (saver);
 }
@@ -732,43 +736,50 @@ void     preparing(t_data *entered_data, t_list *env, t_returned_data **returned
 
     new_env = get_new_env(env);
     entered_data->context = expanding(entered_data->context, new_env);
-    // entered_data->context = get_new_context(entered_data);
-    // splitted_by_pipe = ft_split(entered_data->context, PIPE);
-    // commands_number = get_length(splitted_by_pipe);
-	// pipes_array = malloc(sizeof(int *) * (commands_number - 1));
-    // splitted_by_space = ft_split(entered_data->context, SPACE);
-    // create_returned_nodes(returned_data, commands_number);
-    // heredoc_searcher(splitted_by_space, *returned_data, new_env);
-    // t_returned_data *temp = *returned_data;
-    // i = 0;
-    // while (splitted_by_pipe[i])
+    entered_data->context = get_new_context(entered_data);
+    splitted_by_pipe = ft_split(entered_data->context, PIPE);
+    commands_number = get_length(splitted_by_pipe);
+	pipes_array = malloc(sizeof(int *) * (commands_number - 1));
+    splitted_by_space = ft_split(entered_data->context, SPACE);
+    create_returned_nodes(returned_data, commands_number);
+    heredoc_searcher(splitted_by_space, *returned_data, new_env);
+    t_returned_data *temp = *returned_data;
+    i = 0;
+    while (splitted_by_pipe[i])
+    {
+		if (commands_number > 1)
+		{
+			if (i < commands_number - 1)
+				pipe(pipes_array[i]);
+			if (i == 0)
+				temp->output_fd = pipes_array[i][STD_OUTPUT];
+			else if (i == commands_number - 1)
+			{
+				if (temp->input_fd == 0)
+					temp->input_fd = pipes_array[i - 1][STD_INPUT];
+			}
+			else
+			{
+				if (temp->input_fd == 0)
+					temp->input_fd = pipes_array[i - 1][STD_INPUT];
+				temp->output_fd = pipes_array[i][STD_OUTPUT];
+			} 
+		}
+        is_valid_cmd = getting_input_fd(splitted_by_pipe[i], temp);
+        if (is_valid_cmd)
+            getting_output_fd(splitted_by_pipe[i], temp);
+        temp = temp->next;
+        i++;
+    }
+    if (get_cmd_args(splitted_by_pipe, *returned_data, new_env))
+        args_final_touch(*returned_data, new_env);
+    // int j = 0;
+    // t_returned_data *temp1 = *returned_data;
+    // while (temp1)
     // {
-	// 	if (commands_number > 1)
-	// 	{
-	// 		if (i < commands_number - 1)
-	// 			pipe(pipes_array[i]);
-	// 		if (i == 0)
-	// 			temp->output_fd = pipes_array[i][STD_OUTPUT];
-	// 		else if (i == commands_number - 1)
-	// 		{
-	// 			if (temp->input_fd == 0)
-	// 				temp->input_fd = pipes_array[i - 1][STD_INPUT];
-	// 		}
-	// 		else
-	// 		{
-	// 			if (temp->input_fd == 0)
-	// 				temp->input_fd = pipes_array[i - 1][STD_INPUT];
-	// 			temp->output_fd = pipes_array[i][STD_OUTPUT];
-	// 		} 
-	// 	}
-    //     is_valid_cmd = getting_input_fd(splitted_by_pipe[i], temp);
-    //     if (is_valid_cmd)
-    //         getting_output_fd(splitted_by_pipe[i], temp);
-    //     temp = temp->next;
-    //     i++;
+    //     printf("cmd is : %s\n", temp1->cmd_path);
+    //     temp1 = temp1->next;
     // }
-    // get_cmd_args(splitted_by_pipe, *returned_data, new_env);
-    // args_final_touch(*returned_data, new_env);
 }
 
 
