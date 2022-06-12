@@ -188,6 +188,7 @@ char	*get_command_path(char **env_variables, char *command)
 	i = -1;
 	while (path[++i])
 	{
+        // printf("Here : %s\n", command);
 		full_path = ft_strjoin(ft_strjoin(path[i], "/"), command);
 		if (access(full_path, F_OK) == 0)
 			return (full_path);
@@ -395,6 +396,7 @@ char    *get_new_context(t_data *entered_data)
     counter = 0;
     in_quote = 0;
     // expanding();
+    // printf("Here : %s\n", entered_data->context);
     while (entered_data->context[entered_data->index])
     {
         if (entered_data->context[entered_data->index] == SINGLE_QUOTE)
@@ -525,7 +527,7 @@ void    getting_output_fd(char *str, t_returned_data *returned_data)
     }
 }
 
-void     get_cmd_args(char **data, t_returned_data *returned_data, char **env)
+int get_cmd_args(char **data, t_returned_data *returned_data, char **env)
 {
     char **s;
     int i;
@@ -543,6 +545,8 @@ void     get_cmd_args(char **data, t_returned_data *returned_data, char **env)
         i = 0;
         s = ft_split(data[k++], SPACE);
         whole_length = get_length(s) - get_args_length(s);
+        if (whole_length == 0)
+            return (FALSE);
         temp->args = malloc(sizeof(char *) * (whole_length + 1));
         while (s[i])
         {
@@ -556,10 +560,12 @@ void     get_cmd_args(char **data, t_returned_data *returned_data, char **env)
                 temp->args[j++] = s[i];
             i++;
         }
+
         temp->cmd_path = get_command_path(env, temp->args[0]);
         temp->args[j] = NULL;
         temp = temp->next;
     }
+    return (TRUE);
 }
 
 
@@ -572,7 +578,6 @@ void    args_final_touch(t_returned_data *returned_data, char **env)
     while (temp)
     {
         i = 0;
-        // printf("-------------\n");
         i = 0;
         while (temp->args[i])
         {
@@ -765,8 +770,15 @@ void	preparing(t_data *entered_data, t_list *env, t_returned_data **returned_dat
         temp = temp->next;
         i++;
     }
-    get_cmd_args(splitted_by_pipe, *returned_data, new_env);
-    args_final_touch(*returned_data, new_env);
+    if (get_cmd_args(splitted_by_pipe, *returned_data, new_env))
+        args_final_touch(*returned_data, new_env);
+    // int j = 0;
+    // t_returned_data *temp1 = *returned_data;
+    // while (temp1)
+    // {
+    //     printf("cmd is : %s\n", temp1->cmd_path);
+    //     temp1 = temp1->next;
+    // }
 }
 
 

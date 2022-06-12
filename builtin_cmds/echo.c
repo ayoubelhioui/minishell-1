@@ -18,9 +18,13 @@ void	print_string(char *s, char c, int flag)
 		else if (c != 'n' && flag && !s[i + 1])
 			printf("%c\n", s[i]);
 		else if (!flag && !s[i + 1])
+		{
 			printf("%c ", s[i]);
+		}
 		else
+		{
 			printf("%c", s[i]);
+		}
 		i++;
 	}
 	k++;
@@ -46,6 +50,7 @@ void	ft_echo(char **s)
 		i = 0;
 	while (s[i])
 	{
+		
 		print_string(s[i], c, !s[i + 1]);
 		i++;
 	}
