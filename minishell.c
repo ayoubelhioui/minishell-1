@@ -267,13 +267,15 @@ int here_doc(char *limiter, char **env)
 	char	*s;
     char *entered_data;
 
-	s = readline("< ");
+	s = readline("> ");
 	if (s)
     	entered_data = expanding(s, env);
 	else
+	{
+		key.after_exit = 1;
 		return (p[STD_INPUT]);
-	key.flag_for_here = 1;
-    pipe(p);
+	}
+	pipe(p);
     limiter = remove_quotes(limiter);
     while (entered_data)
     {
@@ -282,11 +284,12 @@ int here_doc(char *limiter, char **env)
         write(p[STD_OUTPUT], entered_data, ft_strlen(entered_data));
         write(p[STD_OUTPUT], "\n", 2);
         free (entered_data);
-        s = readline("< ");
+        s = readline("> ");
 		if (s)
     		entered_data = expanding(s, env);
 		else
 		{
+			key.after_exit = 1;
 			close(p[STD_OUTPUT]);
 			return (p[STD_INPUT]);
 		}
@@ -805,8 +808,10 @@ int main(int ac, char **av,  char **env)
 	signal (SIGINT, &sig_handler);
 	signal(SIGQUIT, SIG_IGN);
 	key.flag_for_here = 0;
+	key.after_exit = 0;
     while (TRUE)
     {
+		key.flag = 0;
 		dup2(key.saver, 0);
         returned_data = NULL;
         entered_data.context = readline("minishell : ");
@@ -814,13 +819,15 @@ int main(int ac, char **av,  char **env)
 			break ;
 		if (ft_strlen(entered_data.context) == 0)
             continue;
+		if (key.after_exit == 1 && entered_data.context)
+			key.after_exit = 0;
         add_history(entered_data.context);
         if (error_handling(entered_data.context))
         {
             printf("error occured\n");
             continue ;
         }
-        if (preparing(&entered_data, new_env, &returned_data) == -1)
+        if (preparing(&entered_data, new_env, &returned_data) == -1 || key.flag == 6)
 			continue;
 		s = returned_data;
 		fill_list(s, env, &new_env);

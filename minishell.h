@@ -61,8 +61,10 @@ typedef struct g_str
 {
 	int	exit_stat;
 	int	flag_for_here;
-	int	sig;
 	int	saver;
+	int	flag;
+	int	after_exit;
+	char *path;
 } t_str ;
 t_str key;
 // char	*get_line(char *line, int rd, char *readed, int fd);

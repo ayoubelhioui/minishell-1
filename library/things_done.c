@@ -56,6 +56,7 @@ void	fill_list(t_returned_data *data, char **env, t_list **env_l)
 		built_check(data, env_l);
 	else
 	{
+		key.flag_for_here = 2;
 		while (data)
 		{
 			if (data->is_executable)
@@ -108,4 +109,5 @@ void	fill_list(t_returned_data *data, char **env, t_list **env_l)
 			key.exit_stat = WEXITSTATUS(status);
 		counter++;
 	}
+	key.flag_for_here = 0;
 }
