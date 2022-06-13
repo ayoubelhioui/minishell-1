@@ -807,6 +807,7 @@ int main(int ac, char **av,  char **env)
 	key.flag_for_here = 0;
     while (TRUE)
     {
+		dup2(key.saver, 0);
         returned_data = NULL;
         entered_data.context = readline("minishell : ");
 		if (entered_data.context == NULL)

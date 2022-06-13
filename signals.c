@@ -14,7 +14,6 @@ void sig_handler(int sig)
 	else
 	{
 		key.saver = dup(0);
-		// close(0);
-		// dup2(key.saver, 0);
+		close(0);
 	}
 }

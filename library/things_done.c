@@ -53,9 +53,7 @@ void	fill_list(t_returned_data *data, char **env, t_list **env_l)
 	id = malloc(counter * sizeof(int));
 	counter = 0;
 	if (len == 1 && built_exist(data, env_l) && data->is_executable)
-	{
 		built_check(data, env_l);
-	}
 	else
 	{
 		while (data)
