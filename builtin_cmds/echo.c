@@ -3,14 +3,17 @@
 void	print_string(char *s, char c, int flag)
 {
 	int	i;
-	static int k;
-
 	i = 0;
 	while (s[i])
 	{
 		if (s[i] == '$' && s[i + 1] == '?')
 		{
-			printf("%d\n", key.exit_stat);
+			if (flag == 1 && !s[i + 2] && c == 'a')
+				printf("%d\n", key.exit_stat);
+			else if (flag == 1 && !s[i + 2] && c == 'n')
+				printf("%d", key.exit_stat);
+			else
+				printf("%d", key.exit_stat);
 			i++;
 		}
 		else if (c == 'n' && flag && !s[i + 1])
@@ -18,16 +21,11 @@ void	print_string(char *s, char c, int flag)
 		else if (c != 'n' && flag && !s[i + 1])
 			printf("%c\n", s[i]);
 		else if (!flag && !s[i + 1])
-		{
 			printf("%c ", s[i]);
-		}
 		else
-		{
 			printf("%c", s[i]);
-		}
 		i++;
 	}
-	k++;
 }
 void	ft_echo(char **s)
 {
@@ -37,8 +35,6 @@ void	ft_echo(char **s)
 
 	i = 0;
 	int j = 0;
-	// while (s[j])
-	// 	printf("c is %s\n", s[j++]);
 	if (*s == NULL)
 		printf("\n");
 	if (!ft_strcmp(s[0], "-n"))
@@ -50,7 +46,6 @@ void	ft_echo(char **s)
 		i = 0;
 	while (s[i])
 	{
-		
 		print_string(s[i], c, !s[i + 1]);
 		i++;
 	}

@@ -265,8 +265,8 @@ int here_doc(char *limiter, char **env)
 {
     int p[2];
 	char	*s;
-    // t_returned_data *returned_data;
     char *entered_data;
+
 	s = readline("> ");
 	if (s)
     	entered_data = expanding(s, env);
@@ -286,7 +286,10 @@ int here_doc(char *limiter, char **env)
 		if (s)
     		entered_data = expanding(s, env);
 		else
+		{
+			close(p[STD_OUTPUT]);
 			return (p[STD_INPUT]);
+		}
 	}
     close(p[STD_OUTPUT]);
     return (p[STD_INPUT]);
@@ -722,7 +725,7 @@ char    **get_new_env(t_list *env)
     new_env[i] = NULL;
     return (new_env);
 }
-void	preparing(t_data *entered_data, t_list *env, t_returned_data **returned_data)
+int	preparing(t_data *entered_data, t_list *env, t_returned_data **returned_data)
 {
     char            **splitted_by_space;
     char            **splitted_by_pipe;
@@ -772,6 +775,8 @@ void	preparing(t_data *entered_data, t_list *env, t_returned_data **returned_dat
     }
     if (get_cmd_args(splitted_by_pipe, *returned_data, new_env))
         args_final_touch(*returned_data, new_env);
+	else
+		return (-1);
     // int j = 0;
     // t_returned_data *temp1 = *returned_data;
     // while (temp1)
@@ -779,6 +784,7 @@ void	preparing(t_data *entered_data, t_list *env, t_returned_data **returned_dat
     //     printf("cmd is : %s\n", temp1->cmd_path);
     //     temp1 = temp1->next;
     // }
+	return (1);
 }
 
 
@@ -801,6 +807,7 @@ int main(int ac, char **av,  char **env)
 	key.flag_for_here = 0;
     while (TRUE)
     {
+		dup2(key.saver, 0);
         returned_data = NULL;
         entered_data.context = readline("minishell : ");
 		if (entered_data.context == NULL)
@@ -813,7 +820,8 @@ int main(int ac, char **av,  char **env)
             printf("error occured\n");
             continue ;
         }
-        preparing(&entered_data, new_env, &returned_data);
+        if (preparing(&entered_data, new_env, &returned_data) == -1)
+			continue;
 		s = returned_data;
 		fill_list(s, env, &new_env);
         free (entered_data.context);

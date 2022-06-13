@@ -53,9 +53,7 @@ void	fill_list(t_returned_data *data, char **env, t_list **env_l)
 	id = malloc(counter * sizeof(int));
 	counter = 0;
 	if (len == 1 && built_exist(data, env_l) && data->is_executable)
-	{
 		built_check(data, env_l);
-	}
 	else
 	{
 		while (data)
@@ -70,7 +68,6 @@ void	fill_list(t_returned_data *data, char **env, t_list **env_l)
 						check = built_exist(data, env_l);
 						if (data->input_fd != 0 && !check)
 						{
-							dprintf(2, "OK1\n");
 							dup2(data->input_fd, STD_INPUT);
 							close (data->input_fd);
 						}
@@ -78,13 +75,11 @@ void	fill_list(t_returned_data *data, char **env, t_list **env_l)
 						{
 							if (data->input_fd)
 							{
-								dprintf(2, "OK2\n");
 								close (data->input_fd);
 							}
 						}
 						if (data->output_fd != 1)
 						{
-							dprintf(2, "OK3\n");
 							dup2(data->output_fd, STD_OUTPUT);
 							close (data->output_fd);
 						}
