@@ -267,13 +267,17 @@ int here_doc(char *limiter, char **env)
 	char	*s;
     char *entered_data;
 
+	key.flag_for_here = 1;
 	s = readline("> ");
 	if (s)
     	entered_data = expanding(s, env);
 	else
+	{
+		key.after_exit = 1;
+		printf(">\n");
 		return (p[STD_INPUT]);
-	key.flag_for_here = 1;
-    pipe(p);
+	}
+	pipe(p);
     limiter = remove_quotes(limiter);
     while (entered_data)
     {
@@ -288,6 +292,7 @@ int here_doc(char *limiter, char **env)
 		else
 		{
 			key.after_exit = 1;
+			printf(">\n");
 			close(p[STD_OUTPUT]);
 			return (p[STD_INPUT]);
 		}
