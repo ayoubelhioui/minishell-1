@@ -98,12 +98,28 @@ int	ft_isnode(t_list **env, char *arg)
 	return (0);
 }
 
+void	change_path_value(t_list **env)
+{
+	t_list *temp;
+	char	**new;
+	temp = *env;
+	while (!ft_strstr(temp->content, "PWD="))
+		temp = temp->next;
+	if (!temp)
+		return ;
+	else
+	{
+		new = split_with_equ(temp->content);
+		
+	}
+}
 void	ft_export(t_list **env, char **args)
 {
 	int		i;
 	char	**split_arg;
 
 	i = 0;
+	change_path_value(env);
 	if (*args == NULL)
 		sort_list(*env);
 	while (args[i])

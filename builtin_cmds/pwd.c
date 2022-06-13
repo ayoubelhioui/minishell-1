@@ -5,6 +5,7 @@ void	pwd(void)
 	char *cwd;
 
 	cwd = getcwd(NULL, sizeof(cwd));
+	key.path = cwd;
     if (!cwd)
       perror("pwd error");
     else
