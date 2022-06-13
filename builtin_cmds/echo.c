@@ -49,4 +49,5 @@ void	ft_echo(char **s)
 		print_string(s[i], c, !s[i + 1]);
 		i++;
 	}
+	key.exit_stat = 0;
 }

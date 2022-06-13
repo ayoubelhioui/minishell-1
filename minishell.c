@@ -267,7 +267,7 @@ int here_doc(char *limiter, char **env)
 	char	*s;
     char *entered_data;
 
-	s = readline("> ");
+	s = readline("< ");
 	if (s)
     	entered_data = expanding(s, env);
 	else
@@ -282,7 +282,7 @@ int here_doc(char *limiter, char **env)
         write(p[STD_OUTPUT], entered_data, ft_strlen(entered_data));
         write(p[STD_OUTPUT], "\n", 2);
         free (entered_data);
-        s = readline("> ");
+        s = readline("< ");
 		if (s)
     		entered_data = expanding(s, env);
 		else

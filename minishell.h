@@ -13,6 +13,7 @@ int	g_exit_stat;
 #include <unistd.h>
 #include <dirent.h>
 #include <errno.h>
+// #include "get_next_line/get_next_line.h"
 
 # define PIPE '|'
 # define SINGLE_QUOTE '\''
@@ -64,6 +65,8 @@ typedef struct g_str
 	int	saver;
 } t_str ;
 t_str key;
+// char	*get_line(char *line, int rd, char *readed, int fd);
+char	*get_next_line(int fd);
 void    ft_free(char **s);
 char    *expanding(char *str, char **env);
 void	returned_data_addback(t_returned_data **returned_data, t_returned_data *new);
