@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 15:14:17 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/14 15:57:48 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/14 16:17:32 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,4 @@ void		free_splits(char **first, char **second);
 void		get_things_changed(char *arg, t_list **env);
 void		add_value(char *arg, t_list **env);
 void		change_value(char *arg, t_list **env);
-void		dup_and_close(t_returned_data *data, int c);
-void		close_and_wait(t_returned_data *data, int counter);
-int			lst_count(t_returned_data *data);
 #endif

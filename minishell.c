@@ -809,8 +809,8 @@ int main(int ac, char **av,  char **env)
         exit (1);
 	}
 	create_list(env, &new_env);
-	signal (SIGINT, &sig_handler);
-	signal(SIGQUIT, SIG_IGN);
+	// signal (SIGINT, &sig_handler);
+	// signal(SIGQUIT, SIG_IGN);
 	key.flag_for_here = 0;
 	key.after_exit = 0;
     while (TRUE)
