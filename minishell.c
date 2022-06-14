@@ -267,7 +267,6 @@ int here_doc(char *limiter, char **env)
 	char	*s;
     char *entered_data;
 
-	key.flag_for_here = 1;
 	s = readline("> ");
 	if (s)
     	entered_data = expanding(s, env);
