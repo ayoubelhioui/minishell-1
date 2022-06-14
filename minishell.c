@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/14 17:12:41 by ijmari            #+#    #+#             */
+/*   Updated: 2022/06/14 18:14:22 by ijmari           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 
 #include "minishell.h"
 
@@ -195,7 +207,7 @@ char	*get_command_path(char **env_variables, char *command)
 		if (access(full_path, F_OK) == 0)
 			return (full_path);
 	}
-	return (command);
+	return (remove_quotes(command));
 }
 
 int	get_length(char **args)
@@ -269,14 +281,16 @@ int here_doc(char *limiter, char **env)
 	char	*s;
     char *entered_data;
 
+	key.flag_for_here = 1;
 	s = readline("> ");
 	if (s)
     	entered_data = expanding(s, env);
 	else
 	{
 		key.after_exit = 1;
-		close(p[STD_OUTPUT]);
-		return (p[STD_INPUT]);
+		if (key.flag == 6)
+			printf(">\n");
+		return (-4);
 	}
 	pipe(p);
     limiter = remove_quotes(limiter);
@@ -293,6 +307,8 @@ int here_doc(char *limiter, char **env)
 		else
 		{
 			key.after_exit = 1;
+			if (key.flag == 6)
+				printf(">\n");
 			close(p[STD_OUTPUT]);
 			return (p[STD_INPUT]);
 		}
@@ -323,6 +339,8 @@ void	heredoc_searcher(char **splitted_data, t_returned_data *returned_data, char
         {
             i += 2;
             temp->input_fd =  here_doc(splitted_data[i], env);
+			if (temp->input_fd == -4)
+				key.flag = 6;
 			key.flag_for_here = 0;
         }
         i++;
@@ -809,8 +827,8 @@ int main(int ac, char **av,  char **env)
         exit (1);
 	}
 	create_list(env, &new_env);
-	// signal (SIGINT, &sig_handler);
-	// signal(SIGQUIT, SIG_IGN);
+	signal (SIGINT, &sig_handler);
+	signal(SIGQUIT, SIG_IGN);
 	key.flag_for_here = 0;
 	key.after_exit = 0;
     while (TRUE)
@@ -825,7 +843,7 @@ int main(int ac, char **av,  char **env)
             continue;
 		if (key.after_exit == 1 && entered_data.context)
 			key.after_exit = 0;
-        add_history(entered_data.context);
+		add_history(entered_data.context);
         if (error_handling(entered_data.context))
         {
             printf("error occured\n");

@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 15:16:09 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/14 16:01:38 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/14 18:54:51 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,11 +94,18 @@ void	fill_list(t_returned_data *data, char **env, t_list **env_l)
 	int				*id;
 	int				counter;
 	t_returned_data	*t;
+	int				saver;
 
 	counter = lst_count(data);
 	id = malloc(counter * sizeof(int));
 	if (counter == 1 && built_exist(data, env_l) && data->is_executable)
+	{
+		saver = dup(1);
+		if (data->output_fd != 1)
+			dup2(data->output_fd, 1);
 		built_check(data, env_l);
+		dup2(saver, 1);
+	}
 	else
 	{
 		key.flag_for_here = 2;
