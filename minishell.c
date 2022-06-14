@@ -119,7 +119,7 @@ int quotes_counter(char *context, int *start, char quote)
     return (counter);
 }
 
-int allocation_length(char *context)
+int new_string_length(char *context)
 {
     int counter;
     int i;
@@ -132,6 +132,7 @@ int allocation_length(char *context)
             counter += quotes_counter(context, &i, DOUBLE_QUOTE);
         else if (context[i] == SINGLE_QUOTE)
             counter += quotes_counter(context, &i, SINGLE_QUOTE);
+        // else if ()
         else
             counter++;
         i++;
@@ -145,7 +146,8 @@ char    *remove_quotes(char *context)
     int      i;
     int      j;
 
-    int length = allocation_length(context);
+    // printf("Fuck It : %s\n", context);
+    int length = new_string_length(context);
     new_string = malloc(sizeof(char) * (length + 1));
     i = 0;
     j = 0;
@@ -189,7 +191,7 @@ char	*get_command_path(char **env_variables, char *command)
 	while (path[++i])
 	{
         // printf("Here : %s\n", command);
-		full_path = ft_strjoin(ft_strjoin(path[i], "/"), command);
+		full_path = ft_strjoin(ft_strjoin(path[i], "/"), remove_quotes(command));
 		if (access(full_path, F_OK) == 0)
 			return (full_path);
 	}
@@ -652,8 +654,8 @@ char *dollar_sign_found(t_data *data, char **env, char *saver, int *i)
     data->index++;
     env_value = NULL;
     index_saver = data->index;
-    // if (!(ft_isalnum(data->context[data->index])) && (data->context[data->index] != UNDER_SCORE))
-    //     return (NULL)
+    if (!ft_isalnum(data->context[data->index]) && data->context[data->index] != UNDER_SCORE)
+        return (ft_substr(data->context, 0, data->index + 1));
     while ((data->context[data->index]) && ((ft_isalnum(data->context[data->index])) || (data->context[data->index] == UNDER_SCORE)))
         data->index++;
     s1 = ft_substr(data->context, *i, index_saver - *i - 1);
@@ -670,10 +672,10 @@ char *dollar_sign_found(t_data *data, char **env, char *saver, int *i)
 
 char    *expanding(char *str, char **env)
 {
+    t_data data;
     int in_quote;
     int is_limiter;
     char    *saver;
-    t_data data;
     int x = 0;
 
     in_quote = 0;
@@ -692,7 +694,7 @@ char    *expanding(char *str, char **env)
             in_a_quote(&in_quote, DOUBLE_QUOTE);
         else if (data.context[data.index] == SINGLE_QUOTE)
             in_a_quote(&in_quote, SINGLE_QUOTE);
-        else if ((data.context[data.index] == DOLLAR_SIGN) && (in_quote != SINGLE_QUOTE) && (is_limiter == FALSE) && (ft_isalnum(data.context[data.index]) == 0) && (data.context[data.index] != UNDER_SCORE))
+        else if ((data.context[data.index] == DOLLAR_SIGN) && (in_quote != SINGLE_QUOTE) && (is_limiter == FALSE))
         {
             saver = dollar_sign_found(&data, env, saver, &j);
             x = data.index + 1;
@@ -702,10 +704,7 @@ char    *expanding(char *str, char **env)
         data.index++;
     }
     if (x < data.index)
-    {
         saver = expanding_join(saver, ft_substr(data.context, x, ft_strlen(data.context) - x));
-        // printf("It Is : %s\n", saver);
-    }
     return (saver);
 }
 
@@ -728,29 +727,25 @@ char    **get_new_env(t_list *env)
     new_env[i] = NULL;
     return (new_env);
 }
-int	preparing(t_data *entered_data, t_list *env, t_returned_data **returned_data)
+
+void    getting_input_output_fd(char *str, t_returned_data *temp)
 {
-    char            **splitted_by_space;
-    char            **splitted_by_pipe;
-    int             commands_number;
-    int             i;
-    int             (*pipes_array)[2];
-    char            **new_env;
-    int             is_valid_cmd = 0;
+    int is_valid_cmd;
 
+    is_valid_cmd = 0;
+    is_valid_cmd = getting_input_fd(str, temp);
+    if (is_valid_cmd)
+        getting_output_fd(str, temp);
+}
 
-    new_env = get_new_env(env);
-    entered_data->context = expanding(entered_data->context, new_env);
-    entered_data->context = get_new_context(entered_data);
-    splitted_by_pipe = ft_split(entered_data->context, PIPE);
-    commands_number = get_length(splitted_by_pipe);
-	pipes_array = malloc(sizeof(int *) * (commands_number - 1));
-    splitted_by_space = ft_split(entered_data->context, SPACE);
-    create_returned_nodes(returned_data, commands_number);
-    heredoc_searcher(splitted_by_space, *returned_data, new_env);
-    t_returned_data *temp = *returned_data;
-    i = 0;
-    while (splitted_by_pipe[i])
+void    pipe_handling(int commands_number, char **splitted_by_pipe, t_returned_data *temp)
+{
+    int (*pipes_array)[2];
+    int i;
+
+    i = -1;
+    pipes_array = malloc(sizeof(int *) * (commands_number - 1));
+    while (splitted_by_pipe[++i])
     {
 		if (commands_number > 1)
 		{
@@ -759,34 +754,39 @@ int	preparing(t_data *entered_data, t_list *env, t_returned_data **returned_data
 			if (i == 0)
 				temp->output_fd = pipes_array[i][STD_OUTPUT];
 			else if (i == commands_number - 1)
-			{
-				if (temp->input_fd == 0)
-					temp->input_fd = pipes_array[i - 1][STD_INPUT];
-			}
+                temp->input_fd = pipes_array[i - 1][STD_INPUT];
 			else
 			{
-				if (temp->input_fd == 0)
-					temp->input_fd = pipes_array[i - 1][STD_INPUT];
+                temp->input_fd = pipes_array[i - 1][STD_INPUT];
 				temp->output_fd = pipes_array[i][STD_OUTPUT];
 			} 
 		}
-        is_valid_cmd = getting_input_fd(splitted_by_pipe[i], temp);
-        if (is_valid_cmd)
-            getting_output_fd(splitted_by_pipe[i], temp);
+        getting_input_output_fd(splitted_by_pipe[i], temp);
         temp = temp->next;
-        i++;
     }
+}
+
+int	preparing(t_data *entered_data, t_list *env, t_returned_data **returned_data)
+{
+    char            **splitted_by_space;
+    char            **splitted_by_pipe;
+    char            **new_env;
+    int             commands_number;
+
+
+    new_env = get_new_env(env);
+    entered_data->context = expanding(entered_data->context, new_env);
+    entered_data->context = get_new_context(entered_data);
+    splitted_by_pipe = ft_split(entered_data->context, PIPE);
+    commands_number = get_length(splitted_by_pipe);
+    splitted_by_space = ft_split(entered_data->context, SPACE);
+    create_returned_nodes(returned_data, commands_number);
+    heredoc_searcher(splitted_by_space, *returned_data, new_env);
+    pipe_handling(commands_number, splitted_by_pipe, *returned_data);
     if (get_cmd_args(splitted_by_pipe, *returned_data, new_env))
         args_final_touch(*returned_data, new_env);
 	else
 		return (-1);
-    // int j = 0;
-    // t_returned_data *temp1 = *returned_data;
-    // while (temp1)
-    // {
-    //     printf("cmd is : %s\n", temp1->cmd_path);
-    //     temp1 = temp1->next;
-    // }
 	return (1);
 }
 
