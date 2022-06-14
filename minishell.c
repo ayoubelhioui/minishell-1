@@ -275,6 +275,7 @@ int here_doc(char *limiter, char **env)
 	else
 	{
 		key.after_exit = 1;
+		close(p[STD_OUTPUT]);
 		return (p[STD_INPUT]);
 	}
 	pipe(p);
@@ -803,10 +804,13 @@ int main(int ac, char **av,  char **env)
 	t_returned_data *s;
 
 	if (ac != 1)
+	{
+		printf("Too many arguments\n");
         exit (1);
+	}
 	create_list(env, &new_env);
-	signal (SIGINT, &sig_handler);
-	signal(SIGQUIT, SIG_IGN);
+	// signal (SIGINT, &sig_handler);
+	// signal(SIGQUIT, SIG_IGN);
 	key.flag_for_here = 0;
 	key.after_exit = 0;
     while (TRUE)

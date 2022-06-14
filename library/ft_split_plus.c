@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_split_plus.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/14 15:11:50 by ijmari            #+#    #+#             */
+/*   Updated: 2022/06/14 15:12:04 by ijmari           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 int	len_2(char *arg, int len)
@@ -14,6 +26,7 @@ int	len_2(char *arg, int len)
 	}
 	return (len2);
 }
+
 int	len_1(char *arg)
 {
 	int	len;
@@ -51,6 +64,7 @@ char	**fill_the_d(int len1, int len2, char *arg, char **s)
 	s[2] = NULL;
 	return (s);
 }
+
 char	**split_with_plus(char *arg)
 {
 	char	**s;

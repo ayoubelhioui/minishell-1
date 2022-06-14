@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_split.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/14 15:02:10 by ijmari            #+#    #+#             */
+/*   Updated: 2022/06/14 15:03:16 by ijmari           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "library.h"
 
 char	*ft_alocateandcopy(const char *s, int length)
@@ -58,7 +70,7 @@ void	ft_next(char **str, const char *s, char c, int size)
 	str[i] = 0;
 }
 
-char	**ft_split(char  *s, char c)
+char	**ft_split(char *s, char c)
 {
 	char	**str;
 	int		size;

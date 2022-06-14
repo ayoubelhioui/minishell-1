@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_export_utils.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/14 16:02:27 by ijmari            #+#    #+#             */
+/*   Updated: 2022/06/14 16:08:51 by ijmari           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 void	add_it_back(char **split_arg, char *arg, t_list **env)
@@ -17,7 +29,7 @@ void	add_it_back(char **split_arg, char *arg, t_list **env)
 
 int	check_if_valid(char *arg)
 {
-	int i;
+	int	i;
 	int	equal;
 
 	equal = 0;
@@ -27,7 +39,7 @@ int	check_if_valid(char *arg)
 	while (arg[i] && arg[i] != '=')
 	{
 		if ((arg[i] == '+' && equal == 0 && arg[i + 1] != '=')
-		|| (arg[i] == '-' && equal == 0))
+			|| (arg[i] == '-' && equal == 0))
 			return (0);
 		else if (arg[i] == '=')
 			equal = 1;
@@ -36,19 +48,20 @@ int	check_if_valid(char *arg)
 	i = 0;
 	while (arg[i] && arg[i] != '=')
 	{
-		if (!ft_isalnum(arg[i]) && arg[i] != '=' && arg[i] != '+' && arg[i] != '_')
+		if (!ft_isalnum(arg[i]) && arg[i] != '=' \
+		&& arg[i] != '+' && arg[i] != '_')
 			return (0);
 		i++;
 	}
 	return (1);
 }
 
-void swap(t_list *a, t_list *b)
+void	swap(t_list *a, t_list *b)
 {
-    char *temp;
-	char crit;
+	char	*temp;
+	char	crit;
 
-    temp = a->content;
+	temp = a->content;
 	crit = a->criteria;
 	a->content = b->content;
 	a->criteria = b->criteria;
@@ -56,32 +69,32 @@ void swap(t_list *a, t_list *b)
 	b->criteria = crit;
 }
 
-void sort_list(t_list *en)
+void	sort_list(t_list *en)
 {
-    int swapped = 1;
-    t_list *ptr1;
-    t_list *lptr;
-	t_list *curr;
+	int		swapped;
+	t_list	*ptr1;
+	t_list	*lptr;
+	t_list	*curr;
 
+	swapped = 1;
 	curr = en;
-	lptr = NULL;
-    if (en == NULL)
-        return;
-    while(swapped)
-    {
-        swapped = 0;
-        ptr1 = curr;
-        while (ptr1->next != lptr)
-        {
-            if (ft_strcmp(ptr1->content , ptr1->next->content) > 0)
-            { 
-                swap(ptr1, ptr1->next);
-                swapped = 1;
-            }
-            ptr1 = ptr1->next;
-        }
-        lptr = ptr1;
-    }
+	if (en == NULL)
+		return ;
+	while (swapped)
+	{
+		swapped = 0;
+		ptr1 = curr;
+		while (ptr1->next != lptr)
+		{
+			if (ft_strcmp(ptr1->content, ptr1->next->content) > 0)
+			{
+				swap(ptr1, ptr1->next);
+				swapped = 1;
+			}
+			ptr1 = ptr1->next;
+		}
+		lptr = ptr1;
+	}
 	print_list(en, NULL);
 }
 

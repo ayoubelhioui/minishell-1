@@ -98,4 +98,8 @@ void    searching_for_dollar_sign(t_returned_data **data, char **env);
 void	fill_list(t_returned_data *data, char **env, t_list **env_l);
 char	*get_command_path(char **env_variables, char *command);
 int		built_exist(t_returned_data *ret, t_list **env);
+void	dup_and_close(t_returned_data *data, int c);
+void	close_and_wait(t_returned_data *data, int counter);
+int		lst_count(t_returned_data *data);
+void	close_all_pipes(t_returned_data *head);
 #endif

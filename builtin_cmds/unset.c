@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   unset.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/14 14:52:24 by ijmari            #+#    #+#             */
+/*   Updated: 2022/06/14 14:52:43 by ijmari           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 int	checkand_deletion(t_list *curr, int pos, char *temp, t_list **env)
@@ -18,6 +30,7 @@ int	checkand_deletion(t_list *curr, int pos, char *temp, t_list **env)
 	free(temp2);
 	return (0);
 }
+
 void	ft_unset(t_list **env, char	**args)
 {
 	t_list	*curr;
@@ -38,7 +51,7 @@ void	ft_unset(t_list **env, char	**args)
 			pos++;
 			curr = curr->next;
 		}
-			free(temp);
+		free(temp);
 		i++;
 	}
 }
