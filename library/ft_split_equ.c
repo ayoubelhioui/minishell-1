@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_split_equ.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/14 15:03:27 by ijmari            #+#    #+#             */
+/*   Updated: 2022/06/14 15:11:38 by ijmari           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 int	len_e2(char *arg, int prev_len)
@@ -16,6 +28,7 @@ int	len_e2(char *arg, int prev_len)
 	}
 	return (len);
 }
+
 int	len_e1(char *arg)
 {
 	int	len;
@@ -24,6 +37,23 @@ int	len_e1(char *arg)
 	while (arg[len] != '=' && arg[len])
 		len++;
 	return (len);
+}
+
+char	**second_case(char **s, int len, char *arg, int j)
+{
+	int	len2;
+	int	total;
+
+	total = j;
+	len2 = len_e2(arg, len);
+	s[1] = malloc((len2 + 1));
+	total = j + 1;
+	j = 0;
+	while (j < len2)
+		s[1][j++] = arg[total++];
+	s[1][j] = '\0';
+	s[2] = NULL;
+	return (s);
 }
 
 char	**fill_it(char *arg, char **s, int len, int len2)
@@ -44,18 +74,7 @@ char	**fill_it(char *arg, char **s, int len, int len2)
 	}
 	s[i][j] = '\0';
 	if (len2)
-	{
-		s[1] = malloc((len2 + 1));
-		total = j + 1;
-		i++;
-		j = 0;
-		while (j < len2)
-		{
-			s[i][j++] = arg[total++];
-		}
-		s[i][j] = '\0';
-		s[2] = NULL;
-	}
+		s = second_case(s, len, arg, j);
 	else
 		s[1] = NULL;
 	return (s);
@@ -66,13 +85,10 @@ char	**split_with_equ(char *arg)
 	int		len;
 	int		len2;
 	char	**s;
-	static int e = 0;
 
 	len2 = 0;
-	len	= len_e1(arg);
+	len = len_e1(arg);
 	len2 = len_e2(arg, len);
-
 	s = malloc((len + len2 + 1) * sizeof(char *));
-	e++;
 	return (fill_it(arg, s, len, len2));
 }

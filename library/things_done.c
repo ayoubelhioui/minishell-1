@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   things_done.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/14 15:16:09 by ijmari            #+#    #+#             */
+/*   Updated: 2022/06/14 16:01:38 by ijmari           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 void	close_all_pipes(t_returned_data *head)
@@ -15,11 +27,9 @@ void	close_all_pipes(t_returned_data *head)
 		i++;
 	}
 }
-void	close_unused_pipes(t_returned_data *head, t_returned_data *curr, char **env, int id)
+
+void	close_unused_pipes(t_returned_data *head, t_returned_data *curr)
 {
-	static int k;
-	int	h;
-	h = 0;
 	while (head)
 	{
 		if (head != curr)
@@ -30,84 +40,69 @@ void	close_unused_pipes(t_returned_data *head, t_returned_data *curr, char **env
 				close(head->output_fd);
 		}
 		head = head->next;
-		h++;
+	}
+}
+
+void	handle_the_cmd(t_returned_data *t, t_returned_data *data, \
+	t_list **env_l, char **env)
+{
+	int	check;
+
+	close_unused_pipes(t, data);
+	check = built_exist(data, env_l);
+	if (data->input_fd != 0 && !check)
+		dup_and_close(data, 'i');
+	if (check)
+		if (data->input_fd)
+			close (data->input_fd);
+	if (data->output_fd != 1)
+		dup_and_close(data, 'o');
+	if (built_check(data, env_l))
+		ft_exit(0);
+	else if (execve(get_command_path(env, data->cmd_path), \
+	data->args, env) == -1)
+	{
+		printf("command not found\n");
+		key.exit_stat = 127;
+		ft_exit(key.exit_stat);
+	}
+}
+
+void	check_and_exec(t_returned_data *data, t_list **env_l, \
+	char **env, int *id)
+{
+	int				i;
+	t_returned_data	*t;
+
+	t = data;
+	i = 0;
+	while (data)
+	{
+		if (data->is_executable)
+		{
+			id[i] = fork();
+			if (id[i] == 0)
+				handle_the_cmd(t, data, env_l, env);
+		}
+		i++;
+		data = data->next;
 	}
 }
 
 void	fill_list(t_returned_data *data, char **env, t_list **env_l)
 {
-	int	*id;
-	int	counter;
-	char *path;
-	t_returned_data *t = data;
-	t_returned_data *temp = data;
-	int	check;
-	int	len;
-	counter = 0;
-	while (temp)
-	{
-		counter++;
-		temp = temp->next;
-	}
-	len = counter;
+	int				*id;
+	int				counter;
+	t_returned_data	*t;
+
+	counter = lst_count(data);
 	id = malloc(counter * sizeof(int));
-	counter = 0;
-	if (len == 1 && built_exist(data, env_l) && data->is_executable)
+	if (counter == 1 && built_exist(data, env_l) && data->is_executable)
 		built_check(data, env_l);
 	else
 	{
 		key.flag_for_here = 2;
-		while (data)
-		{
-			if (data->is_executable)
-			{
-				id[counter] = fork();
-				if (id[counter] == 0)
-				{		
-					close_unused_pipes(t, data, env, id[counter]);
-					{
-						check = built_exist(data, env_l);
-						if (data->input_fd != 0 && !check)
-						{
-							dup2(data->input_fd, STD_INPUT);
-							close (data->input_fd);
-						}
-						if (check)
-						{
-							if (data->input_fd)
-							{
-								close (data->input_fd);
-							}
-						}
-						if (data->output_fd != 1)
-						{
-							dup2(data->output_fd, STD_OUTPUT);
-							close (data->output_fd);
-						}
-						if (built_check(data, env_l))
-							ft_exit(0);
-						else if (execve(get_command_path(env, data->cmd_path), data->args, env) == -1)
-						{
-							printf("command not found\n");
-							key.exit_stat = 127;
-							ft_exit(key.exit_stat);
-						}
-					}
-				}
-		}
-		counter++;
-		data = data->next;
-		}
+		check_and_exec(data, env_l, env, id);
 	}
-	close_all_pipes(t);
-	counter = 0;
-	while (counter < len)
-	{
-		int status;
-		wait(&status);
-		if (WIFEXITED(status))
-			key.exit_stat = WEXITSTATUS(status);
-		counter++;
-	}
-	key.flag_for_here = 0;
+	close_and_wait(data, counter);
 }

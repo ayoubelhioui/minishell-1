@@ -1,8 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   echo.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/14 12:48:09 by ijmari            #+#    #+#             */
+/*   Updated: 2022/06/14 12:48:48 by ijmari           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 void	print_string(char *s, char c, int flag)
 {
 	int	i;
+
 	i = 0;
 	while (s[i])
 	{
@@ -27,14 +40,14 @@ void	print_string(char *s, char c, int flag)
 		i++;
 	}
 }
+
 void	ft_echo(char **s)
 {
 	int		i;
 	char	c;
-	c = 'a';
 
+	c = 'a';
 	i = 0;
-	int j = 0;
 	if (*s == NULL)
 		printf("\n");
 	if (!ft_strcmp(s[0], "-n"))

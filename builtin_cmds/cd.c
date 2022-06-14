@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cd.c                                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/14 12:47:45 by ijmari            #+#    #+#             */
+/*   Updated: 2022/06/14 12:47:57 by ijmari           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 void	cd(char **paths, t_list **env)
@@ -16,7 +28,7 @@ void	cd(char **paths, t_list **env)
 				buff = ft_split(curr->content, '=');
 				ret = chdir((const char *) buff[1]);
 				ft_free(buff);
-				break;
+				break ;
 			}
 			curr = curr->next;
 		}
