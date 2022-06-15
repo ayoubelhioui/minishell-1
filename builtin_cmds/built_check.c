@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 12:46:17 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/14 17:03:23 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/14 19:18:30 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	built_check(t_returned_data *ret, t_list **env)
 	{
 		if (ret->args[1])
 		{
-			key.exit_stat = atoi(ret->args[1]);
+			g_key.exit_stat = atoi(ret->args[1]);
 			ft_exit(ret->exit_stat);
 		}
 		else

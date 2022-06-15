@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 15:16:09 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/14 18:54:51 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/14 19:25:43 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,16 +63,17 @@ void	handle_the_cmd(t_returned_data *t, t_returned_data *data, \
 	data->args, env) == -1)
 	{
 		printf("command not found\n");
-		key.exit_stat = 127;
-		ft_exit(key.exit_stat);
+		g_key.exit_stat = 127;
+		ft_exit(g_key.exit_stat);
 	}
 }
 
 void	check_and_exec(t_returned_data *data, t_list **env_l, \
-	char **env, int *id)
+	char **env)
 {
 	int				i;
 	t_returned_data	*t;
+	int				id;
 
 	t = data;
 	i = 0;
@@ -80,8 +81,8 @@ void	check_and_exec(t_returned_data *data, t_list **env_l, \
 	{
 		if (data->is_executable)
 		{
-			id[i] = fork();
-			if (id[i] == 0)
+			id = fork();
+			if (id == 0)
 				handle_the_cmd(t, data, env_l, env);
 		}
 		i++;
@@ -97,7 +98,6 @@ void	fill_list(t_returned_data *data, char **env, t_list **env_l)
 	int				saver;
 
 	counter = lst_count(data);
-	id = malloc(counter * sizeof(int));
 	if (counter == 1 && built_exist(data, env_l) && data->is_executable)
 	{
 		saver = dup(1);
@@ -108,8 +108,8 @@ void	fill_list(t_returned_data *data, char **env, t_list **env_l)
 	}
 	else
 	{
-		key.flag_for_here = 2;
-		check_and_exec(data, env_l, env, id);
+		g_key.flag_for_here = 2;
+		check_and_exec(data, env_l, env);
 	}
 	close_and_wait(data, counter);
 }

@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 19:02:51 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/14 19:08:16 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/15 20:54:20 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include <unistd.h>
 # include <dirent.h>
 # include <errno.h>
+# include <termios.h>
 // #include "get_next_line/get_next_line.h"
 
 # define PIPE '|'
@@ -113,4 +114,5 @@ void	dup_and_close(t_returned_data *data, int c);
 void	close_and_wait(t_returned_data *data, int counter);
 int		lst_count(t_returned_data *data);
 void	close_all_pipes(t_returned_data *head);
+void	sig_quit(int sig);
 #endif
