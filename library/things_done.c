@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 15:16:09 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/14 19:25:43 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/16 13:04:57 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,4 +112,5 @@ void	fill_list(t_returned_data *data, char **env, t_list **env_l)
 		check_and_exec(data, env_l, env);
 	}
 	close_and_wait(data, counter);
+	g_key.flag_for_here = 0;
 }

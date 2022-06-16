@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 17:12:41 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/16 12:02:53 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/16 14:15:04 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -269,20 +269,34 @@ int redirection_counter(t_list *splitted_data, char redirection)
     }
     return (counter);
 }
-
-
 int here_doc(char *limiter, char **env)
 {
-    int     p[2];
+    int p[2];
 	char	*s;
-    char    *entered_data;
+    char *entered_data;
 
-    pipe(p);
+	g_key.flag_for_here = 1;
+	s = readline("> ");
+	if (s)
+    	entered_data = expanding(s, env);
+	else
+	{
+		g_key.after_exit = 1;
+		if (g_key.flag == 6)
+			printf(">\n");
+		return (-4);
+	}
+	pipe(p);
     limiter = remove_quotes(limiter);
-    while (TRUE)
+    while (entered_data)
     {
+        if (!ft_strcmp(entered_data, limiter))
+            break ;
+        write(p[STD_OUTPUT], entered_data, ft_strlen(entered_data));
+        write(p[STD_OUTPUT], "\n", 2);
+        free (entered_data);
         s = readline("> ");
-        if (s)
+		if (s)
     		entered_data = expanding(s, env);
 		else
 		{
@@ -292,15 +306,43 @@ int here_doc(char *limiter, char **env)
 			close(p[STD_OUTPUT]);
 			return (p[STD_INPUT]);
 		}
-        if (!ft_strcmp(entered_data, limiter))
-            break ;
-        write(p[STD_OUTPUT], entered_data, ft_strlen(entered_data));
-        write(p[STD_OUTPUT], "\n", 2);
-        free (entered_data);
-    }
+	}
     close(p[STD_OUTPUT]);
     return (p[STD_INPUT]);
 }
+
+
+// int here_doc(char *limiter, char **env)
+// {
+//     int     p[2];
+// 	char	*s;
+//     char    *entered_data;
+
+//     pipe(p);
+//     limiter = remove_quotes(limiter);
+//     while (TRUE)
+//     {
+// 		g_key.flag_for_here = 1;
+//         s = readline("> ");
+//         if (s)
+//     		entered_data = expanding(s, env);
+// 		else
+// 		{
+// 			g_key.after_exit = 1;
+// 			if (g_key.flag == 6)
+// 				printf(">\n");
+// 			close(p[STD_OUTPUT]);
+// 			return (p[STD_INPUT]);
+// 		}
+//         if (!ft_strcmp(entered_data, limiter))
+//             break ;
+//         write(p[STD_OUTPUT], entered_data, ft_strlen(entered_data));
+//         write(p[STD_OUTPUT], "\n", 2);
+//         free (entered_data);
+//     }
+//     close(p[STD_OUTPUT]);
+//     return (p[STD_INPUT]);
+// }
 
 void	heredoc_searcher(char **splitted_data, t_returned_data *returned_data, char **env)
 {
@@ -774,7 +816,6 @@ int	preparing(t_data *entered_data, t_list *env, t_returned_data **returned_data
     new_env = get_new_env(env);
     entered_data->context = expanding(entered_data->context, new_env);
     entered_data->context = get_new_context(entered_data);
-    printf("new is : %s\n", entered_data->context);
     splitted_by_pipe = ft_split(entered_data->context, PIPE);
     commands_number = get_length(splitted_by_pipe);
     splitted_by_space = ft_split(entered_data->context, SPACE);
@@ -793,11 +834,9 @@ int	preparing(t_data *entered_data, t_list *env, t_returned_data **returned_data
 
 int main(int ac, char **av,  char **env)
 {
-	struct sigaction sa;
     t_data entered_data;
     t_returned_data *returned_data;
 	t_list	*new_env;
-	t_returned_data	*en_t;
 	t_returned_data *s;
 	struct termios termios_save;
 	struct termios termios_new;
@@ -819,8 +858,8 @@ int main(int ac, char **av,  char **env)
 		termios_new.c_lflag &= ~(ECHOCTL);
 		tcsetattr(0, 0, &termios_new);
 		signal (SIGINT, &sig_handler);
-		signal(SIGQUIT, SIG_IGN);
-        entered_data.context = readline("minishell : ");
+		signal (SIGQUIT, &sig_quit);
+		entered_data.context = readline("minishell : ");
 		if (entered_data.context == NULL)
 			ft_exit(g_key.exit_stat);
 		if (ft_strlen(entered_data.context) == 0)
