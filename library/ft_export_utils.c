@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 16:02:27 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/14 16:08:51 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/14 17:06:19 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ int	check_if_valid(char *arg)
 	return (1);
 }
 
-void	swap(t_list *a, t_list *b)
+void	swap(t_list *a, t_list *b, int *swapped)
 {
 	char	*temp;
 	char	crit;
@@ -67,6 +67,7 @@ void	swap(t_list *a, t_list *b)
 	a->criteria = b->criteria;
 	b->content = temp;
 	b->criteria = crit;
+	*swapped = 1;
 }
 
 void	sort_list(t_list *en)
@@ -78,6 +79,7 @@ void	sort_list(t_list *en)
 
 	swapped = 1;
 	curr = en;
+	lptr = NULL;
 	if (en == NULL)
 		return ;
 	while (swapped)
@@ -87,10 +89,7 @@ void	sort_list(t_list *en)
 		while (ptr1->next != lptr)
 		{
 			if (ft_strcmp(ptr1->content, ptr1->next->content) > 0)
-			{
-				swap(ptr1, ptr1->next);
-				swapped = 1;
-			}
+				swap(ptr1, ptr1->next, &swapped);
 			ptr1 = ptr1->next;
 		}
 		lptr = ptr1;

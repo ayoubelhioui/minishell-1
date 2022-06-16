@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 12:49:37 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/14 12:49:46 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/14 19:19:21 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,5 +14,5 @@
 
 void	ft_exit(int c)
 {
-	exit(key.exit_stat);
+	exit(g_key.exit_stat);
 }

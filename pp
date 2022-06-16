@@ -1,0 +1,15 @@
+Makefile
+a.txt
+builtin_cmds
+library
+line.c
+ll
+minishell
+minishell.c
+minishell.h
+okkk
+pp
+quotes_handling.c
+signals.c
+utils.c
+y.txt

@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 15:14:17 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/14 16:17:32 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/14 17:09:17 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ char		*join_pl(char const *s1, char const *s2);
 char		**split_with_plus(char *arg);
 int			there_is_plus(char *arg);
 void		sort_list(t_list *en);
-void		swap(t_list *a, t_list *b);
+void		swap(t_list *a, t_list *b, int *ptr);
 int			check_if_valid(char *arg);
 void		add_it_back(char **split_arg, char *arg, t_list **env);
 char		**split_with_equ(char *arg);

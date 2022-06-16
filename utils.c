@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/14 16:35:49 by ijmari            #+#    #+#             */
+/*   Updated: 2022/06/14 16:38:18 by ijmari           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	is_int(char *str)
@@ -21,7 +33,7 @@ int	is_int(char *str)
 void	create_list(char **env, t_list **env_l)
 {
 	int		i;
-	t_list 	*head;
+	t_list	*head;
 
 	i = 0;
 	head = *env_l;
@@ -30,6 +42,7 @@ void	create_list(char **env, t_list **env_l)
 	while (env[i])
 		ft_lstadd_back (env_l, ft_lstnew(env[i++]));
 }
+
 void	delete_node(t_list **env, int pos)
 {
 	t_list	*del;
@@ -41,7 +54,7 @@ void	delete_node(t_list **env, int pos)
 	if (pos == 0)
 	{
 		*env = (*env)->next;
-		original->next = NULL; 
+		original->next = NULL;
 	}
 	else
 	{
@@ -57,16 +70,6 @@ void	delete_node(t_list **env, int pos)
 	}
 }
 
-void	ft_free(char **ptr)
-{
-	int i;
-
-	i = 0;
-	while (ptr[i])
-		free(ptr[i++]);
-	free(ptr);
-}
-
 void	print_list(t_list *en, char	*arg)
 {
 	char	**name_path;
@@ -74,22 +77,22 @@ void	print_list(t_list *en, char	*arg)
 
 	cc = en;
 	while (cc)
-    {
-		name_path = split_with_equ(cc->content);  
+	{
+		name_path = split_with_equ(cc->content);
 		if (cc->criteria == 'e')
 		{
 			if (!ft_strcmp("\"\"", name_path[1]))
 				printf("declare -x %s%c%s\n", name_path[0], '=', name_path[1]);
 			else if (name_path[1])
-        		printf("declare -x %s%c\"%s\"\n", name_path[0], '=', name_path[1]);
+				printf("declare -x %s%c\"%s\"\n", name_path[0], '=', name_path[1]);
 			else
 				printf("declare -x %s%c\"\"\n", name_path[0], '=');
 		}
 		else
 			printf("declare -x %s\n", name_path[0]);
 		ft_free(name_path);
-        cc = cc->next;
-    }
+		cc = cc->next;
+	}
 }
 
 int	ft_equal(char *arg)

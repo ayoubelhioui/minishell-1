@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/14 17:12:41 by ijmari            #+#    #+#             */
+/*   Updated: 2022/06/16 12:02:53 by ael-hiou         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 
 #include "minishell.h"
 
@@ -274,7 +286,9 @@ int here_doc(char *limiter, char **env)
     		entered_data = expanding(s, env);
 		else
 		{
-			key.after_exit = 1;
+			g_key.after_exit = 1;
+			if (g_key.flag == 6)
+				printf(">\n");
 			close(p[STD_OUTPUT]);
 			return (p[STD_INPUT]);
 		}
@@ -310,7 +324,9 @@ void	heredoc_searcher(char **splitted_data, t_returned_data *returned_data, char
         {
             i += 2;
             temp->input_fd =  here_doc(splitted_data[i], env);
-			key.flag_for_here = 0;
+			if (temp->input_fd == -4)
+				g_key.flag = 6;
+			g_key.flag_for_here = 0;
         }
         i++;
     }
@@ -783,40 +799,46 @@ int main(int ac, char **av,  char **env)
 	t_list	*new_env;
 	t_returned_data	*en_t;
 	t_returned_data *s;
-
+	struct termios termios_save;
+	struct termios termios_new;
 	if (ac != 1)
 	{
 		printf("Too many arguments\n");
         exit (1);
 	}
 	create_list(env, &new_env);
-	// signal (SIGINT, &sig_handler);
-	// signal(SIGQUIT, SIG_IGN);
-	key.flag_for_here = 0;
-	key.after_exit = 0;
+	g_key.flag_for_here = 0;
+	g_key.after_exit = 0;
     while (TRUE)
     {
-		key.flag = 0;
-		dup2(key.saver, 0);
+		g_key.flag = 0;
+		dup2(g_key.saver, 0);
         returned_data = NULL;
+		tcgetattr(0, &termios_save);
+		termios_new = termios_save;
+		termios_new.c_lflag &= ~(ECHOCTL);
+		tcsetattr(0, 0, &termios_new);
+		signal (SIGINT, &sig_handler);
+		signal(SIGQUIT, SIG_IGN);
         entered_data.context = readline("minishell : ");
 		if (entered_data.context == NULL)
-			break ;
+			ft_exit(g_key.exit_stat);
 		if (ft_strlen(entered_data.context) == 0)
             continue;
-		if (key.after_exit == 1 && entered_data.context)
-			key.after_exit = 0;
-        add_history(entered_data.context);
+		if (g_key.after_exit == 1 && entered_data.context)
+			g_key.after_exit = 0;
+		add_history(entered_data.context);
         if (error_handling(entered_data.context))
         {
             printf("error occured\n");
             continue ;
         }
-        if (preparing(&entered_data, new_env, &returned_data) == -1 || key.flag == 6)
+        if (preparing(&entered_data, new_env, &returned_data) == -1 || g_key.flag == 6)
 			continue;
 		s = returned_data;
 		fill_list(s, env, &new_env);
         free (entered_data.context);
+		// system("leaks minishell");
     }
 	// ft_free_list(&env_l);
 }
