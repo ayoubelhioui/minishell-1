@@ -6,11 +6,11 @@
 /*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 19:02:51 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/16 12:02:19 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/16 14:27:05 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
+# ifndef MINISHELL_H
 # define MINISHELL_H
 # include <stdio.h>
 # include <stdlib.h>
@@ -25,7 +25,6 @@
 # include <dirent.h>
 # include <errno.h>
 # include <termios.h>
-// #include "get_next_line/get_next_line.h"
 
 # define PIPE '|'
 # define SINGLE_QUOTE '\''
@@ -53,7 +52,14 @@ typedef struct returned_data
 	char					**new_env;
 	int						exit_stat;
 	struct returned_data	*next;
-}	t_returned_data;
+}	                        t_returned_data;
+
+typedef struct here_doc_vars
+{
+    int     p[2];
+	char	*s;
+    char    *entered_data;
+}               t_here_doc_vars;
 
 typedef struct add_space_vars
 {
@@ -87,6 +93,12 @@ typedef struct remove_quotes_vars
     int      j;
     int     new_string_length;
 }               t_remove_quotes_vars;
+
+typedef struct error_handling_vars
+{
+    int i;
+    int in_quote;
+}                   t_error_handling_vars;
 // typedef struct expanding
 // {
 //     char *str;
@@ -101,7 +113,7 @@ typedef struct g_str
 	int		flag;
 	int		after_exit;
 	char	*path;
-}	t_str;
+}	        t_str;
 t_str	g_key;
 char	*get_next_line(int fd);
 void	ft_free(char **s);
