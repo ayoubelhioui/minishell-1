@@ -6,7 +6,7 @@
 /*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 17:12:41 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/16 12:02:53 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/16 15:37:34 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,53 +39,60 @@ int check_unclosed_quotes(char *context)
     return (in_quote);
 }
 
+int error_handling_helper(t_error_handling_vars *vars, char *context)
+{
+    if (context[vars->i] == RED_INPUT && vars->in_quote == 0)
+    {
+        vars->i++;
+        if (context[vars->i] == RED_OUTPUT || context[vars->i] == '\0')
+            return (TRUE);
+        if(context[vars->i] == RED_INPUT)
+        {
+            vars->i++;
+            if (context[vars->i] == '\0' || context[vars->i] == RED_INPUT || context[vars->i] == RED_OUTPUT)
+                return (TRUE);
+        }
+    }
+    else if (context[vars->i] == RED_OUTPUT && vars->in_quote == 0)
+    {
+        vars->i++;
+        if (context[vars->i] == RED_INPUT || context[vars->i] == '\0')
+            return (TRUE);
+        if(context[vars->i] == RED_OUTPUT)
+        {
+            vars->i++;
+            if (context[vars->i] == '\0' || context[vars->i] == RED_OUTPUT || context[vars->i] == RED_INPUT)
+                return (TRUE);
+        }
+    }
+    return (FALSE);
+}
+
 int error_handling(char *context)
 {
-    int i;
-    int in_quote = 0;
+    t_error_handling_vars vars;
 
-    i = 0;
+    vars.i = 0;
+    vars.in_quote = 0;
     if (check_unclosed_quotes(context))
         return (TRUE);
-    while (context[i])
+    while (context[vars.i])
     {
-        if (context[i] == DOUBLE_QUOTE)
-            in_a_quote(&in_quote, DOUBLE_QUOTE);
-        else if (context[i] == SINGLE_QUOTE)
-            in_a_quote(&in_quote, SINGLE_QUOTE);
-        if (context[i] == PIPE && in_quote == 0)
+        if (context[vars.i] == DOUBLE_QUOTE)
+            in_a_quote(&vars.in_quote, DOUBLE_QUOTE);
+        else if (context[vars.i] == SINGLE_QUOTE)
+            in_a_quote(&vars.in_quote, SINGLE_QUOTE);
+        if (context[vars.i] == PIPE && vars.in_quote == 0)
         {
-            i++;
-            if (context[i] == PIPE || context[i] == '\0')
+            vars.i++;
+            if (context[vars.i] == PIPE || context[vars.i] == '\0')
                 return (TRUE);
         }
-        if (context[i] == RED_INPUT && in_quote == 0)
-        {
-            i++;
-            if (context[i] == RED_OUTPUT || context[i] == '\0')
-                return (TRUE);
-            if(context[i] == RED_INPUT)
-            {
-                i++;
-                if (context[i] == '\0' || context[i] == RED_INPUT || context[i] == RED_OUTPUT)
-                    return (TRUE);
-            }
-        }
-        if (context[i] == RED_OUTPUT && in_quote == 0)
-        {
-            i++;
-            if (context[i] == RED_INPUT || context[i] == '\0')
-                return (TRUE);
-            if(context[i] == RED_OUTPUT)
-            {
-                i++;
-                if (context[i] == '\0' || context[i] == RED_OUTPUT || context[i] == RED_INPUT)
-                    return (TRUE);
-            }
-        }
-        if (context[i] == '\0')
+        else if (error_handling_helper(&vars, context))
+            return (TRUE);
+        if (context[vars.i] == '\0')
             return (FALSE);            
-        i++;
+        vars.i++;
     }
     return (FALSE);
 }
@@ -147,10 +154,29 @@ int get_new_string_length(char *context)
     return (inside_quotes_counter);
 }
 
-// void    remove_quotes_helper(char *context, )
-// {
-
-// }
+char    *remove_quotes_helper(char *context, t_remove_quotes_vars *vars)
+{
+    while (context[vars->i])
+    {
+        if (context[vars->i] == DOUBLE_QUOTE)
+        {
+            vars->i++;
+            while (context[vars->i] && context[vars->i] != DOUBLE_QUOTE)
+                vars->new_string[vars->j++] = context[vars->i++];
+        }
+        else if (context[vars->i] == SINGLE_QUOTE)
+        {
+            vars->i++;
+            while (context[vars->i] && context[vars->i] != SINGLE_QUOTE)
+                vars->new_string[vars->j++] = context[vars->i++];
+        }
+        else
+            vars->new_string[vars->j++] = context[vars->i];
+        vars->i++;
+    }
+    vars->new_string[vars->j] = '\0';
+    return (vars->new_string);
+}
 
 char    *remove_quotes(char *context)
 {
@@ -160,26 +186,7 @@ char    *remove_quotes(char *context)
     vars.new_string = malloc(sizeof(char) * (vars.new_string_length + 1));
     vars.i = 0;
     vars.j = 0;
-    while (context[vars.i])
-    {
-        if (context[vars.i] == DOUBLE_QUOTE)
-        {
-            vars.i++;
-            while (context[vars.i] && context[vars.i] != DOUBLE_QUOTE)
-                vars.new_string[vars.j++] = context[vars.i++];
-        }
-        else if (context[vars.i] == SINGLE_QUOTE)
-        {
-            vars.i++;
-            while (context[vars.i] && context[vars.i] != SINGLE_QUOTE)
-                vars.new_string[vars.j++] = context[vars.i++];
-        }
-        else
-            vars.new_string[vars.j++] = context[vars.i];
-        vars.i++;
-    }
-    vars.new_string[vars.j] = '\0';
-    return (vars.new_string);
+    return (remove_quotes_helper(context, &vars));
 }
 
 
@@ -270,52 +277,65 @@ int redirection_counter(t_list *splitted_data, char redirection)
     return (counter);
 }
 
-
-int here_doc(char *limiter, char **env)
+int here_doc_helper(t_here_doc_vars *vars, char *limiter, char **env)
 {
-    int     p[2];
-	char	*s;
-    char    *entered_data;
-
-    pipe(p);
-    limiter = remove_quotes(limiter);
-    while (TRUE)
+    while (vars->entered_data)
     {
-        s = readline("> ");
-        if (s)
-    		entered_data = expanding(s, env);
+        if (!ft_strcmp(vars->entered_data, limiter))
+            break ;
+        if (!ft_strcmp(vars->entered_data, limiter))
+            break ;
+        write(vars->p[STD_OUTPUT], vars->entered_data, ft_strlen(vars->entered_data));
+        write(vars->p[STD_OUTPUT], "\n", 2);
+        free (vars->entered_data);
+        vars->s = readline("> ");
+		if (vars->s)
+    		vars->entered_data = expanding(vars->s, env);
 		else
 		{
 			g_key.after_exit = 1;
 			if (g_key.flag == 6)
-				printf(">\n");
-			close(p[STD_OUTPUT]);
-			return (p[STD_INPUT]);
+                printf(">\n");
+			close(vars->p[STD_OUTPUT]);
+			return (vars->p[STD_INPUT]);
 		}
-        if (!ft_strcmp(entered_data, limiter))
-            break ;
-        write(p[STD_OUTPUT], entered_data, ft_strlen(entered_data));
-        write(p[STD_OUTPUT], "\n", 2);
-        free (entered_data);
-    }
-    close(p[STD_OUTPUT]);
-    return (p[STD_INPUT]);
+	}
+    close(vars->p[STD_OUTPUT]);
+    return (vars->p[STD_INPUT]);
+}
+
+int here_doc(char *limiter, char **env)
+{
+    t_here_doc_vars vars;
+
+	g_key.flag_for_here = 1;
+	vars.s = readline("> ");
+	if (vars.s)
+    	vars.entered_data = expanding(vars.s, env);
+	else
+	{
+		g_key.after_exit = 1;
+		if (g_key.flag == 6)
+			printf(">\n");
+		return (-4);
+	}
+	pipe(vars.p);
+    limiter = remove_quotes(limiter);
+    return (here_doc_helper(&vars, limiter, env));
 }
 
 void	heredoc_searcher(char **splitted_data, t_returned_data *returned_data, char **env)
 {
     int     i;
     int     input_fd;
-    t_returned_data *temp;
     int         in_quote;
 
     i = 0;
-    temp = returned_data;
     in_quote = 0;
     while (splitted_data[i])
     {
         if (!ft_strcmp(splitted_data[i], "|"))
-            temp = temp->next;
+            returned_data = returned_data->next;
         else if (!ft_strcmp(splitted_data[i], "\""))
             in_a_quote(&in_quote, DOUBLE_QUOTE);
         else if (!ft_strcmp(splitted_data[i], "'"))
@@ -323,8 +343,8 @@ void	heredoc_searcher(char **splitted_data, t_returned_data *returned_data, char
         else if (!ft_strcmp(splitted_data[i], "<") && !ft_strcmp(splitted_data[i + 1], "<") && in_quote == 0)
         {
             i += 2;
-            temp->input_fd =  here_doc(splitted_data[i], env);
-			if (temp->input_fd == -4)
+            returned_data->input_fd =  here_doc(splitted_data[i], env);
+			if (returned_data->input_fd == -4)
 				g_key.flag = 6;
 			g_key.flag_for_here = 0;
         }
@@ -774,7 +794,6 @@ int	preparing(t_data *entered_data, t_list *env, t_returned_data **returned_data
     new_env = get_new_env(env);
     entered_data->context = expanding(entered_data->context, new_env);
     entered_data->context = get_new_context(entered_data);
-    printf("new is : %s\n", entered_data->context);
     splitted_by_pipe = ft_split(entered_data->context, PIPE);
     commands_number = get_length(splitted_by_pipe);
     splitted_by_space = ft_split(entered_data->context, SPACE);
@@ -787,20 +806,36 @@ int	preparing(t_data *entered_data, t_list *env, t_returned_data **returned_data
 		return (-1);
 	return (1);
 }
-
-
-
-
-int main(int ac, char **av,  char **env)
+void    prompt(char **env, t_list *new_env)
 {
-	struct sigaction sa;
     t_data entered_data;
     t_returned_data *returned_data;
+    
+    returned_data = NULL;
+    entered_data.context = readline("minishell : ");
+    if (entered_data.context == NULL)
+    	ft_exit(g_key.exit_stat);
+    if (ft_strlen(entered_data.context) == 0)
+        return ;
+    if (g_key.after_exit == 1 && entered_data.context)
+    	g_key.after_exit = 0;
+    add_history(entered_data.context);
+    if (error_handling(entered_data.context))
+    {
+        printf("error occured\n");
+        return  ;
+    }
+    if (preparing(&entered_data, new_env, &returned_data) == -1 || g_key.flag == 6)
+    	return ;
+    fill_list(returned_data, env, &new_env);
+    free (entered_data.context);
+}
+int main(int ac, char **av,  char **env)
+{
 	t_list	*new_env;
-	t_returned_data	*en_t;
-	t_returned_data *s;
 	struct termios termios_save;
 	struct termios termios_new;
+
 	if (ac != 1)
 	{
 		printf("Too many arguments\n");
@@ -813,32 +848,12 @@ int main(int ac, char **av,  char **env)
     {
 		g_key.flag = 0;
 		dup2(g_key.saver, 0);
-        returned_data = NULL;
 		tcgetattr(0, &termios_save);
 		termios_new = termios_save;
 		termios_new.c_lflag &= ~(ECHOCTL);
 		tcsetattr(0, 0, &termios_new);
-		signal (SIGINT, &sig_handler);
-		signal(SIGQUIT, SIG_IGN);
-        entered_data.context = readline("minishell : ");
-		if (entered_data.context == NULL)
-			ft_exit(g_key.exit_stat);
-		if (ft_strlen(entered_data.context) == 0)
-            continue;
-		if (g_key.after_exit == 1 && entered_data.context)
-			g_key.after_exit = 0;
-		add_history(entered_data.context);
-        if (error_handling(entered_data.context))
-        {
-            printf("error occured\n");
-            continue ;
-        }
-        if (preparing(&entered_data, new_env, &returned_data) == -1 || g_key.flag == 6)
-			continue;
-		s = returned_data;
-		fill_list(s, env, &new_env);
-        free (entered_data.context);
-		// system("leaks minishell");
+		// signal (SIGINT, &sig_handler);
+		// signal(SIGQUIT, SIG_IGN);
+        prompt(env, new_env);
     }
-	// ft_free_list(&env_l);
 }
