@@ -44,19 +44,44 @@ typedef struct returned_data
     struct returned_data    *next;
 }               t_returned_data;
 
+typedef struct add_space_vars
+{
+    int     i;
+    int     j;
+    int     new_string_length;
+    char    *new_string;
+    int     in_quote;
+}           t_add_space_vars;
+
 typedef struct data
 {
     char    *context;
     int     value;
     int     index;
-}               t_data;
-
-typedef struct expanding
+}
+               t_data;
+typedef struct expanding_vars
 {
-    char *str;
-    char *new_str;
-    int dollar_index;
-}                   t_expanding;
+    t_data  data;
+    int     in_quote;
+    int     is_limiter;
+    char    *saver;
+    int     x;
+    int     j;
+}           t_expanding;
+typedef struct remove_quotes_vars
+{
+    char    *new_string;
+    int      i;
+    int      j;
+    int     new_string_length;
+}               t_remove_quotes_vars;
+// typedef struct expanding
+// {
+//     char *str;
+//     char *new_str;
+//     int dollar_index;
+// }                   t_expanding;
 typedef struct g_str
 {
 	int	exit_stat;
