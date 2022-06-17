@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 17:12:41 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/17 15:46:01 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/17 16:18:49 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -849,7 +849,7 @@ void    prompt(char **env, t_list *new_env)
     if (entered_data.context == NULL)
 	{
 		printf("exit\n");
-    	ft_exit(g_key.exit_stat, NULL);
+    	ft_exit(NULL);
 	}
 	if (ft_strlen(entered_data.context) == 0)
         return ;

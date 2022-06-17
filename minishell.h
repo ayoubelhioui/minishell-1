@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 19:02:51 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/17 15:37:37 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/17 16:19:02 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,7 @@ void	sig_handler(int sig);
 void	cd(char **paths, t_list **env);
 int		ft_strstr(const char *s1, const char *s2);
 void	pwd(void);
-void	ft_exit(unsigned long long c, char **args);
+void	ft_exit(char *ex);
 int		is_int(char *str);
 void	ft_echo(char **s);
 void	ft_env(t_list **env);

@@ -34,11 +34,10 @@ int	built_check(t_returned_data *ret, t_list **env)
 		printf("exit\n");
 		if (ret->args[1])
 		{
-			g_key.exit_stat = ft_atoi(ret->args[1]);
-			ft_exit(g_key.exit_stat, ret->args);
+			ft_exit(ret->args[1]);
 		}
 		else
-			ft_exit(0, ret->args);
+			ft_exit("0");
 	}
 	else if (!ft_strcmp(ret->cmd_path, "export"))
 		ft_export(env, &ret->args[1]);
