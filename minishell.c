@@ -1,6 +1,5 @@
 
 
-
 #include "minishell.h"
 
 void    in_a_quote(int *in_quote, int SINGLE_OR_DOUBLE)
@@ -582,13 +581,13 @@ void    getting_output_fd(char *str, t_returned_data *returned_data, int unexist
             {
                 temp = remove_quotes(s[i + 1]);
                 returned_data->output_fd = open(temp, O_WRONLY | O_CREAT | O_APPEND, 00400 | 00200);
-                free (temp);
+                // free (temp);
             }
             else
             {
                 temp = remove_quotes(s[i]);
                 returned_data->output_fd = open(temp, O_WRONLY | O_CREAT | O_TRUNC, 00400 | 00200);
-                free (temp);
+                // free (temp);
             }
             if (returned_data->output_fd == -1)
             {
@@ -637,11 +636,17 @@ int get_cmd_args(char **data, t_returned_data *returned_data, char **env)
     while (returned_data)
     {
         s = ft_split(data[k++], SPACE);
+		int j = 0;
+		while (s[j])
+			printf("s[i] is %s\n", s[j++]);
         whole_length = get_length(s) - get_args_length(s);
         if (whole_length == 0)
+		{
             return (FALSE);
-        returned_data->args = malloc(sizeof(char *) * (whole_length + 1));
-        get_cmd_args_helper(s, returned_data, env);
+		}
+		returned_data->args = malloc(sizeof(char *) * (whole_length + 1));
+		get_cmd_args_helper(s, returned_data, env);
+        // free(s);
         returned_data = returned_data->next;
     }
     return (TRUE);
@@ -652,7 +657,7 @@ void    args_final_touch(t_returned_data *returned_data, char **env)
 {
     char *temp;
     int i;
-    
+
     while (returned_data)
     {
         i = 0;
@@ -662,7 +667,6 @@ void    args_final_touch(t_returned_data *returned_data, char **env)
             back_space(returned_data->args[i]);
             temp = remove_quotes(returned_data->args[i]);
             returned_data->args[i] = temp;
-            // free (temp);
             i++;
         }
         returned_data = returned_data->next;
@@ -725,6 +729,7 @@ char *dollar_sign_found(t_data *data, char **env, char *saver, int *i)
     // char *vars.temp;
     // char *vars.temp1;
     t_dollar_sign_vars vars;
+	char *f;
 
     data->index++;
     vars.env_value = NULL;
@@ -866,6 +871,7 @@ int	preparing(t_data *entered_data, t_list *env, t_returned_data **returned_data
     splitted_by_pipe = ft_split(entered_data->context, PIPE);
     commands_number = get_length(splitted_by_pipe);
     splitted_by_space = ft_split(entered_data->context, SPACE);
+	free(entered_data->context);
     create_returned_nodes(returned_data, commands_number);
     heredoc_searcher(splitted_by_space, *returned_data, new_env);
     pipe_handling(commands_number, splitted_by_pipe, *returned_data);
@@ -877,6 +883,7 @@ int	preparing(t_data *entered_data, t_list *env, t_returned_data **returned_data
         ft_free(splitted_by_space);
 		return (-1);
     }
+	free(new_env);
     ft_free(splitted_by_pipe);
     ft_free(splitted_by_space);
 	return (1);
@@ -891,7 +898,7 @@ void    prompt(char **env, t_list *new_env)
     if (entered_data.context == NULL)
 	{
 		printf("exit\n");
-    	ft_exit(g_key.exit_stat, NULL);
+    	ft_exit(NULL);
 	}
 	if (ft_strlen(entered_data.context) == 0)
         return ;
@@ -906,8 +913,7 @@ void    prompt(char **env, t_list *new_env)
     if (preparing(&entered_data, new_env, &returned_data) == -1 || g_key.flag == 6)
     	return ;
     fill_list(returned_data, env, &new_env);
-    ft_free(returned_data->args);
-    free(returned_data->cmd_path);
+	ft_free_list(returned_data);
     free (entered_data.context);
 }
 int main(int ac, char **av,  char **env)
@@ -932,10 +938,10 @@ int main(int ac, char **av,  char **env)
 		termios_new = termios_save;
 		termios_new.c_lflag &= ~(ECHOCTL);
 		tcsetattr(0, 0, &termios_new);
-		// signal (SIGINT, &sig_handler);
-		// signal(SIGQUIT, SIG_IGN);`
+		signal (SIGINT, &sig_handler);
+		signal(SIGQUIT, SIG_IGN);
         prompt(env, new_env);
-        // system("leaks minishell");
+        system("leaks minishell");
         // break;
     }
 }

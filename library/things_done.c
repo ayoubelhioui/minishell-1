@@ -42,7 +42,7 @@ void	handle_the_cmd(t_returned_data *t, t_returned_data *data, \
 	{
 		printf("%s: No such file or directory\n", data->cmd_dup);
 		g_key.exit_stat = 127;
-		ft_exit(g_key.exit_stat);
+		ft_exit("127");
 	}
 	if (data->input_fd != 0 && !check)
 		dup_and_close(data, 'i');
@@ -60,7 +60,7 @@ void	handle_the_cmd(t_returned_data *t, t_returned_data *data, \
 	{
 		printf("command not found\n");
 		g_key.exit_stat = 127;
-		ft_exit(g_key.exit_stat, data->args);
+		ft_exit("127");
 	}
 }
 

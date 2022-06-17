@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 16:35:49 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/14 16:38:18 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/17 18:32:42 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,4 +107,18 @@ int	ft_equal(char *arg)
 		i++;
 	}
 	return (0);
+}
+
+void	ft_free_list(t_returned_data *head)
+{
+	t_returned_data	*temp;
+
+	while (head)
+	{
+		temp = head->next;
+		ft_free(head->args);
+    	free(head->cmd_path);
+		free(head);
+		head = temp;
+	}
 }

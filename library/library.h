@@ -6,7 +6,7 @@
 /*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 15:14:17 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/17 16:23:40 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/17 20:48:56 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,6 @@ void		swap(t_list *a, t_list *b, int *ptr);
 int			check_if_valid(char *arg);
 void		add_it_back(char **split_arg, char *arg, t_list **env);
 char		**split_with_equ(char *arg);
-void		ft_free_list(t_list **env);
 void		change_path_value(t_list **env);
 void		free_splits(char **first, char **second);
 void		get_things_changed(char *arg, t_list **env);

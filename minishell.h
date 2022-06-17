@@ -132,7 +132,7 @@ void	sig_handler(int sig);
 void	cd(char **paths, t_list **env);
 int		ft_strstr(const char *s1, const char *s2);
 void	pwd(void);
-void	ft_exit(unsigned long long c, char **args);
+void	ft_exit(char *ex);
 int		is_int(char *str);
 void	ft_echo(char **s);
 void	ft_env(t_list **env);
@@ -150,4 +150,5 @@ void	close_and_wait(t_returned_data *data, int counter);
 int		lst_count(t_returned_data *data);
 void	close_all_pipes(t_returned_data *head);
 void	sig_quit(int sig);
+void	ft_free_list(t_returned_data *head);
 #endif
