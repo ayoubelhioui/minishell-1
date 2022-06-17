@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   library.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 15:14:17 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/14 17:09:17 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/17 10:03:06 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ typedef struct s_list
 char		*copy(char const *s, char *str, unsigned int start, size_t len);
 size_t		ft_strlcpy(char *dst, const char *src, size_t dstsize);
 char		*ft_substr(char const *s, unsigned int start, size_t len);
-char		*ft_strjoin(char const *s1, char const *s2);
+char		*ft_strjoin(char *s1, char *s2);
 char		*ft_strtrim(char *s1, char *set);
 int			ft_strncmp(const char *s1, const char *s2, size_t n);
 int			ft_strcmp(const char *s1, const char *s2);

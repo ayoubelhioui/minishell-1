@@ -6,7 +6,7 @@
 /*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 19:02:51 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/16 14:27:05 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/17 12:49:39 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,20 @@
 # define STD_OUTPUT 1
 # define ZERO '0'
 
+typedef struct dollar_sign_vars
+{
+    int index_saver;
+    char *env_value;
+    char *s1;
+    char *s2;
+    char *temp;
+    char *temp1;
+}           t_dollar_sign_vars;
+
 typedef struct returned_data
 {
 	char					*cmd_path;
+    char                    *cmd_dup;
 	char					**args;
 	int						input_fd;
 	int						output_fd;
@@ -83,6 +94,7 @@ typedef struct expanding_vars
     int     in_quote;
     int     is_limiter;
     char    *saver;
+    char    *temp;
     int     x;
     int     j;
 }           t_expanding;
@@ -112,7 +124,6 @@ typedef struct g_str
 	int		saver;
 	int		flag;
 	int		after_exit;
-	char	*path;
 }	        t_str;
 t_str	g_key;
 char	*get_next_line(int fd);
@@ -145,7 +156,7 @@ int		ft_equal(char *arg);
 void	searching_for_dollar_sign(t_returned_data **data, char **env);
 void	fill_list(t_returned_data *data, char **env, t_list **env_l);
 char	*get_command_path(char **env_variables, char *command);
-int		built_exist(t_returned_data *ret, t_list **env);
+int		built_exist(char *cmd_path);
 void	dup_and_close(t_returned_data *data, int c);
 void	close_and_wait(t_returned_data *data, int counter);
 int		lst_count(t_returned_data *data);

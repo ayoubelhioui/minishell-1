@@ -6,7 +6,7 @@
 #    By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/06/14 19:12:04 by ijmari            #+#    #+#              #
-#    Updated: 2022/06/16 15:18:32 by ael-hiou         ###   ########.fr        #
+#    Updated: 2022/06/17 14:12:58 by ael-hiou         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,7 @@ quotes_handling.c library/ft_substr.c library/ft_strncmp.c Library/ft_strcmp.c l
 library/export_utils2.c  library/things_done.c library/ft_export_utils.c library/ft_split_equ.c line.c library/exec_utils.c
 CC = cc
 NAME = minishell
-READLINE =  -fsanitize=address -lreadline -L /Users/ijmari/Desktop/brew/opt/readline/lib -I /Users/ijmari/Desktop/brew/opt/readline/include   
+READLINE = -lreadline -L /Users/ijmari/Desktop/brew/opt/readline/lib -I /Users/ijmari/Desktop/brew/opt/readline/include   
 SRC_O = $(SRC:.c=.o)
 
 all :$(NAME)

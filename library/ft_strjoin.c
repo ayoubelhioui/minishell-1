@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 15:12:51 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/14 15:12:52 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/17 13:51:09 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char  *s1, char  *s2)
 {
 	size_t	total_len;
 	size_t	i;
@@ -35,5 +35,6 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	while (j < ft_strlen(s2))
 		str[i++] = s2[j++];
 	str[i] = '\0';
+	// free (s1);
 	return (str);
 }

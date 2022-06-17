@@ -6,7 +6,7 @@
 /*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 17:12:41 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/16 15:37:34 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/17 16:11:28 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,7 +180,10 @@ char    *remove_quotes_helper(char *context, t_remove_quotes_vars *vars)
 
 char    *remove_quotes(char *context)
 {
+    if (!context)
+        return (NULL);
     t_remove_quotes_vars vars;
+    char *returned;
 
     vars.new_string_length = get_new_string_length(context);
     vars.new_string = malloc(sizeof(char) * (vars.new_string_length + 1));
@@ -194,6 +197,8 @@ char	*get_command_path(char **env_variables, char *command)
 {
 	char	*full_path;
 	char	**path;
+    char    *temp;
+    char    *temp1;
 	int		i;
 
 	i = -1;
@@ -201,16 +206,28 @@ char	*get_command_path(char **env_variables, char *command)
 	{
 		if (ft_strncmp(env_variables[i], "PATH", 4) == 0)
 			break ;
+        if  (env_variables[i + 1] == NULL)
+            return (NULL);
 	}
 	path = ft_split(env_variables[i], ':');
 	i = -1;
+    temp = remove_quotes(command);
 	while (path[++i])
 	{
-		full_path = ft_strjoin(ft_strjoin(path[i], "/"), remove_quotes(command));
+        temp1 = ft_strjoin(path[i], "/");
+		full_path = ft_strjoin(temp1, temp);
 		if (access(full_path, F_OK) == 0)
+        {
+            free (temp);
+            free (temp1);
+            ft_free(path);
 			return (full_path);
+        }
+        free(temp1);
+        free (full_path);
 	}
-	return (remove_quotes(command));
+    ft_free(path);
+	return (temp);
 }
 
 int	get_length(char **args)
@@ -283,8 +300,6 @@ int here_doc_helper(t_here_doc_vars *vars, char *limiter, char **env)
     {
         if (!ft_strcmp(vars->entered_data, limiter))
             break ;
-        if (!ft_strcmp(vars->entered_data, limiter))
-            break ;
         write(vars->p[STD_OUTPUT], vars->entered_data, ft_strlen(vars->entered_data));
         write(vars->p[STD_OUTPUT], "\n", 2);
         free (vars->entered_data);
@@ -296,11 +311,15 @@ int here_doc_helper(t_here_doc_vars *vars, char *limiter, char **env)
 			g_key.after_exit = 1;
 			if (g_key.flag == 6)
                 printf(">\n");
+            free (limiter);
+            free (vars->entered_data);
 			close(vars->p[STD_OUTPUT]);
 			return (vars->p[STD_INPUT]);
 		}
 	}
     close(vars->p[STD_OUTPUT]);
+    free (vars->entered_data);
+    free (limiter);
     return (vars->p[STD_INPUT]);
 }
 
@@ -525,6 +544,7 @@ void    getting_output_fd(char *str, t_returned_data *returned_data, int unexist
 {
     char **s;
     int     i;
+    char    *temp;
 
     s = ft_split(str, SPACE);
     i = 0;
@@ -536,9 +556,17 @@ void    getting_output_fd(char *str, t_returned_data *returned_data, int unexist
             if (returned_data->output_fd != 1)
                 close (returned_data->output_fd);
             if (!ft_strcmp(s[i], ">"))
-                returned_data->output_fd = open(remove_quotes(s[i + 1]), O_WRONLY | O_CREAT | O_APPEND, 00400 | 00200);
+            {
+                temp = remove_quotes(s[i + 1]);
+                returned_data->output_fd = open(temp, O_WRONLY | O_CREAT | O_APPEND, 00400 | 00200);
+                free (temp);
+            }
             else
-                returned_data->output_fd = open(remove_quotes(s[i]), O_WRONLY | O_CREAT | O_TRUNC, 00400 | 00200);
+            {
+                temp = remove_quotes(s[i]);
+                returned_data->output_fd = open(temp, O_WRONLY | O_CREAT | O_TRUNC, 00400 | 00200);
+                free (temp);
+            }
             if (returned_data->output_fd == -1)
             {
                 returned_data->is_executable = FALSE;
@@ -548,6 +576,7 @@ void    getting_output_fd(char *str, t_returned_data *returned_data, int unexist
         }
         i++;
     }
+    ft_free(s);
 }
 
 void    get_cmd_args_helper(char **data, t_returned_data *returned_data, char **env)
@@ -569,6 +598,7 @@ void    get_cmd_args_helper(char **data, t_returned_data *returned_data, char **
             returned_data->args[j++] = data[i];
         i++;
     }
+    returned_data->cmd_dup = returned_data->args[0];
     returned_data->cmd_path = get_command_path(env, returned_data->args[0]);
     returned_data->args[j] = NULL;
 }
@@ -597,21 +627,22 @@ int get_cmd_args(char **data, t_returned_data *returned_data, char **env)
 
 void    args_final_touch(t_returned_data *returned_data, char **env)
 {
-    t_returned_data *temp;
+    char *temp;
     int i;
     
-    temp = returned_data;
-    while (temp)
+    while (returned_data)
     {
         i = 0;
         i = 0;
-        while (temp->args[i])
+        while (returned_data->args[i])
         {
-            back_space(temp->args[i]);
-            temp->args[i] = remove_quotes(temp->args[i]);
+            back_space(returned_data->args[i]);
+            temp = remove_quotes(returned_data->args[i]);
+            returned_data->args[i] = temp;
+            // free (temp);
             i++;
         }
-        temp = temp->next;
+        returned_data = returned_data->next;
     }
 }
 
@@ -636,6 +667,7 @@ char    *expanding_join(char *s1, char *s2)
 	while (j < ft_strlen(s2))
 		str[i++] = s2[j++];
 	str[i] = '\0';
+    free (s1);
 	return (str);
 }
 
@@ -663,27 +695,34 @@ char    *search_in_env(char *entered_data, char **env)
 
 char *dollar_sign_found(t_data *data, char **env, char *saver, int *i)
 {
-    int index_saver;
-    char *env_value;
-    char *s1;
-    char *s2;
-
+    // int vars.index_saver;
+    // char *vars.env_value;
+    // char *vars.s1;
+    // char *vars.s2;
+    // char *vars.temp;
+    // char *vars.temp1;
+    t_dollar_sign_vars vars;
 
     data->index++;
-    env_value = NULL;
-    index_saver = data->index;
+    vars.env_value = NULL;
+    vars.index_saver = data->index;
     if (!ft_isalnum(data->context[data->index]) && data->context[data->index] != UNDER_SCORE)
         return (ft_substr(data->context, 0, data->index + 1));
     while ((data->context[data->index]) && ((ft_isalnum(data->context[data->index])) || (data->context[data->index] == UNDER_SCORE)))
         data->index++;
-    s1 = ft_substr(data->context, *i, index_saver - *i - 1);
+    vars.s1 = ft_substr(data->context, *i, vars.index_saver - *i - 1);
     *i = data->index;
-    s2 = ft_substr(data->context, index_saver, data->index - index_saver);
-    if (s2[0] == ZERO)
-        env_value = ft_strjoin(ft_strdup("minishell"), ft_substr(data->context, index_saver + 1, data->index - index_saver));
+    vars.s2 = ft_substr(data->context, vars.index_saver, data->index - vars.index_saver);
+    vars.temp = ft_substr(data->context, vars.index_saver + 1, data->index - vars.index_saver);
+    vars.temp1 = ft_strdup("minishell");
+    if (vars.s2[0] == ZERO)
+        vars.env_value = ft_strjoin(vars.temp1, vars.temp);
     else
-        env_value = search_in_env(s2, env);
-    saver = expanding_join(saver, expanding_join(s1, env_value));
+        vars.env_value = search_in_env(vars.s2, env);
+    free(vars.temp);
+    free(vars.temp1);
+    free (vars.s2);
+    saver = expanding_join(saver, expanding_join(vars.s1, vars.env_value));
     data->index--;
     return (saver);
 }
@@ -722,8 +761,11 @@ char    *expanding(char *str, char **env)
             break ;
         vars.data.index++;
     }
+    vars.temp = ft_substr(vars.data.context, vars.x, ft_strlen(vars.data.context) - vars.x);
     if (vars.x < vars.data.index)
-        vars.saver = expanding_join(vars.saver, ft_substr(vars.data.context, vars.x, ft_strlen(vars.data.context) - vars.x));
+        vars.saver = expanding_join(vars.saver, vars.temp);
+    free (vars.temp);
+    free (str);
     return (vars.saver);
 }
 
@@ -750,8 +792,11 @@ char    **get_new_env(t_list *env)
 void    getting_input_output_fd(char *str, t_returned_data *temp)
 {
     int unexisting_file_idx;
+    char **s;
 
-    unexisting_file_idx = getting_input_fd(str, temp, ft_split(str, SPACE));
+    s = ft_split(str, SPACE);
+    unexisting_file_idx = getting_input_fd(str, temp, s);
+    ft_free (s);
     getting_output_fd(str, temp, unexisting_file_idx);
 }
 
@@ -781,6 +826,7 @@ void    pipe_handling(int commands_number, char **splitted_by_pipe, t_returned_d
         getting_input_output_fd(splitted_by_pipe[i], temp);
         temp = temp->next;
     }
+    free (pipes_array);
 }
 
 int	preparing(t_data *entered_data, t_list *env, t_returned_data **returned_data)
@@ -803,7 +849,13 @@ int	preparing(t_data *entered_data, t_list *env, t_returned_data **returned_data
     if (get_cmd_args(splitted_by_pipe, *returned_data, new_env))
         args_final_touch(*returned_data, new_env);
 	else
+    {
+        ft_free(splitted_by_pipe);
+        ft_free(splitted_by_space);
 		return (-1);
+    }
+    ft_free(splitted_by_pipe);
+    ft_free(splitted_by_space);
 	return (1);
 }
 void    prompt(char **env, t_list *new_env)
@@ -828,6 +880,8 @@ void    prompt(char **env, t_list *new_env)
     if (preparing(&entered_data, new_env, &returned_data) == -1 || g_key.flag == 6)
     	return ;
     fill_list(returned_data, env, &new_env);
+    ft_free(returned_data->args);
+    free(returned_data->cmd_path);
     free (entered_data.context);
 }
 int main(int ac, char **av,  char **env)
@@ -853,7 +907,9 @@ int main(int ac, char **av,  char **env)
 		termios_new.c_lflag &= ~(ECHOCTL);
 		tcsetattr(0, 0, &termios_new);
 		// signal (SIGINT, &sig_handler);
-		// signal(SIGQUIT, SIG_IGN);
+		// signal(SIGQUIT, SIG_IGN);`
         prompt(env, new_env);
+        // system("leaks minishell");
+        // break;
     }
 }
