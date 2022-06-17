@@ -3,10 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   things_done.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 15:16:09 by ijmari            #+#    #+#             */
+<<<<<<< HEAD
+/*   Updated: 2022/06/17 10:21:14 by ael-hiou         ###   ########.fr       */
+=======
 /*   Updated: 2022/06/17 15:41:39 by ijmari           ###   ########.fr       */
+>>>>>>> e071e777c76a17d0ad153ed13d4308bbef774b05
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,17 +53,30 @@ void	handle_the_cmd(t_returned_data *t, t_returned_data *data, \
 	int	check;
 
 	close_unused_pipes(t, data);
-	check = built_exist(data, env_l);
+	check = built_exist(data->cmd_dup);
+	if (data->cmd_path == NULL && !check)
+	{
+		printf("%s: No such file or directory\n", data->cmd_dup);
+		g_key.exit_stat = 127;
+		ft_exit(g_key.exit_stat);
+	}
 	if (data->input_fd != 0 && !check)
 		dup_and_close(data, 'i');
 	if (check)
+	{
 		if (data->input_fd)
 			close (data->input_fd);
+	}
 	if (data->output_fd != 1)
 		dup_and_close(data, 'o');
 	if (built_check(data, env_l))
+<<<<<<< HEAD
+		ft_exit(0);
+	else if (execve(data->cmd_path, \
+=======
 		ft_exit(0, data->args);
 	else if (execve(get_command_path(env, data->cmd_path), \
+>>>>>>> e071e777c76a17d0ad153ed13d4308bbef774b05
 	data->args, env) == -1)
 	{
 		printf("command not found\n");
@@ -98,7 +115,7 @@ void	fill_list(t_returned_data *data, char **env, t_list **env_l)
 	int				saver;
 
 	counter = lst_count(data);
-	if (counter == 1 && built_exist(data, env_l) && data->is_executable)
+	if (counter == 1 && built_exist(data->cmd_dup) && data->is_executable)
 	{
 		saver = dup(1);
 		if (data->output_fd != 1)
