@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 17:12:41 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/16 15:50:20 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/17 15:46:01 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -847,8 +847,11 @@ void    prompt(char **env, t_list *new_env)
     returned_data = NULL;
     entered_data.context = readline("minishell : ");
     if (entered_data.context == NULL)
-    	ft_exit(g_key.exit_stat);
-    if (ft_strlen(entered_data.context) == 0)
+	{
+		printf("exit\n");
+    	ft_exit(g_key.exit_stat, NULL);
+	}
+	if (ft_strlen(entered_data.context) == 0)
         return ;
     if (g_key.after_exit == 1 && entered_data.context)
     	g_key.after_exit = 0;
@@ -885,8 +888,8 @@ int main(int ac, char **av,  char **env)
 		termios_new = termios_save;
 		termios_new.c_lflag &= ~(ECHOCTL);
 		tcsetattr(0, 0, &termios_new);
-		// signal (SIGINT, &sig_handler);
-		// signal(SIGQUIT, SIG_IGN);
+		signal (SIGINT, &sig_handler);
+		signal(SIGQUIT, SIG_IGN);
         prompt(env, new_env);
     }
 }

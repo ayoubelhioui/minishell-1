@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 15:16:09 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/16 13:04:57 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/17 15:41:39 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,13 +58,13 @@ void	handle_the_cmd(t_returned_data *t, t_returned_data *data, \
 	if (data->output_fd != 1)
 		dup_and_close(data, 'o');
 	if (built_check(data, env_l))
-		ft_exit(0);
+		ft_exit(0, data->args);
 	else if (execve(get_command_path(env, data->cmd_path), \
 	data->args, env) == -1)
 	{
 		printf("command not found\n");
 		g_key.exit_stat = 127;
-		ft_exit(g_key.exit_stat);
+		ft_exit(g_key.exit_stat, data->args);
 	}
 }
 

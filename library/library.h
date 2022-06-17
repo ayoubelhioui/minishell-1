@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 15:14:17 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/14 17:09:17 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/16 16:23:40 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ char		*ft_strtrim(char *s1, char *set);
 int			ft_strncmp(const char *s1, const char *s2, size_t n);
 int			ft_strcmp(const char *s1, const char *s2);
 char		**ft_split(char *s, char c);
+int			ft_atoi(const char *str);
 size_t		ft_strlen(const char *s);
 char		*ft_strdup(const char *src);
 int			ft_isdigit(int c);

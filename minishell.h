@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 19:02:51 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/16 14:27:05 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/17 15:37:37 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,7 @@ void	sig_handler(int sig);
 void	cd(char **paths, t_list **env);
 int		ft_strstr(const char *s1, const char *s2);
 void	pwd(void);
-void	ft_exit(int c);
+void	ft_exit(unsigned long long c, char **args);
 int		is_int(char *str);
 void	ft_echo(char **s);
 void	ft_env(t_list **env);
