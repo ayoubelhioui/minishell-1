@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 15:14:17 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/16 16:23:40 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/17 18:21:45 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ typedef struct s_list
 char		*copy(char const *s, char *str, unsigned int start, size_t len);
 size_t		ft_strlcpy(char *dst, const char *src, size_t dstsize);
 char		*ft_substr(char const *s, unsigned int start, size_t len);
-char		*ft_strjoin(char const *s1, char const *s2);
+char		*ft_strjoin(char *s1, char *s2);
 char		*ft_strtrim(char *s1, char *set);
 int			ft_strncmp(const char *s1, const char *s2, size_t n);
 int			ft_strcmp(const char *s1, const char *s2);
@@ -63,7 +63,6 @@ void		swap(t_list *a, t_list *b, int *ptr);
 int			check_if_valid(char *arg);
 void		add_it_back(char **split_arg, char *arg, t_list **env);
 char		**split_with_equ(char *arg);
-void		ft_free_list(t_list **env);
 void		change_path_value(t_list **env);
 void		free_splits(char **first, char **second);
 void		get_things_changed(char *arg, t_list **env);
