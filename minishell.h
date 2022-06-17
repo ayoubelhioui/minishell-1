@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/06/14 19:02:51 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/17 12:49:39 by ael-hiou         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 # ifndef MINISHELL_H
 # define MINISHELL_H
 # include <stdio.h>
@@ -144,7 +132,7 @@ void	sig_handler(int sig);
 void	cd(char **paths, t_list **env);
 int		ft_strstr(const char *s1, const char *s2);
 void	pwd(void);
-void	ft_exit(int c);
+void	ft_exit(unsigned long long c, char **args);
 int		is_int(char *str);
 void	ft_echo(char **s);
 void	ft_env(t_list **env);

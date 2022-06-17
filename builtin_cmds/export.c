@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 12:47:10 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/15 11:35:43 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/16 16:58:17 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,10 +118,12 @@ void	ft_export(t_list **env, char **args)
 		sort_list(*env);
 	while (args[i])
 	{
-		split_arg = split_with_equ(args[i]);
+		if (args[i][0] != '=')
+			split_arg = split_with_equ(args[i]);
 		if (!check_if_valid(args[i]) || args[i][0] == '=')
 		{
 			printf("export: \'%s\': not a valid identifier\n", args[i++]);
+			ft_free(split_arg);
 			continue ;
 		}
 		else if (ft_isnode(env, args[i]))

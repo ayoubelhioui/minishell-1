@@ -1,14 +1,4 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/06/14 17:12:41 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/17 16:11:28 by ael-hiou         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+
 
 
 #include "minishell.h"
@@ -342,6 +332,39 @@ int here_doc(char *limiter, char **env)
     limiter = remove_quotes(limiter);
     return (here_doc_helper(&vars, limiter, env));
 }
+
+
+// int here_doc(char *limiter, char **env)
+// {
+//     int     p[2];
+// 	char	*s;
+//     char    *entered_data;
+
+//     pipe(p);
+//     limiter = remove_quotes(limiter);
+//     while (TRUE)
+//     {
+// 		g_key.flag_for_here = 1;
+//         s = readline("> ");
+//         if (s)
+//     		entered_data = expanding(s, env);
+// 		else
+// 		{
+// 			g_key.after_exit = 1;
+// 			if (g_key.flag == 6)
+// 				printf(">\n");
+// 			close(p[STD_OUTPUT]);
+// 			return (p[STD_INPUT]);
+// 		}
+//         if (!ft_strcmp(entered_data, limiter))
+//             break ;
+//         write(p[STD_OUTPUT], entered_data, ft_strlen(entered_data));
+//         write(p[STD_OUTPUT], "\n", 2);
+//         free (entered_data);
+//     }
+//     close(p[STD_OUTPUT]);
+//     return (p[STD_INPUT]);
+// }
 
 void	heredoc_searcher(char **splitted_data, t_returned_data *returned_data, char **env)
 {
@@ -866,8 +889,11 @@ void    prompt(char **env, t_list *new_env)
     returned_data = NULL;
     entered_data.context = readline("minishell : ");
     if (entered_data.context == NULL)
-    	ft_exit(g_key.exit_stat);
-    if (ft_strlen(entered_data.context) == 0)
+	{
+		printf("exit\n");
+    	ft_exit(g_key.exit_stat, NULL);
+	}
+	if (ft_strlen(entered_data.context) == 0)
         return ;
     if (g_key.after_exit == 1 && entered_data.context)
     	g_key.after_exit = 0;

@@ -6,7 +6,11 @@
 /*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 15:14:17 by ijmari            #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2022/06/17 10:03:06 by ael-hiou         ###   ########.fr       */
+=======
+/*   Updated: 2022/06/16 16:23:40 by ijmari           ###   ########.fr       */
+>>>>>>> e071e777c76a17d0ad153ed13d4308bbef774b05
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +38,7 @@ char		*ft_strtrim(char *s1, char *set);
 int			ft_strncmp(const char *s1, const char *s2, size_t n);
 int			ft_strcmp(const char *s1, const char *s2);
 char		**ft_split(char *s, char c);
+int			ft_atoi(const char *str);
 size_t		ft_strlen(const char *s);
 char		*ft_strdup(const char *src);
 int			ft_isdigit(int c);

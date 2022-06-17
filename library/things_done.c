@@ -6,7 +6,11 @@
 /*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 15:16:09 by ijmari            #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2022/06/17 10:21:14 by ael-hiou         ###   ########.fr       */
+=======
+/*   Updated: 2022/06/17 15:41:39 by ijmari           ###   ########.fr       */
+>>>>>>> e071e777c76a17d0ad153ed13d4308bbef774b05
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,13 +70,18 @@ void	handle_the_cmd(t_returned_data *t, t_returned_data *data, \
 	if (data->output_fd != 1)
 		dup_and_close(data, 'o');
 	if (built_check(data, env_l))
+<<<<<<< HEAD
 		ft_exit(0);
 	else if (execve(data->cmd_path, \
+=======
+		ft_exit(0, data->args);
+	else if (execve(get_command_path(env, data->cmd_path), \
+>>>>>>> e071e777c76a17d0ad153ed13d4308bbef774b05
 	data->args, env) == -1)
 	{
 		printf("command not found\n");
 		g_key.exit_stat = 127;
-		ft_exit(g_key.exit_stat);
+		ft_exit(g_key.exit_stat, data->args);
 	}
 }
 
@@ -120,4 +129,5 @@ void	fill_list(t_returned_data *data, char **env, t_list **env_l)
 		check_and_exec(data, env_l, env);
 	}
 	close_and_wait(data, counter);
+	g_key.flag_for_here = 0;
 }
