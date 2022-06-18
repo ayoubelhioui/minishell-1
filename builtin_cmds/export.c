@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 12:47:10 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/18 14:08:14 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/18 18:20:52 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ void	changing(t_list **env, char *arg)
 	int		j;
 
 	len = ft_strlen(arg);
+	if ((*env)->content)
+		free((*env)->content);
 	(*env)->content = malloc(len + 1);
 	j = 0;
 	while (arg[j])
@@ -68,20 +70,20 @@ void	add_value(char *arg, t_list **env)
 			{
 				if (!ft_equal((*env)->content))
 				{
-					temp = (*env)->content;
+					if ((*env)->content)
+						free((*env)->content);
 					(*env)->content = ft_strjoin((*env)->content, "=");
-					free(temp);
 				}
-				temp = (*env)->content;
+				if ((*env)->content)
+					free((*env)->content);
 				(*env)->content = ft_strjoin((*env)->content, split_arg[1]);
-				free(temp);
 				(*env)->criteria = 'e';
 			}
 			else
 			{
-				temp = (*env)->content;
+				if ((*env)->content)
+					free((*env)->content);
 				(*env)->content = ft_strjoin((*env)->content, split_arg[1]);
-				free(temp);
 			}
 		}
 		free_splits(spl, split_arg);
@@ -108,12 +110,12 @@ int	ft_isnode(t_list **env, char *arg)
 			split_arg = split_with_equ(arg);
 		if (!ft_strcmp(spl[0], split_arg[0]))
 		{
-			// ft_free(spl);
-			// ft_free(split_arg);
+			ft_free(spl);
+			ft_free(split_arg);
 			return (1);
 		}
 		curr = curr->next;
-		// free_splits(spl, split_arg);
+		free_splits(spl, split_arg);
 	}
 	return (0);
 }
@@ -124,7 +126,7 @@ void	ft_export(t_list **env, char **args)
 	char	**split_arg;
 
 	i = 0;
-	//change_path_value(env);
+	change_path_value(env);
 	if (*args == NULL)
 		sort_list(*env);
 	while (args[i])
@@ -134,14 +136,14 @@ void	ft_export(t_list **env, char **args)
 		if (!check_if_valid(args[i]) || args[i][0] == '=')
 		{
 			printf("export: \'%s\': not a valid identifier\n", args[i++]);
-			// ft_free(split_arg);
+			ft_free(split_arg);
 			continue ;
 		}
 		else if (ft_isnode(env, args[i]))
 			get_things_changed(args[i], env);
 		else
 			add_it_back(split_arg, args[i], env);
-		// ft_free(split_arg);
+		ft_free(split_arg);
 		i++;
 	}
 }
