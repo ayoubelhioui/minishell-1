@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 16:02:27 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/14 17:06:19 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/18 14:05:48 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,16 @@
 void	add_it_back(char **split_arg, char *arg, t_list **env)
 {
 	char	*temp;
+	char	*f;
+	char	*f2;
 
 	temp = NULL;
 	if (there_is_plus(arg))
 	{
-		temp = join_pl(split_arg[0], "=");
+		temp = join_pl(split_arg[0], "=");	
+		f = temp;
 		temp = ft_strjoin(temp, split_arg[1]);
+		// free(f);
 		ft_lstadd_back(env, ft_lstnew(temp));
 	}
 	else

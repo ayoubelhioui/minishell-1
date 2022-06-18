@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 16:01:46 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/16 13:05:38 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/18 12:01:10 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,8 @@ void	ft_free(char **ptr)
 {
 	int	i;
 
-	i = 0;
-	while (ptr[i])
-		free(ptr[i++]);
+	i = -1;
+	while (ptr[++i])
+		free(ptr[i]);
 	free(ptr);
 }

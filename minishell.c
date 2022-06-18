@@ -359,7 +359,7 @@ int here_doc(char *limiter, char **env)
 //             break ;
 //         write(p[STD_OUTPUT], entered_data, ft_strlen(entered_data));
 //         write(p[STD_OUTPUT], "\n", 2);
-//         free (entered_data);
+        // free (entered_data);
 //     }
 //     close(p[STD_OUTPUT]);
 //     return (p[STD_INPUT]);
@@ -463,6 +463,7 @@ char    *get_new_context(t_data *entered_data)
 {
     int counter;
     int in_quote;
+    char    *s;
 
     entered_data->index = 0;
     counter = 0;
@@ -477,7 +478,9 @@ char    *get_new_context(t_data *entered_data)
             counter+=2;
         entered_data->index++;
     }
-    return (add_space(entered_data->context, counter));
+    s = add_space(entered_data->context, counter);
+    free (entered_data->context);
+    return (s);
 }
 
 
@@ -581,13 +584,13 @@ void    getting_output_fd(char *str, t_returned_data *returned_data, int unexist
             {
                 temp = remove_quotes(s[i + 1]);
                 returned_data->output_fd = open(temp, O_WRONLY | O_CREAT | O_APPEND, 00400 | 00200);
-                // free (temp);
+                free (temp);
             }
             else
             {
                 temp = remove_quotes(s[i]);
                 returned_data->output_fd = open(temp, O_WRONLY | O_CREAT | O_TRUNC, 00400 | 00200);
-                // free (temp);
+                free (temp);
             }
             if (returned_data->output_fd == -1)
             {
@@ -636,17 +639,11 @@ int get_cmd_args(char **data, t_returned_data *returned_data, char **env)
     while (returned_data)
     {
         s = ft_split(data[k++], SPACE);
-		int j = 0;
-		while (s[j])
-			printf("s[i] is %s\n", s[j++]);
         whole_length = get_length(s) - get_args_length(s);
         if (whole_length == 0)
-		{
             return (FALSE);
-		}
 		returned_data->args = malloc(sizeof(char *) * (whole_length + 1));
 		get_cmd_args_helper(s, returned_data, env);
-        // free(s);
         returned_data = returned_data->next;
     }
     return (TRUE);
@@ -694,7 +691,7 @@ char    *expanding_join(char *s1, char *s2)
 	while (j < ft_strlen(s2))
 		str[i++] = s2[j++];
 	str[i] = '\0';
-    free (s1);
+    // free (s1);
 	return (str);
 }
 
@@ -913,8 +910,9 @@ void    prompt(char **env, t_list *new_env)
     if (preparing(&entered_data, new_env, &returned_data) == -1 || g_key.flag == 6)
     	return ;
     fill_list(returned_data, env, &new_env);
-	ft_free_list(returned_data);
-    free (entered_data.context);
+    ft_free_list(returned_data);
+	system("leaks minishell");
+    
 }
 int main(int ac, char **av,  char **env)
 {
@@ -938,10 +936,11 @@ int main(int ac, char **av,  char **env)
 		termios_new = termios_save;
 		termios_new.c_lflag &= ~(ECHOCTL);
 		tcsetattr(0, 0, &termios_new);
-		signal (SIGINT, &sig_handler);
-		signal(SIGQUIT, SIG_IGN);
+		// signal (SIGINT, &sig_handler);
+		// signal(SIGQUIT, SIG_IGN);
         prompt(env, new_env);
-        system("leaks minishell");
+        // system("leaks minishell");
+        // system("leaks minishell");
         // break;
     }
 }
