@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 16:35:49 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/18 18:10:13 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/18 21:08:51 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,7 @@ void	ft_free_list(t_returned_data *head)
 	{
 		temp = head->next;
 		ft_free(head->args);
+		// free(head->cmd_dup);
     	free(head->cmd_path);
 		free(head);
 		head = temp;

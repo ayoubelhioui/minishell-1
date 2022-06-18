@@ -36,6 +36,7 @@ void	handle_the_cmd(t_returned_data *t, t_returned_data *data, \
 {
 	int	check;
 
+	signal(SIGQUIT, sig_quit);
 	close_unused_pipes(t, data);
 	check = built_exist(data->cmd_dup);
 	if (data->cmd_path == NULL && !check)
@@ -54,7 +55,7 @@ void	handle_the_cmd(t_returned_data *t, t_returned_data *data, \
 	if (data->output_fd != 1)
 		dup_and_close(data, 'o');
 	if (built_check(data, env_l))
-		ft_exit(0);
+		ft_exit("0");
 	else if (execve(data->cmd_path, \
 	data->args, env) == -1)
 	{
@@ -79,7 +80,9 @@ void	check_and_exec(t_returned_data *data, t_list **env_l, \
 		{
 			id = fork();
 			if (id == 0)
+			{
 				handle_the_cmd(t, data, env_l, env);
+			}
 		}
 		i++;
 		data = data->next;
