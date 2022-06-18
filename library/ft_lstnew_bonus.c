@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 15:01:08 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/14 15:01:09 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/18 18:09:59 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ t_list	*ft_lstnew(char *content)
 		new->criteria = 'e';
 	else
 		new->criteria = 'x';
-	new->content = content;
+	new->content = ft_strdup(content);
 	new->next = NULL;
 	return (new);
 }

@@ -908,9 +908,11 @@ void    prompt(char **env, t_list *new_env)
         return  ;
     }
     if (preparing(&entered_data, new_env, &returned_data) == -1 || g_key.flag == 6)
+	{
     	return ;
-    fill_list(returned_data, env, &new_env);
-    ft_free_list(returned_data);
+	}
+	fill_list(returned_data, env, &new_env);
+    // ft_free_list(returned_data);
 	system("leaks minishell");
     
 }
@@ -936,8 +938,8 @@ int main(int ac, char **av,  char **env)
 		termios_new = termios_save;
 		termios_new.c_lflag &= ~(ECHOCTL);
 		tcsetattr(0, 0, &termios_new);
-		// signal (SIGINT, &sig_handler);
-		// signal(SIGQUIT, SIG_IGN);
+		signal (SIGINT, &sig_handler);
+		signal(SIGQUIT, SIG_IGN);
         prompt(env, new_env);
         // system("leaks minishell");
         // system("leaks minishell");
