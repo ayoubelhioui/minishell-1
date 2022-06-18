@@ -54,8 +54,8 @@ void	handle_the_cmd(t_returned_data *t, t_returned_data *data, \
 	if (data->output_fd != 1)
 		dup_and_close(data, 'o');
 	if (built_check(data, env_l))
-		ft_exit("0");
-	else if (execve(get_command_path(env, data->cmd_path), \
+		ft_exit(0);
+	else if (execve(data->cmd_path, \
 	data->args, env) == -1)
 	{
 		printf("command not found\n");

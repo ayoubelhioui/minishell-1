@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 12:47:10 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/16 16:58:17 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/18 14:08:14 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ void	add_value(char *arg, t_list **env)
 	t_list	*curr;
 	char	**spl;
 	char	**split_arg;
+	char	*temp;
 
 	curr = *env;
 	while (*env)
@@ -66,12 +67,22 @@ void	add_value(char *arg, t_list **env)
 			if (spl[1] == NULL && split_arg[1])
 			{
 				if (!ft_equal((*env)->content))
+				{
+					temp = (*env)->content;
 					(*env)->content = ft_strjoin((*env)->content, "=");
+					free(temp);
+				}
+				temp = (*env)->content;
 				(*env)->content = ft_strjoin((*env)->content, split_arg[1]);
+				free(temp);
 				(*env)->criteria = 'e';
 			}
 			else
+			{
+				temp = (*env)->content;
 				(*env)->content = ft_strjoin((*env)->content, split_arg[1]);
+				free(temp);
+			}
 		}
 		free_splits(spl, split_arg);
 		(*env) = (*env)->next;
@@ -97,12 +108,12 @@ int	ft_isnode(t_list **env, char *arg)
 			split_arg = split_with_equ(arg);
 		if (!ft_strcmp(spl[0], split_arg[0]))
 		{
-			ft_free(spl);
-			ft_free(split_arg);
+			// ft_free(spl);
+			// ft_free(split_arg);
 			return (1);
 		}
 		curr = curr->next;
-		free_splits(spl, split_arg);
+		// free_splits(spl, split_arg);
 	}
 	return (0);
 }
@@ -113,7 +124,7 @@ void	ft_export(t_list **env, char **args)
 	char	**split_arg;
 
 	i = 0;
-	change_path_value(env);
+	//change_path_value(env);
 	if (*args == NULL)
 		sort_list(*env);
 	while (args[i])
@@ -123,14 +134,14 @@ void	ft_export(t_list **env, char **args)
 		if (!check_if_valid(args[i]) || args[i][0] == '=')
 		{
 			printf("export: \'%s\': not a valid identifier\n", args[i++]);
-			ft_free(split_arg);
+			// ft_free(split_arg);
 			continue ;
 		}
 		else if (ft_isnode(env, args[i]))
 			get_things_changed(args[i], env);
 		else
 			add_it_back(split_arg, args[i], env);
-		ft_free(split_arg);
+		// ft_free(split_arg);
 		i++;
 	}
 }
