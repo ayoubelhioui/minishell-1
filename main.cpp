@@ -1,31 +1,48 @@
 #include <iostream>
-
+#include <vector>
 using namespace std;
-
+int find_position(vector <int> &vec, int a, int length)
+{
+    int i = 0;
+    int sum  = 0;
+    while (sum < a)
+    {
+        if (vec[i] > vec[i + 1])
+        {
+            i++;
+            sum++;
+        }
+        else if (vec[i] == vec[i + 1])
+        {
+            sum++;
+            while (vec[i] == vec[i + 1])
+                i++;
+        }
+    }
+    return (i);
+}
 int main()
 {
-    int n, i = 0;
-    cin >> n;
-    while (i < n)
+    int sum = 0, a, b, i = 0;
+    cin >> a >> b;
+    vector<int> vec(a);
+    while (i < a)
     {
-        if (i == 0 && i == n - 1)
-            cout << "i hate it";
-        else if (i == 0 && i != n - 1)
-            cout << "i hate that ";
-        else if (i == n - 1)
-        {
-            if (i % 2 == 0)
-                cout << "i hate it";
-            else 
-                cout << "i love it";
-        }
-        else
-        {
-            if (i % 2 == 0)
-                cout << "i hate that ";
-            else
-                cout << "i love that ";
-        }
+        cin >> vec[i];
         i++;
     }
+    i = 0;
+    if (a < 5)
+    {
+        while (i < a)
+        {
+            if (vec[i] > 0)
+                sum++;
+            i++;
+        }
+        cout << sum << endl;
+        return 0;
+    }
+    int k = find_position(vec, b, a);
+    cout << k << endl;
 }
