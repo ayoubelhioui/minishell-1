@@ -895,7 +895,7 @@ void    prompt(char **env, t_list *new_env)
     if (entered_data.context == NULL)
 	{
 		printf("exit\n");
-    	ft_exit(NULL);
+    	exit(g_key.exit_stat);
 	}
 	if (ft_strlen(entered_data.context) == 0)
         return ;
