@@ -642,9 +642,10 @@ int get_cmd_args(char **data, t_returned_data *returned_data, char **env)
         whole_length = get_length(s) - get_args_length(s);
         if (whole_length == 0)
             return (FALSE);
-		returned_data->args = malloc(sizeof(char *) * (whole_length + 1));
+        returned_data->args = malloc(sizeof(char *) * (whole_length + 1));
 		get_cmd_args_helper(s, returned_data, env);
         returned_data = returned_data->next;
+        free(s);
     }
     return (TRUE);
 }
@@ -699,19 +700,21 @@ char    *search_in_env(char *entered_data, char **env)
 {
     int i;
     char **holder;
+    char *returned;
 
     if (ft_isdigit(entered_data[0]))
-        return (entered_data + 1);
-    if (!ft_isalnum(entered_data[0]) && entered_data[0] != UNDER_SCORE)
-        return (ft_strjoin("$",entered_data));
+        return (ft_strdup(entered_data + 1));
     i = 0;
-    holder = malloc(sizeof(char *) * 3);
-    holder[2] = NULL;
     while (env[i])
     {
         holder = ft_split(env[i], EQUAL);
         if (ft_strcmp(holder[0], entered_data) == 0)
-            return (holder[1]);
+        {
+            returned = ft_strdup(holder[1]);
+            ft_free(holder);
+            return (returned);
+        }
+        ft_free(holder);
         i++;
     }
     return (ft_strdup(""));
@@ -719,13 +722,8 @@ char    *search_in_env(char *entered_data, char **env)
 
 char *dollar_sign_found(t_data *data, char **env, char *saver, int *i)
 {
-    // int vars.index_saver;
-    // char *vars.env_value;
-    // char *vars.s1;
-    // char *vars.s2;
-    // char *vars.temp;
-    // char *vars.temp1;
     t_dollar_sign_vars vars;
+    char                *temp_r;
 	char *f;
 
     data->index++;
@@ -738,7 +736,7 @@ char *dollar_sign_found(t_data *data, char **env, char *saver, int *i)
     vars.s1 = ft_substr(data->context, *i, vars.index_saver - *i - 1);
     *i = data->index;
     vars.s2 = ft_substr(data->context, vars.index_saver, data->index - vars.index_saver);
-    vars.temp = ft_substr(data->context, vars.index_saver + 1, data->index - vars.index_saver);
+    vars.temp = ft_substr(data->context, vars.index_saver + 1, data->index - vars.index_saver - 1);
     vars.temp1 = ft_strdup("minishell");
     if (vars.s2[0] == ZERO)
         vars.env_value = ft_strjoin(vars.temp1, vars.temp);
@@ -747,7 +745,11 @@ char *dollar_sign_found(t_data *data, char **env, char *saver, int *i)
     free(vars.temp);
     free(vars.temp1);
     free (vars.s2);
-    saver = expanding_join(saver, expanding_join(vars.s1, vars.env_value));
+    temp_r = expanding_join(vars.s1, vars.env_value);
+    saver = expanding_join(saver, temp_r);
+    free(temp_r);
+    free(vars.s1);
+    free(vars.env_value);
     data->index--;
     return (saver);
 }
@@ -766,6 +768,7 @@ void    expanding_helper(t_expanding *vars)
 char    *expanding(char *str, char **env)
 {
    t_expanding vars;
+   char *temp;
 
     vars.in_quote = 0;
     vars.is_limiter = FALSE;
@@ -788,7 +791,11 @@ char    *expanding(char *str, char **env)
     }
     vars.temp = ft_substr(vars.data.context, vars.x, ft_strlen(vars.data.context) - vars.x);
     if (vars.x < vars.data.index)
+    {
+        temp = vars.saver;
         vars.saver = expanding_join(vars.saver, vars.temp);
+        free(temp);
+    }
     free (vars.temp);
     free (str);
     return (vars.saver);
@@ -911,7 +918,7 @@ void    prompt(char **env, t_list *new_env)
     	return ;
 	fill_list(returned_data, env, &new_env);
     ft_free_list(returned_data);
-	// system("leaks minishell");
+	system("leaks minishell");
     
 }
 int main(int ac, char **av,  char **env)

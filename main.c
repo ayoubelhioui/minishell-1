@@ -6,7 +6,7 @@
 /*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/15 10:32:20 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/06/18 15:12:12 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/19 12:16:54 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ int search(int* nums, int numsSize, int target){
 }
 int main()
 {
-    int a[] = {1, 3, 5, 7};
-    printf("It Is : %d\n", search(a, 4, 13));
+    // char *ss = 
+    char **s = ft_split("ok.ok.ok", '.');
+    system("leaks a.out");
 }

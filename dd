@@ -1,10 +1,11 @@
-total 472
-drwxr-xr-x  19 ael-hiou  2019     646 Jun 19 10:01 .
+total 480
+drwxr-xr-x  20 ael-hiou  2019     680 Jun 19 10:04 .
 drwxr-xr-x  16 ael-hiou  2019     544 Jun 19 09:37 ..
 drwxr-xr-x  15 ael-hiou  2019     510 Jun 19 09:26 .git
 drwxr-xr-x   4 ael-hiou  2019     136 Jun 14 11:41 .vscode
 -rw-r--r--   1 ael-hiou  2019    1103 Jun 19 09:31 Makefile
 drwxr-xr-x  11 ael-hiou  2019     374 Jun 19 09:26 builtin_cmds
+-rw-------   1 ael-hiou  2019       0 Jun 19 10:04 dd
 -rw-------   1 ael-hiou  2019       9 Jun 19 10:01 k
 drwxr-xr-x  31 ael-hiou  2019    1054 Jun 19 09:26 library
 -rw-r--r--   1 ael-hiou  2019    1730 Jun 14 11:41 line.c
@@ -15,6 +16,6 @@ drwxr-xr-x  31 ael-hiou  2019    1054 Jun 19 09:26 library
 drwxr-xr-x   3 ael-hiou  2019     102 Jun 18 18:23 minishell.dSYM
 -rw-r--r--   1 ael-hiou  2019    3896 Jun 17 20:48 minishell.h
 -rw-r--r--   1 ael-hiou  2019    4582 Jun 14 11:41 quotes_handling.c
--rw-------   1 ael-hiou  2019       0 Jun 19 10:01 s
+-rw-------   1 ael-hiou  2019    1134 Jun 19 10:01 s
 -rw-r--r--   1 ael-hiou  2019    1387 Jun 19 09:26 signals.c
 -rw-r--r--   1 ael-hiou  2019    2558 Jun 19 09:26 utils.c
