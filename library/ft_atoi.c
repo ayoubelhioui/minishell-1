@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/04 09:06:17 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/16 16:23:22 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/18 19:16:09 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,11 +49,5 @@ int	ft_atoi(const char *str)
 	negative = 0;
 	while (is_space(str[i]))
 		i++;
-	if (str[i] == '-' || str[i] == '+')
-	{
-		if (str[i] == '-')
-			negative++;
-		i++;
-	}
 	return (ft_form(str, i, negative));
 }

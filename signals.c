@@ -6,21 +6,17 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 18:55:21 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/16 14:15:18 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/18 19:06:45 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	sig_quit(int sig)
+void	sig_quit()
 {
-	if (g_key.flag_for_here == 2)
-	{
-		printf("Quit: 3\n");
-		g_key.exit_stat = 131;
-	}
-	else
-		return ;
+	printf("ok\n");
+	g_key.exit_stat = 131;
+	exit(135);
 }
 void	sig_handler(int sig)
 {
