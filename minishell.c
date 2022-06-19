@@ -285,9 +285,11 @@ int redirection_counter(t_list *splitted_data, char redirection)
 
 int here_doc_helper(t_here_doc_vars *vars, char *limiter, char **env)
 {
+	//printf("ente is %s and lim is %s\n", vars->entered_data, limiter);
     while (vars->entered_data)
     {
-        if (!ft_strcmp(vars->entered_data, limiter) && limiter[0] != '\0')
+		//printf("limiter is %s\n", limiter);
+        if (!ft_strcmp(vars->entered_data, limiter) && vars->entered_data[0] != '\0')
             break ;
         write(vars->p[STD_OUTPUT], vars->entered_data, ft_strlen(vars->entered_data));
         write(vars->p[STD_OUTPUT], "\n", 2);
@@ -319,7 +321,10 @@ int here_doc(char *limiter, char **env)
 	g_key.flag_for_here = 1;
 	vars.s = readline("> ");
 	if (vars.s)
+	{
+		//printf("vars is %s\n", vars.s);
     	vars.entered_data = expanding(vars.s, env);
+	}
 	else
 	{
 		g_key.after_exit = 1;
@@ -777,6 +782,8 @@ char    *expanding(char *str, char **env)
     vars.data.index = 0;
     vars.j = 0;
     vars.x = 0;
+	if (str[0] == '\0')
+		return (str);
     while (vars.data.context[vars.data.index])
     {
         expanding_helper(&vars);
