@@ -287,7 +287,7 @@ int here_doc_helper(t_here_doc_vars *vars, char *limiter, char **env)
 {
     while (vars->entered_data)
     {
-        if (!ft_strcmp(vars->entered_data, limiter))
+        if (!ft_strcmp(vars->entered_data, limiter) && limiter[0] != '\0')
             break ;
         write(vars->p[STD_OUTPUT], vars->entered_data, ft_strlen(vars->entered_data));
         write(vars->p[STD_OUTPUT], "\n", 2);
@@ -918,7 +918,7 @@ void    prompt(char **env, t_list *new_env)
     	return ;
 	fill_list(returned_data, env, &new_env);
     ft_free_list(returned_data);
-	system("leaks minishell");
+	// system("leaks minishell");
     
 }
 int main(int ac, char **av,  char **env)

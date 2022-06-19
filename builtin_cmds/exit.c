@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 12:49:37 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/19 15:28:09 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/19 15:50:53 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ unsigned long long	exit_atoi(char *str, int *negative)
 {
 	int	i;
 	unsigned long long temp;
+	int	flag;
 
 	i = 0;
 	while (str[i] == 32 || str[i] == '\r'
@@ -29,10 +30,10 @@ unsigned long long	exit_atoi(char *str, int *negative)
 		i++;
 	}
 	temp = 0;
-	while ((str[i] >= '0' && str[i] <= '9'))
+	while (str[i])
 	{
 		// printf("inr is %lld\n", temp);
-		if (temp >= 9223372036854775808ULL)
+		if (temp >= 9223372036854775808ULL || !ft_isdigit(str[i]))
 			return (-1);
 		temp = (str[i] - 48) + (temp * 10);
 		i++;

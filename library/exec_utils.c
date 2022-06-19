@@ -6,7 +6,7 @@
 /*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 16:01:46 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/18 12:01:10 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/19 17:18:32 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,10 @@ void	close_and_wait(t_returned_data *data, int counter)
 		wait(&status);
 		if (WIFEXITED(status))
 			g_key.exit_stat = WEXITSTATUS(status);
+		else if (status == 2)
+			g_key.exit_stat= 130;
+		else if (status == 3)
+			g_key.exit_stat = 131;
 		i++;
 	}
 }
