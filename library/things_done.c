@@ -54,44 +54,44 @@ void	handle_the_cmd(t_returned_data *t, t_returned_data *data, \
 	}
 	if (data->output_fd != 1)
 		dup_and_close(data, 'o');
+	dprintf(2, "cmd is %s\n", data->cmd_path);
 	if (built_check(data, env_l))
 		exit(0);
 	else if (execve(data->cmd_path, \
 	data->args, env) == -1)
 	{
-		printf("command not found\n");
+		dprintf(2, "command not found\n");
 		g_key.exit_stat = 127;
 		exit(127);
 	}
 }
 
 void	check_and_exec(t_returned_data *data, t_list **env_l, \
-	char **env)
+	char **env, int counter)
 {
 	int				i;
 	t_returned_data	*t;
-	int				id;
+	int				*id;
 
+	id = malloc(counter * sizeof(int));
 	t = data;
 	i = 0;
 	while (data)
 	{
 		if (data->is_executable)
 		{
-			id = fork();
-			if (id == 0)
-			{
+			id[i] = fork();
+			if (id[i] == 0)
 				handle_the_cmd(t, data, env_l, env);
-			}
 		}
 		i++;
 		data = data->next;
 	}
+	close_and_wait(data, counter, id);
 }
 
 void	fill_list(t_returned_data *data, char **env, t_list **env_l)
 {
-	int				*id;
 	int				counter;
 	t_returned_data	*t;
 	int				saver;
@@ -108,8 +108,7 @@ void	fill_list(t_returned_data *data, char **env, t_list **env_l)
 	else
 	{
 		g_key.flag_for_here = 2;
-		check_and_exec(data, env_l, env);
+		check_and_exec(data, env_l, env, counter);
 	}
-	close_and_wait(data, counter);
 	g_key.flag_for_here = 0;
 }

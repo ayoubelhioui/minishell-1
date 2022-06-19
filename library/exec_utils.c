@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 16:01:46 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/19 17:18:32 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/19 19:49:28 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	dup_and_close(t_returned_data *data, int c)
 	}
 }
 
-void	close_and_wait(t_returned_data *data, int counter)
+void	close_and_wait(t_returned_data *data, int counter, int *id)
 {
 	int	i;
 	int	status;
@@ -35,8 +35,8 @@ void	close_and_wait(t_returned_data *data, int counter)
 	i = 0;
 	while (i < counter)
 	{
-		wait(&status);
-		if (WIFEXITED(status))
+		waitpid(id[i], &status, 0);
+		if (WIFEXITED(status) && i == counter - 1)
 			g_key.exit_stat = WEXITSTATUS(status);
 		else if (status == 2)
 			g_key.exit_stat= 130;
