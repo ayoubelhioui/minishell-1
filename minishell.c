@@ -287,7 +287,7 @@ int here_doc_helper(t_here_doc_vars *vars, char *limiter, char **env)
 {
     while (vars->entered_data)
     {
-        if (!ft_strcmp(vars->entered_data, limiter))
+        if (!ft_strcmp(vars->entered_data, limiter) && vars->entered_data[0] != '\0')
             break ;
         write(vars->p[STD_OUTPUT], vars->entered_data, ft_strlen(vars->entered_data));
         write(vars->p[STD_OUTPUT], "\n", 2);
@@ -319,7 +319,10 @@ int here_doc(char *limiter, char **env)
 	g_key.flag_for_here = 1;
 	vars.s = readline("> ");
 	if (vars.s)
+	{
+		//printf("vars is %s\n", vars.s);
     	vars.entered_data = expanding(vars.s, env);
+	}
 	else
 	{
 		g_key.after_exit = 1;
@@ -331,39 +334,6 @@ int here_doc(char *limiter, char **env)
     limiter = remove_quotes(limiter);
     return (here_doc_helper(&vars, limiter, env));
 }
-
-
-// int here_doc(char *limiter, char **env)
-// {
-//     int     p[2];
-// 	char	*s;
-//     char    *entered_data;
-
-//     pipe(p);
-//     limiter = remove_quotes(limiter);
-//     while (TRUE)
-//     {
-// 		g_key.flag_for_here = 1;
-//         s = readline("> ");
-//         if (s)
-//     		entered_data = expanding(s, env);
-// 		else
-// 		{
-// 			g_key.after_exit = 1;
-// 			if (g_key.flag == 6)
-// 				printf(">\n");
-// 			close(p[STD_OUTPUT]);
-// 			return (p[STD_INPUT]);
-// 		}
-//         if (!ft_strcmp(entered_data, limiter))
-//             break ;
-//         write(p[STD_OUTPUT], entered_data, ft_strlen(entered_data));
-//         write(p[STD_OUTPUT], "\n", 2);
-        // free (entered_data);
-//     }
-//     close(p[STD_OUTPUT]);
-//     return (p[STD_INPUT]);
-// }
 
 void	heredoc_searcher(char **splitted_data, t_returned_data *returned_data, char **env)
 {
@@ -664,6 +634,7 @@ void    args_final_touch(t_returned_data *returned_data, char **env)
         {
             back_space(returned_data->args[i]);
             temp = remove_quotes(returned_data->args[i]);
+            // free (returned_data->args[i]);
             returned_data->args[i] = temp;
             i++;
         }
@@ -692,7 +663,6 @@ char    *expanding_join(char *s1, char *s2)
 	while (j < ft_strlen(s2))
 		str[i++] = s2[j++];
 	str[i] = '\0';
-    // free (s1);
 	return (str);
 }
 
@@ -777,6 +747,8 @@ char    *expanding(char *str, char **env)
     vars.data.index = 0;
     vars.j = 0;
     vars.x = 0;
+	if (str[0] == '\0')
+		return (str);
     while (vars.data.context[vars.data.index])
     {
         expanding_helper(&vars);
@@ -902,7 +874,7 @@ void    prompt(char **env, t_list *new_env)
     if (entered_data.context == NULL)
 	{
 		printf("exit\n");
-    	ft_exit(NULL);
+    	exit(g_key.exit_stat);
 	}
 	if (ft_strlen(entered_data.context) == 0)
         return ;
@@ -918,7 +890,7 @@ void    prompt(char **env, t_list *new_env)
     	return ;
 	fill_list(returned_data, env, &new_env);
     ft_free_list(returned_data);
-	system("leaks minishell");
+	// system("leaks minishell");
     
 }
 int main(int ac, char **av,  char **env)

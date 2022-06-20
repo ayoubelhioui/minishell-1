@@ -6,7 +6,7 @@
 /*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 16:35:49 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/19 12:24:13 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/20 13:41:47 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,6 @@ void	ft_free_list(t_returned_data *head)
 	{
 		temp = head->next;
 		ft_free(head->args);
-		// free(head->cmd_dup);
     	free(head->cmd_path);
 		free(head);
 		head = temp;

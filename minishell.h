@@ -107,7 +107,7 @@ typedef struct error_handling_vars
 // }                   t_expanding;
 typedef struct g_str
 {
-	int		exit_stat;
+	long long	exit_stat;
 	int		flag_for_here;
 	int		saver;
 	int		flag;
@@ -132,7 +132,7 @@ void	sig_handler(int sig);
 void	cd(char **paths, t_list **env);
 int		ft_strstr(const char *s1, const char *s2);
 void	pwd(void);
-void	ft_exit(char *ex);
+void	ft_exit(char **ex);
 int		is_int(char *str);
 void	ft_echo(char **s);
 void	ft_env(t_list **env);
@@ -145,10 +145,11 @@ void	searching_for_dollar_sign(t_returned_data **data, char **env);
 void	fill_list(t_returned_data *data, char **env, t_list **env_l);
 char	*get_command_path(char **env_variables, char *command);
 int		built_exist(char *cmd_path);
+int		get_length(char **args);
 void	dup_and_close(t_returned_data *data, int c);
 void	close_and_wait(t_returned_data *data, int counter);
 int		lst_count(t_returned_data *data);
 void	close_all_pipes(t_returned_data *head);
-void	sig_quit(int sig);
+void	sig_quit();
 void	ft_free_list(t_returned_data *head);
 #endif

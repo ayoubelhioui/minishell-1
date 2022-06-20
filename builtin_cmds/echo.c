@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 12:48:09 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/14 19:18:58 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/19 14:35:34 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,11 @@ void	print_string(char *s, char c, int flag)
 		if (s[i] == '$' && s[i + 1] == '?')
 		{
 			if (flag == 1 && !s[i + 2] && c == 'a')
-				printf("%d\n", g_key.exit_stat);
+				printf("%lld\n", g_key.exit_stat);
 			else if (flag == 1 && !s[i + 2] && c == 'n')
-				printf("%d", g_key.exit_stat);
+				printf("%lld", g_key.exit_stat);
 			else
-				printf("%d", g_key.exit_stat);
+				printf("%lld", g_key.exit_stat);
 			i++;
 		}
 		else if (c == 'n' && flag && !s[i + 1])
@@ -53,7 +53,8 @@ void	ft_echo(char **s)
 	if (!ft_strcmp(s[0], "-n"))
 	{
 		c = 'n';
-		i = 1;
+		while (!ft_strcmp(s[i], "-n"))
+			i++;
 	}
 	else
 		i = 0;
