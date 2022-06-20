@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 16:01:46 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/19 19:49:28 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/20 12:42:06 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,11 +36,11 @@ void	close_and_wait(t_returned_data *data, int counter, int *id)
 	while (i < counter)
 	{
 		waitpid(id[i], &status, 0);
-		if (WIFEXITED(status) && i == counter - 1)
+		if (WIFEXITED(status))
 			g_key.exit_stat = WEXITSTATUS(status);
-		else if (status == 2)
+		if (status == 2)
 			g_key.exit_stat= 130;
-		else if (status == 3)
+		if (status == 3)
 			g_key.exit_stat = 131;
 		i++;
 	}

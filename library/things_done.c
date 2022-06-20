@@ -54,7 +54,6 @@ void	handle_the_cmd(t_returned_data *t, t_returned_data *data, \
 	}
 	if (data->output_fd != 1)
 		dup_and_close(data, 'o');
-	dprintf(2, "cmd is %s\n", data->cmd_path);
 	if (built_check(data, env_l))
 		exit(0);
 	else if (execve(data->cmd_path, \
@@ -71,6 +70,7 @@ void	check_and_exec(t_returned_data *data, t_list **env_l, \
 {
 	int				i;
 	t_returned_data	*t;
+	int				last;
 	int				*id;
 
 	id = malloc(counter * sizeof(int));
@@ -87,7 +87,7 @@ void	check_and_exec(t_returned_data *data, t_list **env_l, \
 		i++;
 		data = data->next;
 	}
-	close_and_wait(data, counter, id);
+	close_and_wait(t, counter , id);
 }
 
 void	fill_list(t_returned_data *data, char **env, t_list **env_l)
@@ -95,6 +95,7 @@ void	fill_list(t_returned_data *data, char **env, t_list **env_l)
 	int				counter;
 	t_returned_data	*t;
 	int				saver;
+	int				*id;
 
 	counter = lst_count(data);
 	if (counter == 1 && built_exist(data->cmd_dup) && data->is_executable)
