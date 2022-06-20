@@ -147,7 +147,7 @@ char	*get_command_path(char **env_variables, char *command);
 int		built_exist(char *cmd_path);
 int		get_length(char **args);
 void	dup_and_close(t_returned_data *data, int c);
-void	close_and_wait(t_returned_data *data, int counter);
+void	close_and_wait(t_returned_data *data, int counter, int *id);
 int		lst_count(t_returned_data *data);
 void	close_all_pipes(t_returned_data *head);
 void	sig_quit();

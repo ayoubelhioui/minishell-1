@@ -6,7 +6,7 @@
 /*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 16:01:46 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/20 13:48:42 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/20 14:07:35 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	dup_and_close(t_returned_data *data, int c)
 	}
 }
 
-void	close_and_wait(t_returned_data *data, int counter)
+void	close_and_wait(t_returned_data *data, int counter, int *id)
 {
 	int	i;
 	int	status;
@@ -35,12 +35,12 @@ void	close_and_wait(t_returned_data *data, int counter)
 	i = 0;
 	while (i < counter)
 	{
-		wait(&status);
+		waitpid(id[i], &status, 0);
 		if (WIFEXITED(status))
 			g_key.exit_stat = WEXITSTATUS(status);
-		else if (status == 2)
+		if (status == 2)
 			g_key.exit_stat= 130;
-		else if (status == 3)
+		if (status == 3)
 			g_key.exit_stat = 131;
 		i++;
 	}

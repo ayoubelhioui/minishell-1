@@ -59,42 +59,43 @@ void	handle_the_cmd(t_returned_data *t, t_returned_data *data, \
 	else if (execve(data->cmd_path, \
 	data->args, env) == -1)
 	{
-		printf("command not found\n");
+		dprintf(2, "command not found\n");
 		g_key.exit_stat = 127;
 		exit(127);
 	}
 }
 
 void	check_and_exec(t_returned_data *data, t_list **env_l, \
-	char **env)
+	char **env, int counter)
 {
 	int				i;
 	t_returned_data	*t;
-	int				id;
+	int				last;
+	int				*id;
 
+	id = malloc(counter * sizeof(int));
 	t = data;
 	i = 0;
 	while (data)
 	{
 		if (data->is_executable)
 		{
-			id = fork();
-			if (id == 0)
-			{
+			id[i] = fork();
+			if (id[i] == 0)
 				handle_the_cmd(t, data, env_l, env);
-			}
 		}
 		i++;
 		data = data->next;
 	}
+	close_and_wait(t, counter , id);
 }
 
 void	fill_list(t_returned_data *data, char **env, t_list **env_l)
 {
-	int				*id;
 	int				counter;
 	t_returned_data	*t;
 	int				saver;
+	int				*id;
 
 	counter = lst_count(data);
 	if (counter == 1 && built_exist(data->cmd_dup) && data->is_executable)
@@ -108,8 +109,7 @@ void	fill_list(t_returned_data *data, char **env, t_list **env_l)
 	else
 	{
 		g_key.flag_for_here = 2;
-		check_and_exec(data, env_l, env);
+		check_and_exec(data, env_l, env, counter);
 	}
-	close_and_wait(data, counter);
 	g_key.flag_for_here = 0;
 }
