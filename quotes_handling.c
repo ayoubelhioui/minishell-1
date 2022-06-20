@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   quotes_handling.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/15 15:38:43 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/06/02 13:28:49 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/20 14:57:20 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ void remove_the_word(t_returned_data *data, char *saver, int position)
 void dollar_sign(t_returned_data *data, char **env, int dollar_position)
 {
     int i;
-    int j;
     char *saver;
     char *real_value;
     int counter;
