@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 15:11:50 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/14 15:12:04 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/20 14:57:40 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,6 @@ char	**split_with_plus(char *arg)
 	char	**s;
 	int		len1;
 	int		len2;
-	int		i;
-	int		j;
 
 	len1 = len_1(arg);
 	len2 = len_2(arg, len1);

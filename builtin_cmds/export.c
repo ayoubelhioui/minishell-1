@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 12:47:10 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/18 20:43:31 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/20 14:56:42 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,6 @@ void	change_value(char *arg, t_list **env)
 	t_list	*curr;
 	char	**spl;
 	char	**split_arg;
-	int		len;
-	int		j;
 
 	curr = *env;
 	while (*env)

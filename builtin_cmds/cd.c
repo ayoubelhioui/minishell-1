@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 12:47:45 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/16 15:34:19 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/20 14:55:24 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ void	cd(char **paths, t_list **env)
 	t_list	*curr;
 
 	curr = *env;
+	ret = 0;
 	if (*paths == NULL || !ft_strcmp(paths[0], "~"))
 	{
 		while (curr)

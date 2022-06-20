@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 18:55:21 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/19 15:55:36 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/20 14:54:36 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,7 @@ void	sig_quit()
 }
 void	sig_handler(int sig)
 {
-	int	saver;
-
+	(void) sig;
 	if (g_key.flag_for_here == 0)
 	{
 		g_key.exit_stat = 1;

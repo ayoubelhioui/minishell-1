@@ -172,7 +172,6 @@ char    *remove_quotes(char *context)
     if (!context)
         return (NULL);
     t_remove_quotes_vars vars;
-    char *returned;
 
     vars.new_string_length = get_new_string_length(context);
     vars.new_string = malloc(sizeof(char) * (vars.new_string_length + 1));
@@ -340,7 +339,6 @@ int here_doc(char *limiter, char **env)
 void	heredoc_searcher(char **splitted_data, t_returned_data *returned_data, char **env)
 {
     int     i;
-    int     input_fd;
     int         in_quote;
 
     i = 0;
@@ -720,7 +718,6 @@ char *dollar_sign_found(t_data *data, char **env, char *saver, int *i)
 {
     t_dollar_sign_vars vars;
     char                *temp_r;
-	char *f;
 
     data->index++;
     vars.env_value = NULL;
@@ -942,6 +939,7 @@ int main(int ac, char **av,  char **env)
 	struct termios termios_save;
 	struct termios termios_new;
 
+	(void) av;
 	if (ac != 1)
 	{
 		printf("Too many arguments\n");

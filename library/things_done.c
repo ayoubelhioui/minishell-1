@@ -70,7 +70,6 @@ void	check_and_exec(t_returned_data *data, t_list **env_l, \
 {
 	int				i;
 	t_returned_data	*t;
-	int				last;
 	int				*id;
 
 	id = malloc(counter * sizeof(int));
@@ -94,9 +93,7 @@ void	check_and_exec(t_returned_data *data, t_list **env_l, \
 void	fill_list(t_returned_data *data, char **env, t_list **env_l)
 {
 	int				counter;
-	t_returned_data	*t;
 	int				saver;
-	int				*id;
 
 	counter = lst_count(data);
 	if (counter == 1 && built_exist(data->cmd_dup) && data->is_executable)
