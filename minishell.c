@@ -285,8 +285,10 @@ int redirection_counter(t_list *splitted_data, char redirection)
 
 int here_doc_helper(t_here_doc_vars *vars, char *limiter, char **env)
 {
+	//printf("ente is %s and lim is %s\n", vars->entered_data, limiter);
     while (vars->entered_data)
     {
+		//printf("limiter is %s\n", limiter);
         if (!ft_strcmp(vars->entered_data, limiter) && vars->entered_data[0] != '\0')
             break ;
         write(vars->p[STD_OUTPUT], vars->entered_data, ft_strlen(vars->entered_data));
@@ -577,6 +579,7 @@ void    getting_output_fd(char *str, t_returned_data *returned_data, int unexist
 void    get_cmd_args_helper(char **data, t_returned_data *returned_data, char **env)
 {
     int i;
+    char *temp;
     int j;    
 
     i = 0;
@@ -590,14 +593,41 @@ void    get_cmd_args_helper(char **data, t_returned_data *returned_data, char **
                 i++;
         }
         else
-            returned_data->args[j++] = data[i];
+        {
+            temp = data[i];
+            returned_data->args[j++] = remove_quotes(data[i]);
+            data[i] = returned_data->args[j - 1];
+            free (temp);
+        }
         i++;
     }
+    i = 0;
     returned_data->cmd_dup = returned_data->args[0];
     returned_data->cmd_path = get_command_path(env, returned_data->args[0]);
     returned_data->args[j] = NULL;
 }
 
+void    freeing(char **s)
+{
+    int i = 0;
+    while (s[i])
+    {
+        if (!ft_strcmp(s[i], "<") || !ft_strcmp(s[i], ">"))
+        {
+            printf("I will free : %s\n", s[i]);
+            free (s[i++]);
+            if (!ft_strcmp(s[i], "<") || !ft_strcmp(s[i], ">"))
+            {
+                printf("I will free : %s\n", s[i]);
+                free (s[i++]);
+            }
+            printf("I will free : %s\n", s[i]);
+            free (s[i]);
+        }
+        i++;
+    }
+    free (s);
+}
 int get_cmd_args(char **data, t_returned_data *returned_data, char **env)
 {
     char **s;
@@ -606,16 +636,20 @@ int get_cmd_args(char **data, t_returned_data *returned_data, char **env)
 
     whole_length = 0;
     k = 0;
+    int i = 0;
     while (returned_data)
     {
         s = ft_split(data[k++], SPACE);
         whole_length = get_length(s) - get_args_length(s);
         if (whole_length == 0)
+        {
+            ft_free(s);
             return (FALSE);
+        }
         returned_data->args = malloc(sizeof(char *) * (whole_length + 1));
 		get_cmd_args_helper(s, returned_data, env);
+        freeing(s);
         returned_data = returned_data->next;
-        free(s);
     }
     return (TRUE);
 }
@@ -623,21 +657,13 @@ int get_cmd_args(char **data, t_returned_data *returned_data, char **env)
 
 void    args_final_touch(t_returned_data *returned_data, char **env)
 {
-    char *temp;
     int i;
 
     while (returned_data)
     {
         i = 0;
-        i = 0;
         while (returned_data->args[i])
-        {
-            back_space(returned_data->args[i]);
-            temp = remove_quotes(returned_data->args[i]);
-            // free (returned_data->args[i]);
-            returned_data->args[i] = temp;
-            i++;
-        }
+            back_space(returned_data->args[i++]);
         returned_data = returned_data->next;
     }
 }
@@ -857,12 +883,25 @@ int	preparing(t_data *entered_data, t_list *env, t_returned_data **returned_data
     {
         ft_free(splitted_by_pipe);
         ft_free(splitted_by_space);
+        free(new_env);
 		return (-1);
     }
 	free(new_env);
     ft_free(splitted_by_pipe);
     ft_free(splitted_by_space);
 	return (1);
+}
+
+void    ft_free_h(t_returned_data *head)
+{
+    t_returned_data	*temp;
+
+	while (head)
+	{
+		temp = head->next;
+		free(head);
+		head = temp;
+	}
 }
 void    prompt(char **env, t_list *new_env)
 {
@@ -887,10 +926,14 @@ void    prompt(char **env, t_list *new_env)
         return  ;
     }
     if (preparing(&entered_data, new_env, &returned_data) == -1 || g_key.flag == 6)
+    {
+        // ft_free_list(returned_data);
+        ft_free_h(returned_data);
     	return ;
-	fill_list(returned_data, env, &new_env);
+    }
+    fill_list(returned_data, env, &new_env);
     ft_free_list(returned_data);
-	// system("leaks minishell");
+	system("leaks minishell");
     
 }
 int main(int ac, char **av,  char **env)
