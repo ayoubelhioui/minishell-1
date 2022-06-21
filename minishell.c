@@ -290,7 +290,9 @@ int here_doc_helper(t_here_doc_vars *vars, char *limiter, char **env)
             break ;
         write(vars->p[STD_OUTPUT], vars->entered_data, ft_strlen(vars->entered_data));
         write(vars->p[STD_OUTPUT], "\n", 2);
-        // free (vars->entered_data);
+        vars->entered_data = NULL;
+        if (vars->entered_data)
+         free (vars->entered_data);
         vars->s = readline("> ");
 		if (vars->s)
     		vars->entered_data = expanding(vars->s, env);
@@ -318,10 +320,7 @@ int here_doc(char *limiter, char **env)
 	g_key.flag_for_here = 1;
 	vars.s = readline("> ");
 	if (vars.s)
-	{
-		//printf("vars is %s\n", vars.s);
     	vars.entered_data = expanding(vars.s, env);
-	}
 	else
 	{
 		g_key.after_exit = 1;
@@ -473,6 +472,7 @@ void    create_returned_nodes(t_returned_data **returned_data, int commands_numb
     while(commands_number > 0)
     {
         new = malloc(sizeof(t_returned_data));
+        new->cmd_path = NULL;
         new->next = NULL;
         new->args = NULL;
         new->str_idx = 0;
@@ -618,6 +618,7 @@ void    get_cmd_args_helper(char **data, t_returned_data *returned_data, char **
     }
     returned_data->cmd_dup = returned_data->args[0];
     returned_data->cmd_path = get_command_path(env, returned_data->args[0]);
+    // printf("it Is : %s\n", returned_data->cmd_path);
     returned_data->args[j] = NULL;
 }
 
@@ -712,20 +713,30 @@ char    *search_in_env(char *entered_data, char **env)
     return (ft_strdup(""));
 }
 
-char *dollar_sign_found(t_data *data, char **env, char *saver, int *i)
+char *dollar_sign_found(t_data *data, char **env, char *saver, int *last_$_index)
 {
     t_dollar_sign_vars vars;
     char                *temp_r;
-
+    char                *temp1;
+    char                *temp2;
     data->index++;
     vars.env_value = NULL;
     vars.index_saver = data->index;
-    if (!ft_isalnum(data->context[data->index]) && data->context[data->index] != UNDER_SCORE)
-        return (ft_substr(data->context, 0, data->index + 1));
+    // if (!ft_isalnum(data->context[data->index]) && data->context[data->index] != UNDER_SCORE)
+    // {
+    //     temp1 = ft_substr(data->context, *last_$_index, data->index + 1);
+    //     printf("temp1 : %s and saver : %s\n", temp1, saver);
+    //     temp2 = ft_strjoin(saver, temp1);
+    //     while (data->context[data->index] && data->context[data->index] != SPACE)
+    //         data->index++;
+    //     free(temp1);
+    //     printf("IT iS : %s\n", temp2);
+    //     return (temp2);
+    // }
     while ((data->context[data->index]) && ((ft_isalnum(data->context[data->index])) || (data->context[data->index] == UNDER_SCORE)))
         data->index++;
-    vars.s1 = ft_substr(data->context, *i, vars.index_saver - *i - 1);
-    *i = data->index;
+    vars.s1 = ft_substr(data->context, *last_$_index, vars.index_saver - *last_$_index - 1);
+    *last_$_index = data->index;
     vars.s2 = ft_substr(data->context, vars.index_saver, data->index - vars.index_saver);
     vars.temp = ft_substr(data->context, vars.index_saver + 1, data->index - vars.index_saver - 1);
     vars.temp1 = ft_strdup("minishell");
@@ -744,6 +755,12 @@ char *dollar_sign_found(t_data *data, char **env, char *saver, int *i)
     data->index--;
     return (saver);
 }
+
+// void    bad_case(t_expanding *vars)
+// {
+
+// }
+
 void    expanding_helper(t_expanding *vars)
 {
     if ((vars->data.context[vars->data.index] == RED_INPUT) && (vars->data.context[vars->data.index + 1] == RED_INPUT))
@@ -761,6 +778,7 @@ char    *expanding(char *str, char **env)
    t_expanding vars;
    char *temp;
 
+    int idontknow = 0;
     vars.in_quote = 0;
     vars.is_limiter = FALSE;
     vars.saver = NULL;
@@ -773,11 +791,16 @@ char    *expanding(char *str, char **env)
     while (vars.data.context[vars.data.index])
     {
         expanding_helper(&vars);
-        if ((vars.data.context[vars.data.index] == DOLLAR_SIGN) && (vars.in_quote != SINGLE_QUOTE) && (vars.is_limiter == FALSE))
+        if ((vars.data.context[vars.data.index] == DOLLAR_SIGN) && (vars.in_quote != SINGLE_QUOTE) && (vars.is_limiter == FALSE) && \
+        (ft_isalnum(vars.data.context[vars.data.index + 1]) || vars.data.context[vars.data.index + 1] == UNDER_SCORE))
         {
             vars.saver = dollar_sign_found(&vars.data, env, vars.saver, &vars.j);
             vars.x = vars.data.index + 1;
         }
+        // if (vars.data.context[vars.data.index + 1] == DOUBLE_QUOTE || vars.data.context[vars.data.index + 1] == SINGLE_QUOTE)
+        // {
+        //     vars.saver 
+        // }
         if (!vars.data.context[vars.data.index])
             break ;
         vars.data.index++;
@@ -789,6 +812,7 @@ char    *expanding(char *str, char **env)
         vars.saver = expanding_join(vars.saver, vars.temp);
         free(temp);
     }
+            printf("shit\n");
     free (vars.temp);
     free (str);
     return (vars.saver);
@@ -864,6 +888,8 @@ void    preparing(t_data *entered_data, t_list *env, t_returned_data **returned_
 
     new_env = get_new_env(env);
     entered_data->context = expanding(entered_data->context, new_env);
+    // if (!entered_data->context)
+    //     printf("YES\n");
     entered_data->context = get_new_context(entered_data);
     splitted_by_pipe = ft_split(entered_data->context, PIPE);
     commands_number = get_length(splitted_by_pipe);
