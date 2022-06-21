@@ -1,5 +1,5 @@
-total 488
-drwxr-xr-x  25 ijmari  2019     850 Jun 21 09:23 .
+total 504
+drwxr-xr-x  27 ijmari  2019     918 Jun 21 09:25 .
 drwxr-xr-x  29 ijmari  2019     986 Jun 19 22:05 ..
 drwxr-xr-x  15 ijmari  2019     510 Jun 20 17:30 .git
 drwxr-xr-x   4 ijmari  2019     136 Jun 18 15:05 .vscode
@@ -16,9 +16,11 @@ drwxr-xr-x  31 ijmari  2019    1054 Jun 19 21:34 library
 drwxr-xr-x   3 ijmari  2019     102 Jun 20 19:16 minishell.dSYM
 -rw-r--r--   1 ijmari  2019    3934 Jun 20 12:15 minishell.h
 -rw-------   1 ijmari  2019       6 Jun 21 09:24 ok
--rw-r--r--   1 ijmari  2019       0 Jun 21 09:24 p.txt
+-rw-r--r--   1 ijmari  2019    1418 Jun 21 09:24 p.txt
+-rw-r--r--   1 ijmari  2019       7 Jun 21 09:25 pol
 -rw-r--r--   1 ijmari  2019       6 Jun 19 21:34 pp
 -rw-r--r--   1 ijmari  2019     129 Jun 19 21:33 pp.c
+-rw-r--r--   1 ijmari  2019       0 Jun 21 09:25 ppk.txt
 -rw-r--r--   1 ijmari  2019    4571 Jun 20 14:57 quotes_handling.c
 -rw-------   1 ijmari  2019       0 Jun 20 20:47 s
 -rw-r--r--   1 ijmari  2019    1370 Jun 20 14:54 signals.c

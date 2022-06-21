@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 12:48:09 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/19 14:35:34 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/21 09:11:43 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,23 +41,32 @@ void	print_string(char *s, char c, int flag)
 	}
 }
 
+int	some_ns(char *s)
+{
+	int	i;
+
+	if (s[0] != '-')
+		return (0);
+	i = 1;
+	while (s[i])
+	{
+		if(s[i] != 'n')
+			return (0);
+		i++;
+	}
+	return (1);
+}
 void	ft_echo(char **s)
 {
 	int		i;
 	char	c;
 
 	c = 'a';
-	i = 0;
+	i = -1;
 	if (*s == NULL)
 		printf("\n");
-	if (!ft_strcmp(s[0], "-n"))
-	{
+	while (some_ns(s[++i]))
 		c = 'n';
-		while (!ft_strcmp(s[i], "-n"))
-			i++;
-	}
-	else
-		i = 0;
 	while (s[i])
 	{
 		print_string(s[i], c, !s[i + 1]);
