@@ -37,6 +37,8 @@ void	handle_the_cmd(t_returned_data *t, t_returned_data *data, \
 	int	check;
 
 	signal(SIGQUIT, sig_quit);
+	if (data->flag == 1)
+		exit(0);
 	close_unused_pipes(t, data);
 	check = built_exist(data->cmd_dup);
 	if (data->cmd_path == NULL && !check)

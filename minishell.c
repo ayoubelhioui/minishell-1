@@ -478,6 +478,7 @@ void    create_returned_nodes(t_returned_data **returned_data, int commands_numb
         new->next = NULL;
         new->args = NULL;
         new->str_idx = 0;
+        new->flag = 0;
         new->is_executable = TRUE;
         new->input_fd = STD_INPUT;
         new->output_fd = STD_OUTPUT;
@@ -574,6 +575,24 @@ void    getting_output_fd(char *str, t_returned_data *returned_data, int unexist
     ft_free(s);
 }
 
+
+void    freeing(char **s)
+{
+    int i = 0;
+    while (s[i])
+    {
+        if (!ft_strcmp(s[i], "<") || !ft_strcmp(s[i], ">"))
+        {
+            free (s[i++]);
+            if (!ft_strcmp(s[i], "<") || !ft_strcmp(s[i], ">"))
+                free (s[i++]);
+            free (s[i]);
+        }
+        i++;
+    }
+    free (s);
+}
+
 void    get_cmd_args_helper(char **data, t_returned_data *returned_data, char **env)
 {
     int i;
@@ -599,33 +618,11 @@ void    get_cmd_args_helper(char **data, t_returned_data *returned_data, char **
         }
         i++;
     }
-    i = 0;
     returned_data->cmd_dup = returned_data->args[0];
     returned_data->cmd_path = get_command_path(env, returned_data->args[0]);
     returned_data->args[j] = NULL;
 }
 
-void    freeing(char **s)
-{
-    int i = 0;
-    while (s[i])
-    {
-        if (!ft_strcmp(s[i], "<") || !ft_strcmp(s[i], ">"))
-        {
-            printf("I will free : %s\n", s[i]);
-            free (s[i++]);
-            if (!ft_strcmp(s[i], "<") || !ft_strcmp(s[i], ">"))
-            {
-                printf("I will free : %s\n", s[i]);
-                free (s[i++]);
-            }
-            printf("I will free : %s\n", s[i]);
-            free (s[i]);
-        }
-        i++;
-    }
-    free (s);
-}
 int get_cmd_args(char **data, t_returned_data *returned_data, char **env)
 {
     char **s;
@@ -634,7 +631,6 @@ int get_cmd_args(char **data, t_returned_data *returned_data, char **env)
 
     whole_length = 0;
     k = 0;
-    int i = 0;
     while (returned_data)
     {
         s = ft_split(data[k++], SPACE);
@@ -642,7 +638,11 @@ int get_cmd_args(char **data, t_returned_data *returned_data, char **env)
         if (whole_length == 0)
         {
             ft_free(s);
-            return (FALSE);
+            returned_data->args = malloc(sizeof(char *));
+            returned_data->args[0] = NULL;
+            returned_data->flag = 1; 
+            returned_data = returned_data->next;
+            continue;
         }
         returned_data->args = malloc(sizeof(char *) * (whole_length + 1));
 		get_cmd_args_helper(s, returned_data, env);
@@ -856,7 +856,7 @@ void    pipe_handling(int commands_number, char **splitted_by_pipe, t_returned_d
     free (pipes_array);
 }
 
-int	preparing(t_data *entered_data, t_list *env, t_returned_data **returned_data)
+void    preparing(t_data *entered_data, t_list *env, t_returned_data **returned_data)
 {
     char            **splitted_by_space;
     char            **splitted_by_pipe;
@@ -874,19 +874,11 @@ int	preparing(t_data *entered_data, t_list *env, t_returned_data **returned_data
     create_returned_nodes(returned_data, commands_number);
     heredoc_searcher(splitted_by_space, *returned_data, new_env);
     pipe_handling(commands_number, splitted_by_pipe, *returned_data);
-    if (get_cmd_args(splitted_by_pipe, *returned_data, new_env))
-        args_final_touch(*returned_data, new_env);
-	else
-    {
-        ft_free(splitted_by_pipe);
-        ft_free(splitted_by_space);
-        free(new_env);
-		return (-1);
-    }
-	free(new_env);
+    get_cmd_args(splitted_by_pipe, *returned_data, new_env);
+    args_final_touch(*returned_data, new_env);
     ft_free(splitted_by_pipe);
     ft_free(splitted_by_space);
-	return (1);
+    free(new_env);
 }
 
 void    ft_free_h(t_returned_data *head)
@@ -922,16 +914,15 @@ void    prompt(char **env, t_list *new_env)
         printf("error occured\n");
         return  ;
     }
-    if (preparing(&entered_data, new_env, &returned_data) == -1 || g_key.flag == 6)
+    preparing(&entered_data, new_env, &returned_data);
+    if (g_key.flag == 6)
     {
-        // ft_free_list(returned_data);
         ft_free_h(returned_data);
     	return ;
     }
     fill_list(returned_data, env, &new_env);
     ft_free_list(returned_data);
-	system("leaks minishell");
-    
+	// system("leaks minishell");
 }
 int main(int ac, char **av,  char **env)
 {

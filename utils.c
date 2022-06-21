@@ -6,7 +6,7 @@
 /*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 16:35:49 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/20 17:41:51 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/20 17:56:54 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,9 +117,9 @@ void	ft_free_list(t_returned_data *head)
 	while (head)
 	{
 		temp = head->next;
-		// ft_free(head->args);
-    	// free(head->cmd_path);
-		// free(head);
+		ft_free(head->args);
+    	free(head->cmd_path);
+		free(head);
 		head = temp;
 	}
 }
