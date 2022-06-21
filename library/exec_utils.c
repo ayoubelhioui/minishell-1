@@ -6,7 +6,7 @@
 /*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 16:01:46 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/20 14:07:35 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/21 15:46:40 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,10 @@ void	ft_free(char **ptr)
 
 	i = 0;
 	while (ptr[i])
-		free(ptr[i++]);
-	free(ptr);
+	{
+		if (ptr[i])
+			free(ptr[i++]);
+	}
+	if (ptr)
+		free(ptr);
 }
