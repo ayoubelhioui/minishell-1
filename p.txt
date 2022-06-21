@@ -1,0 +1,26 @@
+total 488
+drwxr-xr-x  25 ijmari  2019     850 Jun 21 09:23 .
+drwxr-xr-x  29 ijmari  2019     986 Jun 19 22:05 ..
+drwxr-xr-x  15 ijmari  2019     510 Jun 20 17:30 .git
+drwxr-xr-x   4 ijmari  2019     136 Jun 18 15:05 .vscode
+-rw-r--r--   1 ijmari  2019    1146 Jun 21 09:07 Makefile
+-rw-------   1 ijmari  2019       0 Jun 20 20:51 a
+drwxr-xr-x  11 ijmari  2019     374 Jun 19 21:33 builtin_cmds
+drwxr-xr-x  31 ijmari  2019    1054 Jun 19 21:34 library
+-rw-r--r--   1 ijmari  2019    1730 Jun 18 15:05 line.c
+-rw-r--r--   1 ijmari  2019     115 Jun 18 15:05 m.c
+-rw-r--r--   1 ijmari  2019    1412 Jun 19 21:33 main.c
+-rw-r--r--   1 ijmari  2019     601 Jun 19 21:33 main.cpp
+-rwxr-xr-x   1 ijmari  2019  171920 Jun 21 09:23 minishell
+-rw-r--r--   1 ijmari  2019   24266 Jun 21 09:23 minishell.c
+drwxr-xr-x   3 ijmari  2019     102 Jun 20 19:16 minishell.dSYM
+-rw-r--r--   1 ijmari  2019    3934 Jun 20 12:15 minishell.h
+-rw-------   1 ijmari  2019       6 Jun 21 09:24 ok
+-rw-r--r--   1 ijmari  2019       0 Jun 21 09:24 p.txt
+-rw-r--r--   1 ijmari  2019       6 Jun 19 21:34 pp
+-rw-r--r--   1 ijmari  2019     129 Jun 19 21:33 pp.c
+-rw-r--r--   1 ijmari  2019    4571 Jun 20 14:57 quotes_handling.c
+-rw-------   1 ijmari  2019       0 Jun 20 20:47 s
+-rw-r--r--   1 ijmari  2019    1370 Jun 20 14:54 signals.c
+-rw-r--r--   1 ijmari  2019    2558 Jun 19 21:33 utils.c
+-rw-------   1 ijmari  2019       0 Jun 20 20:51 w

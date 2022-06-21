@@ -284,15 +284,13 @@ int redirection_counter(t_list *splitted_data, char redirection)
 
 int here_doc_helper(t_here_doc_vars *vars, char *limiter, char **env)
 {
-	//printf("ente is %s and lim is %s\n", vars->entered_data, limiter);
     while (vars->entered_data)
     {
-		//printf("limiter is %s\n", limiter);
         if (!ft_strcmp(vars->entered_data, limiter) && vars->entered_data[0] != '\0')
             break ;
         write(vars->p[STD_OUTPUT], vars->entered_data, ft_strlen(vars->entered_data));
         write(vars->p[STD_OUTPUT], "\n", 2);
-        free (vars->entered_data);
+        // free (vars->entered_data);
         vars->s = readline("> ");
 		if (vars->s)
     		vars->entered_data = expanding(vars->s, env);
@@ -873,6 +871,7 @@ void    preparing(t_data *entered_data, t_list *env, t_returned_data **returned_
 	free(entered_data->context);
     create_returned_nodes(returned_data, commands_number);
     heredoc_searcher(splitted_by_space, *returned_data, new_env);
+	printf("OK\n");
     pipe_handling(commands_number, splitted_by_pipe, *returned_data);
     get_cmd_args(splitted_by_pipe, *returned_data, new_env);
     args_final_touch(*returned_data, new_env);
@@ -927,7 +926,6 @@ void    prompt(char **env, t_list *new_env)
 int main(int ac, char **av,  char **env)
 {
 	t_list	*new_env;
-	struct termios termios_save;
 	struct termios termios_new;
 
 	(void) av;
@@ -943,8 +941,7 @@ int main(int ac, char **av,  char **env)
     {
 		g_key.flag = 0;
 		dup2(g_key.saver, 0);
-		tcgetattr(0, &termios_save);
-		termios_new = termios_save;
+		tcgetattr(0, &termios_new);
 		termios_new.c_lflag &= ~(ECHOCTL);
 		tcsetattr(0, 0, &termios_new);
 		signal (SIGINT, &sig_handler);
