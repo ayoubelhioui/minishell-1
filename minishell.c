@@ -285,17 +285,20 @@ int redirection_counter(t_list *splitted_data, char redirection)
 int here_doc_helper(t_here_doc_vars *vars, char *limiter, char **env)
 {
     while (vars->entered_data)
-    {
-        if (!ft_strcmp(vars->entered_data, limiter) && vars->entered_data[0] != '\0')
+    { 
+        if (!ft_strcmp(vars->entered_data, limiter) )
             break ;
         write(vars->p[STD_OUTPUT], vars->entered_data, ft_strlen(vars->entered_data));
         write(vars->p[STD_OUTPUT], "\n", 2);
-        vars->entered_data = NULL;
-        if (vars->entered_data)
-         free (vars->entered_data);
         vars->s = readline("> ");
 		if (vars->s)
-    		vars->entered_data = expanding(vars->s, env);
+		{
+			free(vars->entered_data);
+			if (ft_strlen(vars->s))
+    			vars->entered_data = expanding(vars->s, env);
+			else
+				vars->entered_data = vars->s;
+		}
 		else
 		{
 			g_key.after_exit = 1;
@@ -320,7 +323,12 @@ int here_doc(char *limiter, char **env)
 	g_key.flag_for_here = 1;
 	vars.s = readline("> ");
 	if (vars.s)
-    	vars.entered_data = expanding(vars.s, env);
+	{
+		if (ft_strlen(vars.s))
+    		vars.entered_data = expanding(vars.s, env);
+		else
+			vars.entered_data = vars.s;
+	}
 	else
 	{
 		g_key.after_exit = 1;
@@ -330,6 +338,7 @@ int here_doc(char *limiter, char **env)
 	}
 	pipe(vars.p);
     limiter = remove_quotes(limiter);
+	printf("limiter is : %s\n", limiter);
     return (here_doc_helper(&vars, limiter, env));
 }
 
@@ -352,8 +361,6 @@ void	heredoc_searcher(char **splitted_data, t_returned_data *returned_data, char
         {
             i += 2;
             returned_data->input_fd =  here_doc(splitted_data[i], env);
-			if (returned_data->input_fd == -4)
-				g_key.flag = 6;
 			g_key.flag_for_here = 0;
         }
         i++;
@@ -786,8 +793,6 @@ char    *expanding(char *str, char **env)
     vars.data.index = 0;
     vars.j = 0;
     vars.x = 0;
-	if (str[0] == '\0')
-		return (str);
     while (vars.data.context[vars.data.index])
     {
         expanding_helper(&vars);
@@ -812,7 +817,6 @@ char    *expanding(char *str, char **env)
         vars.saver = expanding_join(vars.saver, vars.temp);
         free(temp);
     }
-            printf("shit\n");
     free (vars.temp);
     free (str);
     return (vars.saver);
@@ -941,12 +945,12 @@ void    prompt(char **env, t_list *new_env)
     preparing(&entered_data, new_env, &returned_data);
     if (g_key.flag == 6)
     {
-        ft_free_h(returned_data);
+        ft_free_list(returned_data);
     	return ;
     }
     fill_list(returned_data, env, &new_env);
     ft_free_list(returned_data);
-	// system("leaks minishell");
+	system("leaks minishell");
 }
 int main(int ac, char **av,  char **env)
 {
