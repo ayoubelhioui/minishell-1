@@ -756,10 +756,6 @@ char *dollar_sign_found(t_data *data, char **env, char *saver, int *last_$_index
     return (saver);
 }
 
-// void    bad_case(t_expanding *vars)
-// {
-
-// }
 
 void    expanding_helper(t_expanding *vars)
 {
@@ -773,10 +769,27 @@ void    expanding_helper(t_expanding *vars)
         in_a_quote(&vars->in_quote, SINGLE_QUOTE);
 }
 
+// char    *bad_case(t_expanding *vars, int quote)
+// {
+//     int start;
+//     int end;
+
+//     vars->data.index+=2;
+//     start = vars->data.index;
+//     end = vars->data.index;
+//     while (vars->data.context[vars->data.index] && vars->data.context[vars->data.index] != quote)
+//     {
+//         vars->data.index++;
+//         end++;
+//     }
+//     // printf("index start is : %c and end is : %c\n", vars->data.context[start], vars->data.context[end - 1]);
+//     return (ft_substr(vars->data.context, start, (end - start));
+// }
+
 char    *expanding(char *str, char **env)
 {
-   t_expanding vars;
-   char *temp;
+    t_expanding vars;
+    char *temp;
 
     int idontknow = 0;
     vars.in_quote = 0;
@@ -797,10 +810,8 @@ char    *expanding(char *str, char **env)
             vars.saver = dollar_sign_found(&vars.data, env, vars.saver, &vars.j);
             vars.x = vars.data.index + 1;
         }
-        // if (vars.data.context[vars.data.index + 1] == DOUBLE_QUOTE || vars.data.context[vars.data.index + 1] == SINGLE_QUOTE)
-        // {
-        //     vars.saver 
-        // }
+        // else if (vars.data.context[vars.data.index + 1] == DOUBLE_QUOTE || vars.data.context[vars.data.index + 1] == SINGLE_QUOTE)
+        //     bad_case(&vars, DOUBLE_QUOTE);
         if (!vars.data.context[vars.data.index])
             break ;
         vars.data.index++;
@@ -946,7 +957,7 @@ void    prompt(char **env, t_list *new_env)
     }
     fill_list(returned_data, env, &new_env);
     ft_free_list(returned_data);
-	// system("leaks minishell");
+	system("leaks minishell");
 }
 int main(int ac, char **av,  char **env)
 {

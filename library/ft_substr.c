@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_substr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 15:13:30 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/14 15:13:33 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/21 17:53:52 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ char	*copy(char const *s, char *str, unsigned int start, size_t len)
 		start++;
 	}
 	str[i] = '\0';
+	// printf("s i s %s\n", str);
 	return (str);
 }
 
