@@ -37,6 +37,8 @@ void	handle_the_cmd(t_returned_data *t, t_returned_data *data, \
 	int	check;
 
 	signal(SIGQUIT, sig_quit);
+	if (data->flag == 1)
+		exit(0);
 	close_unused_pipes(t, data);
 	check = built_exist(data->cmd_dup);
 	if (data->cmd_path == NULL && !check)
@@ -87,6 +89,7 @@ void	check_and_exec(t_returned_data *data, t_list **env_l, \
 		data = data->next;
 	}
 	close_and_wait(t, counter , id);
+	free(id);
 }
 
 void	fill_list(t_returned_data *data, char **env, t_list **env_l)

@@ -51,6 +51,7 @@ typedef struct returned_data
 	char					**new_env;
 	int						exit_stat;
 	struct returned_data	*next;
+    int                     flag;
 }	                        t_returned_data;
 
 typedef struct here_doc_vars

@@ -1,31 +1,34 @@
-#include <iostream>
-
-using namespace std;
-
-int main()
+    #include <iostream>
+    #include <vector>
+    using namespace std;
+int solve_it(int start_pos, int jumps_number)
 {
-    int n, i = 0;
-    cin >> n;
-    while (i < n)
+    int n = 1;
+    while (jumps_number > 0)
     {
-        if (i == 0 && i == n - 1)
-            cout << "i hate it";
-        else if (i == 0 && i != n - 1)
-            cout << "i hate that ";
-        else if (i == n - 1)
+        if (start_pos % 2 == 0)
         {
-            if (i % 2 == 0)
-                cout << "i hate it";
-            else 
-                cout << "i love it";
+            start_pos -= n;
         }
         else
         {
-            if (i % 2 == 0)
-                cout << "i hate that ";
-            else
-                cout << "i love that ";
+            start_pos += n;
         }
+        n++;
+        jumps_number--;
+    }
+    return (start_pos);
+}
+int main()
+{
+    int test_cases;
+    cin >> test_cases;
+    int i = 0;
+    while (i < test_cases)
+    {
+        int start_pos, jumps_number;
+        cin >> start_pos >> jumps_number;
+        cout<< solve_it(start_pos, jumps_number) << endl;
         i++;
     }
 }
