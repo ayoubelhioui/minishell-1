@@ -871,7 +871,6 @@ void    preparing(t_data *entered_data, t_list *env, t_returned_data **returned_
 	free(entered_data->context);
     create_returned_nodes(returned_data, commands_number);
     heredoc_searcher(splitted_by_space, *returned_data, new_env);
-	printf("OK\n");
     pipe_handling(commands_number, splitted_by_pipe, *returned_data);
     get_cmd_args(splitted_by_pipe, *returned_data, new_env);
     args_final_touch(*returned_data, new_env);

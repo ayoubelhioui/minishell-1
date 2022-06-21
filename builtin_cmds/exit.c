@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 12:49:37 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/20 17:27:49 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/21 14:45:13 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	ft_exit(char **ex)
 	g = (long long) exit_atoi(*ex, &negative);
 	if (negative == 1 && g != -1)
 		g *= -1;
-	if (g != -1 && get_length(ex) != 1 && g != 9223372036854775808ULL)
+	if (g != -1 && get_length(ex) != 1)
 	{
 		printf("minishell: exit: too many arguments\n");
 		g_key.exit_stat = 1;

@@ -33,11 +33,9 @@ int	built_check(t_returned_data *ret, t_list **env)
 	{
 		printf("exit\n");
 		if (ret->args[1])
-		{
 			ft_exit(&ret->args[1]);
-		}
 		else
-			exit(0);
+			exit(g_key.exit_stat);
 	}
 	else if (!ft_strcmp(ret->cmd_dup, "export"))
 		ft_export(env, &ret->args[1]);
