@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 12:48:09 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/21 09:11:43 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/22 20:43:04 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,12 +50,13 @@ int	some_ns(char *s)
 	i = 1;
 	while (s[i])
 	{
-		if(s[i] != 'n')
+		if (s[i] != 'n')
 			return (0);
 		i++;
 	}
 	return (1);
 }
+
 void	ft_echo(char **s)
 {
 	int		i;
