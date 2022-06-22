@@ -39,6 +39,15 @@ typedef struct dollar_sign_vars
     char *temp1;
 }           t_dollar_sign_vars;
 
+typedef struct cmd_path
+{
+    char	*full_path;
+	char	**path;
+    char    *temp;
+    char    *temp1;
+	int		i;
+}               t_cmd_path;
+
 typedef struct returned_data
 {
 	char					*cmd_path;
@@ -100,12 +109,7 @@ typedef struct error_handling_vars
     int i;
     int in_quote;
 }                   t_error_handling_vars;
-// typedef struct expanding
-// {
-//     char *str;
-//     char *new_str;
-//     int dollar_index;
-// }                   t_expanding;
+
 typedef struct g_str
 {
 	long long	exit_stat;

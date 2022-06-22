@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 16:35:49 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/21 18:34:59 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/22 12:19:14 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ void	delete_node(t_list **env, int pos)
 	original = *env;
 	if (pos == 0)
 	{
+		free((*env)->content);
 		*env = (*env)->next;
 		original->next = NULL;
 	}
@@ -65,6 +66,7 @@ void	delete_node(t_list **env, int pos)
 		}
 		del = original->next;
 		original->next = original->next->next;
+		free(del->content);
 		del->next = NULL;
 		free(del);
 	}
