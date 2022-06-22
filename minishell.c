@@ -143,7 +143,7 @@ int get_new_string_length(char *context)
     return (inside_quotes_counter);
 }
 
-char    *remove_quotes_helper(char *context, t_remove_quotes_vars *vars)
+void    remove_quotes_helper(char *context, t_remove_quotes_vars *vars)
 {
     while (context[vars->i])
     {
@@ -164,7 +164,6 @@ char    *remove_quotes_helper(char *context, t_remove_quotes_vars *vars)
         vars->i++;
     }
     vars->new_string[vars->j] = '\0';
-    return (vars->new_string);
 }
 
 char    *remove_quotes(char *context)
@@ -177,17 +176,36 @@ char    *remove_quotes(char *context)
     vars.new_string = malloc(sizeof(char) * (vars.new_string_length + 1));
     vars.i = 0;
     vars.j = 0;
-    return (remove_quotes_helper(context, &vars));
+    remove_quotes_helper(context, &vars);
+    return (vars.new_string);
 }
 
+int get_cmd_path_helper(t_cmd_path *vars)
+{
+    int i;
+
+    i = -1;
+    while (vars->path[++i])
+	{
+        vars->temp1 = ft_strjoin(vars->path[i], "/");
+		vars->full_path = ft_strjoin(vars->temp1, vars->temp);
+		if (access(vars->full_path, F_OK) == 0)
+        {
+            free (vars->temp);
+            free (vars->temp1);
+            ft_free(vars->path);
+			return (TRUE);
+        }
+        free(vars->temp1);
+        free (vars->full_path);
+	}
+    return (FALSE);
+}
 
 char	*get_command_path(char **env_variables, char *command)
 {
-	char	*full_path;
-	char	**path;
-    char    *temp;
-    char    *temp1;
-	int		i;
+    t_cmd_path vars;
+    int i;
 
 	i = -1;
 	while (env_variables[++i])
@@ -197,25 +215,12 @@ char	*get_command_path(char **env_variables, char *command)
         if  (env_variables[i + 1] == NULL)
             return (NULL);
 	}
-	path = ft_split(env_variables[i], ':');
-	i = -1;
-    temp = remove_quotes(command);
-	while (path[++i])
-	{
-        temp1 = ft_strjoin(path[i], "/");
-		full_path = ft_strjoin(temp1, temp);
-		if (access(full_path, F_OK) == 0)
-        {
-            free (temp);
-            free (temp1);
-            ft_free(path);
-			return (full_path);
-        }
-        free(temp1);
-        free (full_path);
-	}
-    ft_free(path);
-	return (temp);
+	vars.path = ft_split(env_variables[i], ':');
+    vars.temp = remove_quotes(command);
+    if (get_cmd_path_helper(&vars))
+        return (vars.full_path);
+    ft_free(vars.path);
+	return (vars.temp);
 }
 
 int	get_length(char **args)
@@ -338,7 +343,6 @@ int here_doc(char *limiter, char **env)
 	}
 	pipe(vars.p);
     limiter = remove_quotes(limiter);
-	printf("limiter is : %s\n", limiter);
     return (here_doc_helper(&vars, limiter, env));
 }
 
@@ -520,6 +524,7 @@ int getting_input_fd(char *str, t_returned_data *returned_data, char **s)
 
     i = -1;
     temp_input = returned_data->input_fd;
+    // printf("temp is : %d\n", temp_input);
     while (s[++i])
     {
         if (!ft_strcmp(s[i], "<") && !ft_strcmp(s[i + 1], "<"))
@@ -536,16 +541,31 @@ int getting_input_fd(char *str, t_returned_data *returned_data, char **s)
             }
         }
     }
-    if (find_heredoc_position(s))
-        returned_data->input_fd = temp_input;
     return (i);
+}
+
+void    getting_output_fd_helper(char **s, int i, t_returned_data *returned_data)
+{
+    char    *temp;
+    if (!ft_strcmp(s[i], ">"))
+    {
+        temp = remove_quotes(s[i + 1]);
+        returned_data->output_fd = open(temp, O_WRONLY | O_CREAT | O_APPEND, 00400 | 00200);
+        free (temp);
+    }
+    else
+    {
+        temp = remove_quotes(s[i]);
+        returned_data->output_fd = open(temp, O_WRONLY | O_CREAT | O_TRUNC, 00400 | 00200);
+        free (temp);
+    }
 }
 
 void    getting_output_fd(char *str, t_returned_data *returned_data, int unexisting_file_idx)
 {
     char **s;
-    int     i;
     char    *temp;
+    int     i;
 
     s = ft_split(str, SPACE);
     i = 0;
@@ -556,18 +576,7 @@ void    getting_output_fd(char *str, t_returned_data *returned_data, int unexist
             i++;
             if (returned_data->output_fd != 1)
                 close (returned_data->output_fd);
-            if (!ft_strcmp(s[i], ">"))
-            {
-                temp = remove_quotes(s[i + 1]);
-                returned_data->output_fd = open(temp, O_WRONLY | O_CREAT | O_APPEND, 00400 | 00200);
-                free (temp);
-            }
-            else
-            {
-                temp = remove_quotes(s[i]);
-                returned_data->output_fd = open(temp, O_WRONLY | O_CREAT | O_TRUNC, 00400 | 00200);
-                free (temp);
-            }
+            getting_output_fd_helper(s, i, returned_data);
             if (returned_data->output_fd == -1)
             {
                 returned_data->is_executable = FALSE;
@@ -598,6 +607,24 @@ void    freeing(char **s)
     free (s);
 }
 
+// void    get_cmd_args_helper1(char **data, int *i, int *j)
+// {
+//     if (!ft_strcmp(data[*i], "<") || !ft_strcmp(data[*i], ">"))
+//     {
+//         *i+=1;
+//         if (!ft_strcmp(data[*i], "<") || !ft_strcmp(data[*i], ">"))
+//             *i+=1;
+//     }
+//     else
+//     {
+//         temp = data[*i];
+//         returned_data->args[*j] = remove_quotes(data[*i]);
+//         *j+=1;
+//         data[*i] = returned_data->args[j - 1];
+//         free (temp);
+//     }
+// }
+
 void    get_cmd_args_helper(char **data, t_returned_data *returned_data, char **env)
 {
     int i;
@@ -621,11 +648,11 @@ void    get_cmd_args_helper(char **data, t_returned_data *returned_data, char **
             data[i] = returned_data->args[j - 1];
             free (temp);
         }
+        // get_cmd_args_helper1(data, &i, &j);
         i++;
     }
     returned_data->cmd_dup = returned_data->args[0];
     returned_data->cmd_path = get_command_path(env, returned_data->args[0]);
-    // printf("it Is : %s\n", returned_data->cmd_path);
     returned_data->args[j] = NULL;
 }
 
@@ -720,7 +747,7 @@ char    *search_in_env(char *entered_data, char **env)
     return (ft_strdup(""));
 }
 
-char *dollar_sign_found(t_data *data, char **env, char *saver, int *last_$_index)
+char *dollar_sign_found(t_data *data, char **env, char *saver, int *last_dollar_index)
 {
     t_dollar_sign_vars vars;
     char                *temp_r;
@@ -729,21 +756,11 @@ char *dollar_sign_found(t_data *data, char **env, char *saver, int *last_$_index
     data->index++;
     vars.env_value = NULL;
     vars.index_saver = data->index;
-    // if (!ft_isalnum(data->context[data->index]) && data->context[data->index] != UNDER_SCORE)
-    // {
-    //     temp1 = ft_substr(data->context, *last_$_index, data->index + 1);
-    //     printf("temp1 : %s and saver : %s\n", temp1, saver);
-    //     temp2 = ft_strjoin(saver, temp1);
-    //     while (data->context[data->index] && data->context[data->index] != SPACE)
-    //         data->index++;
-    //     free(temp1);
-    //     printf("IT iS : %s\n", temp2);
-    //     return (temp2);
-    // }
+
     while ((data->context[data->index]) && ((ft_isalnum(data->context[data->index])) || (data->context[data->index] == UNDER_SCORE)))
         data->index++;
-    vars.s1 = ft_substr(data->context, *last_$_index, vars.index_saver - *last_$_index - 1);
-    *last_$_index = data->index;
+    vars.s1 = ft_substr(data->context, *last_dollar_index, vars.index_saver - *last_dollar_index - 1);
+    *last_dollar_index = data->index;
     vars.s2 = ft_substr(data->context, vars.index_saver, data->index - vars.index_saver);
     vars.temp = ft_substr(data->context, vars.index_saver + 1, data->index - vars.index_saver - 1);
     vars.temp1 = ft_strdup("minishell");
@@ -761,8 +778,8 @@ char *dollar_sign_found(t_data *data, char **env, char *saver, int *last_$_index
     free(vars.env_value);
     data->index--;
     return (saver);
+    
 }
-
 
 void    expanding_helper(t_expanding *vars)
 {
@@ -776,29 +793,11 @@ void    expanding_helper(t_expanding *vars)
         in_a_quote(&vars->in_quote, SINGLE_QUOTE);
 }
 
-// char    *bad_case(t_expanding *vars, int quote)
-// {
-//     int start;
-//     int end;
-
-//     vars->data.index+=2;
-//     start = vars->data.index;
-//     end = vars->data.index;
-//     while (vars->data.context[vars->data.index] && vars->data.context[vars->data.index] != quote)
-//     {
-//         vars->data.index++;
-//         end++;
-//     }
-//     // printf("index start is : %c and end is : %c\n", vars->data.context[start], vars->data.context[end - 1]);
-//     return (ft_substr(vars->data.context, start, (end - start));
-// }
-
 char    *expanding(char *str, char **env)
 {
     t_expanding vars;
     char *temp;
 
-    int idontknow = 0;
     vars.in_quote = 0;
     vars.is_limiter = FALSE;
     vars.saver = NULL;
@@ -815,8 +814,6 @@ char    *expanding(char *str, char **env)
             vars.saver = dollar_sign_found(&vars.data, env, vars.saver, &vars.j);
             vars.x = vars.data.index + 1;
         }
-        // else if (vars.data.context[vars.data.index + 1] == DOUBLE_QUOTE || vars.data.context[vars.data.index + 1] == SINGLE_QUOTE)
-        //     bad_case(&vars, DOUBLE_QUOTE);
         if (!vars.data.context[vars.data.index])
             break ;
         vars.data.index++;
@@ -868,11 +865,13 @@ void    pipe_handling(int commands_number, char **splitted_by_pipe, t_returned_d
 {
     int (*pipes_array)[2];
     int i;
+    int temp_input;
 
     i = -1;
     pipes_array = malloc(sizeof(int *) * (commands_number - 1));
     while (splitted_by_pipe[++i])
     {
+        temp_input = temp->input_fd;
 		if (commands_number > 1)
 		{
 			if (i < commands_number - 1)
@@ -888,6 +887,8 @@ void    pipe_handling(int commands_number, char **splitted_by_pipe, t_returned_d
 			} 
 		}
         getting_input_output_fd(splitted_by_pipe[i], temp);
+        if (find_heredoc_position(ft_split(splitted_by_pipe[i], SPACE)))
+            temp->input_fd = temp_input;
         temp = temp->next;
     }
     free (pipes_array);
@@ -903,8 +904,6 @@ void    preparing(t_data *entered_data, t_list *env, t_returned_data **returned_
 
     new_env = get_new_env(env);
     entered_data->context = expanding(entered_data->context, new_env);
-    // if (!entered_data->context)
-    //     printf("YES\n");
     entered_data->context = get_new_context(entered_data);
     splitted_by_pipe = ft_split(entered_data->context, PIPE);
     commands_number = get_length(splitted_by_pipe);
@@ -961,7 +960,7 @@ void    prompt(char **env, t_list *new_env)
     }
     fill_list(returned_data, env, &new_env);
     ft_free_list(returned_data);
-	system("leaks minishell");
+	// system("leaks minishell");
 }
 int main(int ac, char **av,  char **env)
 {
