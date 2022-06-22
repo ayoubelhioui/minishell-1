@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 16:35:49 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/21 16:04:00 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/21 18:34:59 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,8 +120,7 @@ void	ft_free_list(t_returned_data *head)
 		ft_free(head->args);
 		if (head->cmd_path)
     		free(head->cmd_path);
-		if (head)
-			free(head);
+		free(head);
 		head = temp;
 	}
 }
