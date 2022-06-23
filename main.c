@@ -1,29 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   list_utils.c                                       :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/06/22 21:15:45 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/23 14:25:39 by ael-hiou         ###   ########.fr       */
+/*   Created: 2022/06/23 11:10:04 by ael-hiou          #+#    #+#             */
+/*   Updated: 2022/06/23 14:17:49 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	ft_free_list(t_returned_data *head)
+void    test_it()
 {
-	t_returned_data	*temp;
+      char **s;
 
-	while (head)
-	{
-		
-		temp = head->next;
-		ft_free(head->args);
-		if (head->cmd_path)
-			free(head->cmd_path);
-		free(head);
-		head = temp;
-	}
+    s = malloc(sizeof(char *));
+    s[0] = NULL;
+    // free(s[0]);
+    free (s);
+}
+int main()
+{
+    test_it();
+
+    system("leaks a.out");
 }

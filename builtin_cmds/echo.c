@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 12:48:09 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/22 20:43:04 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/23 13:57:34 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,9 @@ void	print_string(char *s, char c, int flag)
 	{
 		if (s[i] == '$' && s[i + 1] == '?')
 		{
-			if (flag == 1 && !s[i + 2] && c == 'a')
+			if (flag != 1 && !s[i + 2])
+				printf("%lld ", g_key.exit_stat);
+			else if (flag == 1 && !s[i + 2] && c == 'a')
 				printf("%lld\n", g_key.exit_stat);
 			else if (flag == 1 && !s[i + 2] && c == 'n')
 				printf("%lld", g_key.exit_stat);
@@ -45,6 +47,8 @@ int	some_ns(char *s)
 {
 	int	i;
 
+	if (!s)
+		return (0);
 	if (s[0] != '-')
 		return (0);
 	i = 1;
@@ -68,7 +72,7 @@ void	ft_echo(char **s)
 		printf("\n");
 	while (some_ns(s[++i]))
 		c = 'n';
-	while (s[i])
+	while (s && s[i])
 	{
 		print_string(s[i], c, !s[i + 1]);
 		i++;
