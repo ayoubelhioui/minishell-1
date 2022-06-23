@@ -550,13 +550,13 @@ void    getting_output_fd_helper(char **s, int i, t_returned_data *returned_data
     if (!ft_strcmp(s[i], ">"))
     {
         temp = remove_quotes(s[i + 1]);
-        returned_data->output_fd = open(temp, O_WRONLY | O_CREAT | O_APPEND, 00400 | 00200);
+        returned_data->output_fd = open(temp, O_WRONLY | O_CREAT | O_APPEND, 0644);
         free (temp);
     }
     else
     {
         temp = remove_quotes(s[i]);
-        returned_data->output_fd = open(temp, O_WRONLY | O_CREAT | O_TRUNC, 00400 | 00200);
+        returned_data->output_fd = open(temp, O_WRONLY | O_CREAT | O_TRUNC, 0644);
         free (temp);
     }
 }
