@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   library.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 15:14:17 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/17 20:48:56 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/22 20:49:30 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,4 +68,5 @@ void		free_splits(char **first, char **second);
 void		get_things_changed(char *arg, t_list **env);
 void		add_value(char *arg, t_list **env);
 void		change_value(char *arg, t_list **env);
+void		adding(char **spl, char **split_arg, t_list **env);
 #endif

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   things_done.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/22 20:39:37 by ijmari            #+#    #+#             */
+/*   Updated: 2022/06/22 20:41:38 by ijmari           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 void	close_all_pipes(t_returned_data *head)
@@ -47,15 +59,7 @@ void	handle_the_cmd(t_returned_data *t, t_returned_data *data, \
 		g_key.exit_stat = 127;
 		exit(127);
 	}
-	if (data->input_fd != 0 && !check)
-		dup_and_close(data, 'i');
-	if (check)
-	{
-		if (data->input_fd)
-			close (data->input_fd);
-	}
-	if (data->output_fd != 1)
-		dup_and_close(data, 'o');
+	ft_dupping(data, check);
 	if (built_check(data, env_l))
 		exit(0);
 	else if (execve(data->cmd_path, \
@@ -88,11 +92,11 @@ void	check_and_exec(t_returned_data *data, t_list **env_l, \
 		i++;
 		data = data->next;
 	}
-	close_and_wait(t, counter , id);
+	close_and_wait(t, counter, id);
 	free(id);
 }
 
-void	fill_list(t_returned_data *data, char **env, t_list **env_l)
+void	exec(t_returned_data *data, char **env, t_list **env_l)
 {
 	int				counter;
 	int				saver;

@@ -753,6 +753,7 @@ char *dollar_sign_found(t_data *data, char **env, char *saver, int *last_dollar_
     char                *temp_r;
     char                *temp1;
     char                *temp2;
+	char				*temp3;
     data->index++;
     vars.env_value = NULL;
     vars.index_saver = data->index;
@@ -772,7 +773,10 @@ char *dollar_sign_found(t_data *data, char **env, char *saver, int *last_dollar_
     free(vars.temp1);
     free (vars.s2);
     temp_r = expanding_join(vars.s1, vars.env_value);
+	temp1 = saver;
     saver = expanding_join(saver, temp_r);
+	if (temp1)
+		free(temp1);
     free(temp_r);
     free(vars.s1);
     free(vars.env_value);
@@ -866,6 +870,7 @@ void    pipe_handling(int commands_number, char **splitted_by_pipe, t_returned_d
     int (*pipes_array)[2];
     int i;
     int temp_input;
+	char	**ptr;
 
     i = -1;
     pipes_array = malloc(sizeof(int *) * (commands_number - 1));
@@ -887,9 +892,11 @@ void    pipe_handling(int commands_number, char **splitted_by_pipe, t_returned_d
 			} 
 		}
         getting_input_output_fd(splitted_by_pipe[i], temp);
-        if (find_heredoc_position(ft_split(splitted_by_pipe[i], SPACE)))
+		ptr = ft_split(splitted_by_pipe[i], SPACE);
+        if (find_heredoc_position(ptr))
             temp->input_fd = temp_input;
         temp = temp->next;
+		ft_free(ptr);
     }
     free (pipes_array);
 }
@@ -958,7 +965,7 @@ void    prompt(char **env, t_list *new_env)
         ft_free_list(returned_data);
     	return ;
     }
-    fill_list(returned_data, env, &new_env);
+    exec(returned_data, env, &new_env);
     ft_free_list(returned_data);
 	// system("leaks minishell");
 }
@@ -971,7 +978,7 @@ int main(int ac, char **av,  char **env)
 	if (ac != 1)
 	{
 		printf("Too many arguments\n");
-        exit (1);
+        exit (0);
 	}
 	create_list(env, &new_env);
 	g_key.flag_for_here = 0;

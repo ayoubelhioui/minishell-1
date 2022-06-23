@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 12:47:10 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/20 14:56:42 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/22 20:49:51 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,34 +55,14 @@ void	add_value(char *arg, t_list **env)
 	t_list	*curr;
 	char	**spl;
 	char	**split_arg;
-	char	*temp;
+
 	curr = *env;
 	while (*env)
 	{
 		spl = split_with_equ((*env)->content);
 		split_arg = split_with_plus(arg);
 		if (!ft_strcmp(spl[0], split_arg[0]))
-		{
-			if (spl[1] == NULL && split_arg[1])
-			{
-				if (!ft_equal((*env)->content))
-				{
-					temp = (*env)->content;
-					(*env)->content = ft_strjoin((*env)->content, "=");
-					free(temp);
-				}
-				temp = (*env)->content;
-				(*env)->content = ft_strjoin((*env)->content, split_arg[1]);
-				free(temp);
-				(*env)->criteria = 'e';
-			}
-			else
-			{
-				temp = (*env)->content;
-				(*env)->content = ft_strjoin((*env)->content, split_arg[1]);
-				free(temp);
-			}
-		}
+			adding(spl, split_arg, env);
 		free_splits(spl, split_arg);
 		(*env) = (*env)->next;
 	}

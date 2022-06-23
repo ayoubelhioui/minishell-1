@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 14:58:47 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/18 18:21:17 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/22 20:52:43 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,17 @@ void	free_splits(char **first, char **second)
 {
 	ft_free(first);
 	ft_free(second);
+}
+
+void	set_new_path(t_list *head)
+{
+	char	*cwd;
+
+	cwd = getcwd(NULL, sizeof(cwd));
+	if (head->content)
+		free(head->content);
+	head->content = ft_strjoin("PWD=", cwd);
+	free(cwd);
 }
 
 void	change_path_value(t_list **env)
@@ -47,11 +58,30 @@ void	change_path_value(t_list **env)
 	if (!head)
 		return ;
 	else
+		set_new_path(head);
+}
+
+void	adding(char **spl, char **split_arg, t_list **env)
+{
+	char	*temp;
+
+	if (spl[1] == NULL && split_arg[1])
 	{
-		cwd = getcwd(NULL, sizeof(cwd));
-		if (head->content)
-			free(head->content);
-		head->content = ft_strjoin("PWD=", cwd);
-		free(cwd);
+		if (!ft_equal((*env)->content))
+		{
+			temp = (*env)->content;
+			(*env)->content = ft_strjoin((*env)->content, "=");
+			free(temp);
+		}
+		temp = (*env)->content;
+		(*env)->content = ft_strjoin((*env)->content, split_arg[1]);
+		free(temp);
+		(*env)->criteria = 'e';
+	}
+	else
+	{
+		temp = (*env)->content;
+		(*env)->content = ft_strjoin((*env)->content, split_arg[1]);
+		free(temp);
 	}
 }

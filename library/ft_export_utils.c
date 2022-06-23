@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 16:02:27 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/20 14:58:53 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/22 20:39:22 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,11 @@
 void	add_it_back(char **split_arg, char *arg, t_list **env)
 {
 	char	*temp;
-	char	*f;
 
 	temp = NULL;
 	if (there_is_plus(arg))
 	{
-		temp = join_pl(split_arg[0], "=");	
-		f = temp;
+		temp = join_pl(split_arg[0], "=");
 		temp = ft_strjoin(temp, split_arg[1]);
 		ft_lstadd_back(env, ft_lstnew(temp));
 	}

@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 16:01:46 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/21 18:34:00 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/22 20:41:57 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	close_and_wait(t_returned_data *data, int counter, int *id)
 		if (WIFEXITED(status))
 			g_key.exit_stat = WEXITSTATUS(status);
 		if (status == 2)
-			g_key.exit_stat= 130;
+			g_key.exit_stat = 130;
 		if (status == 3)
 			g_key.exit_stat = 131;
 		i++;
@@ -65,6 +65,17 @@ void	ft_free(char **ptr)
 
 	i = 0;
 	while (ptr[i])
-			free(ptr[i++]);
-		free(ptr);
+		free(ptr[i++]);
+	free(ptr);
+}
+
+void	ft_dupping(t_returned_data *data, int check)
+{
+	if (data->input_fd != 0 && !check)
+		dup_and_close(data, 'i');
+	if (check)
+		if (data->input_fd)
+			close (data->input_fd);
+	if (data->output_fd != 1)
+		dup_and_close(data, 'o');
 }
