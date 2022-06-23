@@ -7,8 +7,8 @@ quotes_handling.c library/ft_substr.c library/ft_strncmp.c Library/ft_strcmp.c l
 library/export_utils2.c  library/things_done.c library/ft_export_utils.c library/ft_split_equ.c line.c library/exec_utils.c library/ft_atoi.c
 CC = cc
 NAME = minishell
-READLINE =  -fsanitize=address -lreadline -L /Users/ael-hiou/goinfre/.brew/opt/readline/lib -I /Users/ael-hiou/goinfre/.brew/opt/readline/include
-# 
+READLINE = -fsanitize=address   -lreadline -L /Users/ael-hiou/goinfre/.brew/opt/readline/lib -I /Users/ael-hiou/goinfre/.brew/opt/readline/include
+#
 SRC_O = $(SRC:.c=.o)
 
 all :$(NAME)

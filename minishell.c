@@ -287,22 +287,16 @@ int redirection_counter(t_list *splitted_data, char redirection)
     return (counter);
 }
 
-int here_doc_helper(t_here_doc_vars *vars, char *limiter, char **env)
+int here_doc_helper2(t_here_doc_vars *vars, char *limiter, char **env)
 {
-    while (vars->entered_data)
-    { 
-        if (!ft_strcmp(vars->entered_data, limiter) )
-            break ;
-        write(vars->p[STD_OUTPUT], vars->entered_data, ft_strlen(vars->entered_data));
-        write(vars->p[STD_OUTPUT], "\n", 2);
-        vars->s = readline("> ");
-		if (vars->s)
+         if (vars->s)
 		{
 			free(vars->entered_data);
 			if (ft_strlen(vars->s))
     			vars->entered_data = expanding(vars->s, env);
 			else
 				vars->entered_data = vars->s;
+            return (FALSE);
 		}
 		else
 		{
@@ -312,8 +306,47 @@ int here_doc_helper(t_here_doc_vars *vars, char *limiter, char **env)
             free (limiter);
             free (vars->entered_data);
 			close(vars->p[STD_OUTPUT]);
-			return (vars->p[STD_INPUT]);
+            if (g_key.flag == 6)
+                return (-4);
+			return (TRUE);
 		}
+}
+
+int here_doc_helper(t_here_doc_vars *vars, char *limiter, char **env)
+{
+    int value;
+    while (vars->entered_data)
+    { 
+        if (!ft_strcmp(vars->entered_data, limiter) )
+            break ;
+        write(vars->p[STD_OUTPUT], vars->entered_data, ft_strlen(vars->entered_data));
+        write(vars->p[STD_OUTPUT], "\n", 2);
+        vars->s = readline("> ");
+        value = here_doc_helper2(vars, limiter, env);
+        if (value == -4)
+            return (-4);
+        else if (value == 1)
+            return (vars->p[STD_INPUT]);
+		// if (vars->s)
+		// {
+		// 	free(vars->entered_data);
+		// 	if (ft_strlen(vars->s))
+    	// 		vars->entered_data = expanding(vars->s, env);
+		// 	else
+		// 		vars->entered_data = vars->s;
+		// }
+		// else
+		// {
+		// 	g_key.after_exit = 1;
+		// 	if (g_key.flag == 6)
+        //         printf(">\n");
+        //     free (limiter);
+        //     free (vars->entered_data);
+		// 	close(vars->p[STD_OUTPUT]);
+        //     if (g_key.flag == 6)
+        //         return (-4);
+		// 	return (vars->p[STD_INPUT]);
+		// }
 	}
     close(vars->p[STD_OUTPUT]);
     free (vars->entered_data);
@@ -346,7 +379,7 @@ int here_doc(char *limiter, char **env)
     return (here_doc_helper(&vars, limiter, env));
 }
 
-void	heredoc_searcher(char **splitted_data, t_returned_data *returned_data, char **env)
+int heredoc_searcher(char **splitted_data, t_returned_data *returned_data, char **env)
 {
     int     i;
     int         in_quote;
@@ -365,10 +398,13 @@ void	heredoc_searcher(char **splitted_data, t_returned_data *returned_data, char
         {
             i += 2;
             returned_data->input_fd =  here_doc(splitted_data[i], env);
-			g_key.flag_for_here = 0;
+            if (returned_data->input_fd == -4)
+                return (-4);
+            g_key.flag_for_here = 0;
         }
         i++;
     }
+    return (1);
 }
 
 
@@ -485,7 +521,8 @@ void    create_returned_nodes(t_returned_data **returned_data, int commands_numb
         new = malloc(sizeof(t_returned_data));
         new->cmd_path = NULL;
         new->next = NULL;
-        new->args = NULL;
+        new->args = malloc(sizeof(char *));
+        new->args[0] = NULL;
         new->str_idx = 0;
         new->flag = 0;
         new->is_executable = TRUE;
@@ -607,48 +644,36 @@ void    freeing(char **s)
     free (s);
 }
 
-// void    get_cmd_args_helper1(char **data, int *i, int *j)
-// {
-//     if (!ft_strcmp(data[*i], "<") || !ft_strcmp(data[*i], ">"))
-//     {
-//         *i+=1;
-//         if (!ft_strcmp(data[*i], "<") || !ft_strcmp(data[*i], ">"))
-//             *i+=1;
-//     }
-//     else
-//     {
-//         temp = data[*i];
-//         returned_data->args[*j] = remove_quotes(data[*i]);
-//         *j+=1;
-//         data[*i] = returned_data->args[j - 1];
-//         free (temp);
-//     }
-// }
+void    get_cmd_args_helper1(char **data, int *i, int *j, t_returned_data *returned_data)
+{
+    char *temp;
+
+    if (!ft_strcmp(data[*i], "<") || !ft_strcmp(data[*i], ">"))
+    {
+        *i+=1;
+        if (!ft_strcmp(data[*i], "<") || !ft_strcmp(data[*i], ">"))
+            *i+=1;
+    }
+    else
+    {
+        temp = data[*i];
+        returned_data->args[*j] = remove_quotes(data[*i]);
+        *j+=1;
+        data[*i] = returned_data->args[*j - 1];
+        free (temp);
+    }
+}
 
 void    get_cmd_args_helper(char **data, t_returned_data *returned_data, char **env)
 {
     int i;
-    char *temp;
     int j;    
 
     i = 0;
     j = 0;
     while (data[i])
     {
-        if (!ft_strcmp(data[i], "<") || !ft_strcmp(data[i], ">"))
-        {
-            i++;
-            if (!ft_strcmp(data[i], "<") || !ft_strcmp(data[i], ">"))
-                i++;
-        }
-        else
-        {
-            temp = data[i];
-            returned_data->args[j++] = remove_quotes(data[i]);
-            data[i] = returned_data->args[j - 1];
-            free (temp);
-        }
-        // get_cmd_args_helper1(data, &i, &j);
+        get_cmd_args_helper1(data, &i, &j, returned_data);
         i++;
     }
     returned_data->cmd_dup = returned_data->args[0];
@@ -671,12 +696,12 @@ int get_cmd_args(char **data, t_returned_data *returned_data, char **env)
         if (whole_length == 0)
         {
             ft_free(s);
-            returned_data->args = malloc(sizeof(char *));
-            returned_data->args[0] = NULL;
             returned_data->flag = 1; 
             returned_data = returned_data->next;
             continue;
         }
+        if (returned_data->args[0] == NULL)
+            free(returned_data->args);
         returned_data->args = malloc(sizeof(char *) * (whole_length + 1));
 		get_cmd_args_helper(s, returned_data, env);
         freeing(s);
@@ -747,13 +772,16 @@ char    *search_in_env(char *entered_data, char **env)
     return (ft_strdup(""));
 }
 
+void    all_about_free(char *s1, char *s2, char *s3)
+{
+    free (s1);
+    free (s2);
+    free (s3);
+}
+
 char *dollar_sign_found(t_data *data, char **env, char *saver, int *last_dollar_index)
 {
     t_dollar_sign_vars vars;
-    char                *temp_r;
-    char                *temp1;
-    char                *temp2;
-	char				*temp3;
     data->index++;
     vars.env_value = NULL;
     vars.index_saver = data->index;
@@ -769,20 +797,15 @@ char *dollar_sign_found(t_data *data, char **env, char *saver, int *last_dollar_
         vars.env_value = ft_strjoin(vars.temp1, vars.temp);
     else
         vars.env_value = search_in_env(vars.s2, env);
-    free(vars.temp);
-    free(vars.temp1);
-    free (vars.s2);
-    temp_r = expanding_join(vars.s1, vars.env_value);
-	temp1 = saver;
-    saver = expanding_join(saver, temp_r);
-	if (temp1)
-		free(temp1);
-    free(temp_r);
-    free(vars.s1);
-    free(vars.env_value);
+    all_about_free(vars.temp1, vars.temp, vars.s2);
+    vars.temp = expanding_join(vars.s1, vars.env_value);
+	vars.temp1 = saver;
+    saver = expanding_join(saver, vars.temp);
+	if (vars.temp1)
+		free(vars.temp1);
+    all_about_free(vars.temp, vars.env_value, vars.s1);
     data->index--;
     return (saver);
-    
 }
 
 void    expanding_helper(t_expanding *vars)
@@ -797,18 +820,36 @@ void    expanding_helper(t_expanding *vars)
         in_a_quote(&vars->in_quote, SINGLE_QUOTE);
 }
 
+void    expanding_init(t_expanding *vars, char *str)
+{
+    vars->in_quote = 0;
+    vars->is_limiter = FALSE;
+    vars->saver = NULL;
+    vars->data.context = str;
+    vars->data.index = 0;
+    vars->j = 0;
+    vars->x = 0;
+}
+
+void    expanding_final_part(t_expanding *vars)
+{
+    char *temp;
+
+     if (vars->x < vars->data.index)
+    {
+        temp = vars->saver;
+        vars->saver = expanding_join(vars->saver, vars->temp);
+        free(temp);
+    }
+    free(vars->temp);
+}
+
 char    *expanding(char *str, char **env)
 {
     t_expanding vars;
     char *temp;
 
-    vars.in_quote = 0;
-    vars.is_limiter = FALSE;
-    vars.saver = NULL;
-    vars.data.context = str;
-    vars.data.index = 0;
-    vars.j = 0;
-    vars.x = 0;
+    expanding_init(&vars, str);
     while (vars.data.context[vars.data.index])
     {
         expanding_helper(&vars);
@@ -823,13 +864,7 @@ char    *expanding(char *str, char **env)
         vars.data.index++;
     }
     vars.temp = ft_substr(vars.data.context, vars.x, ft_strlen(vars.data.context) - vars.x);
-    if (vars.x < vars.data.index)
-    {
-        temp = vars.saver;
-        vars.saver = expanding_join(vars.saver, vars.temp);
-        free(temp);
-    }
-    free (vars.temp);
+    expanding_final_part(&vars);
     free (str);
     return (vars.saver);
 }
@@ -901,12 +936,13 @@ void    pipe_handling(int commands_number, char **splitted_by_pipe, t_returned_d
     free (pipes_array);
 }
 
-void    preparing(t_data *entered_data, t_list *env, t_returned_data **returned_data)
+int preparing(t_data *entered_data, t_list *env, t_returned_data **returned_data)
 {
     char            **splitted_by_space;
     char            **splitted_by_pipe;
     char            **new_env;
     int             commands_number;
+    int              ret;
 
 
     new_env = get_new_env(env);
@@ -917,13 +953,16 @@ void    preparing(t_data *entered_data, t_list *env, t_returned_data **returned_
     splitted_by_space = ft_split(entered_data->context, SPACE);
 	free(entered_data->context);
     create_returned_nodes(returned_data, commands_number);
-    heredoc_searcher(splitted_by_space, *returned_data, new_env);
+    ret = heredoc_searcher(splitted_by_space, *returned_data, new_env);
+    if (ret == -4 && g_key.flag == 6)
+        return (-4);
     pipe_handling(commands_number, splitted_by_pipe, *returned_data);
     get_cmd_args(splitted_by_pipe, *returned_data, new_env);
     args_final_touch(*returned_data, new_env);
     ft_free(splitted_by_pipe);
     ft_free(splitted_by_space);
     free(new_env);
+    return (1);
 }
 
 void    ft_free_h(t_returned_data *head)
@@ -941,6 +980,7 @@ void    prompt(char **env, t_list *new_env)
 {
     t_data entered_data;
     t_returned_data *returned_data;
+    int ret = 0;
     
     returned_data = NULL;
     entered_data.context = readline("minishell : ");
@@ -956,11 +996,12 @@ void    prompt(char **env, t_list *new_env)
     add_history(entered_data.context);
     if (error_handling(entered_data.context))
     {
+        free(entered_data.context);
         printf("error occured\n");
         return  ;
     }
-    preparing(&entered_data, new_env, &returned_data);
-    if (g_key.flag == 6)
+    ret = preparing(&entered_data, new_env, &returned_data);
+    if (g_key.flag == 6 && ret == -4)
     {
         ft_free_list(returned_data);
     	return ;
