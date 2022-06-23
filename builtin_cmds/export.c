@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 12:47:10 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/22 20:49:51 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/23 19:38:12 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,7 @@ void	ft_export(t_list **env, char **args)
 	char	**split_arg;
 
 	i = 0;
+	split_arg = NULL;
 	change_path_value(env);
 	if (*args == NULL)
 		sort_list(*env);
@@ -113,7 +114,8 @@ void	ft_export(t_list **env, char **args)
 		if (!check_if_valid(args[i]) || args[i][0] == '=')
 		{
 			printf("export: \'%s\': not a valid identifier\n", args[i++]);
-			ft_free(split_arg);
+			if (split_arg)
+				ft_free(split_arg);
 			continue ;
 		}
 		else if (ft_isnode(env, args[i]))

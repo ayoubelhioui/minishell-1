@@ -1,1 +1,19 @@
-       9
+Makefile
+OK
+a.out
+builtin_cmds
+ko
+l.txt
+library
+line.c
+list_utils.c
+main.c
+minishell
+minishell.c
+minishell.dSYM
+minishell.h
+p.txt
+ppp
+quotes_handling.c
+signals.c
+utils.c
