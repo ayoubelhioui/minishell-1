@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split_plus.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 15:11:50 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/20 14:57:40 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/23 15:31:18 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,23 @@ int	len_1(char *arg)
 	return (len);
 }
 
+char	**s_case(char **s, int len, char *arg, int j)
+{
+	int	total;
+	int	len2;
+
+	total = j;
+	len2 = len_2(arg, len);
+	s[1] = malloc((len2 + 1));
+	total = j + 2;
+	j = 0;
+	while (j < len2)
+		s[1][j++] = arg[total++];
+	s[1][j] = '\0';
+	s[2] = NULL;
+	return (s);
+}
+
 char	**fill_the_d(int len1, int len2, char *arg, char **s)
 {
 	int	i;
@@ -54,14 +71,10 @@ char	**fill_the_d(int len1, int len2, char *arg, char **s)
 		total++;
 	}
 	s[i][j] = '\0';
-	s[1] = malloc((len2 + 1));
-	total = j + 2;
-	i++;
-	j = 0;
-	while (j < len2)
-		s[i][j++] = arg[total++];
-	s[i][j] = '\0';
-	s[2] = NULL;
+	if (len2)
+		s_case(s, len1, arg, j);
+	else
+		s[1] = NULL;
 	return (s);
 }
 

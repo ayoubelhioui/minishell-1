@@ -118,6 +118,15 @@ typedef struct g_str
 	int		flag;
 	int		after_exit;
 }	        t_str;
+
+typedef struct pipe_vars
+{
+    int (*pipes_array)[2];
+    int i;
+    int temp_input;
+	char	**ptr;
+}              t_pipe_vars;
+
 t_str	g_key;
 char	*get_next_line(int fd);
 void	ft_free(char **s);

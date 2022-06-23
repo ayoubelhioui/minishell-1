@@ -289,13 +289,11 @@ int redirection_counter(t_list *splitted_data, char redirection)
 
 int here_doc_helper2(t_here_doc_vars *vars, char *limiter, char **env)
 {
-         if (vars->s)
+        if (vars->s)
 		{
-			free(vars->entered_data);
-			if (ft_strlen(vars->s))
-    			vars->entered_data = expanding(vars->s, env);
-			else
-				vars->entered_data = vars->s;
+            if (vars->entered_data)
+			    free(vars->entered_data);
+            vars->entered_data = vars->s;
             return (FALSE);
 		}
 		else
@@ -304,8 +302,9 @@ int here_doc_helper2(t_here_doc_vars *vars, char *limiter, char **env)
 			if (g_key.flag == 6)
                 printf(">\n");
             free (limiter);
-            free (vars->entered_data);
-			close(vars->p[STD_OUTPUT]);
+            // if (vars->entered_data)
+                free (vars->entered_data);
+            close(vars->p[STD_OUTPUT]);
             if (g_key.flag == 6)
                 return (-4);
 			return (TRUE);
@@ -315,41 +314,27 @@ int here_doc_helper2(t_here_doc_vars *vars, char *limiter, char **env)
 int here_doc_helper(t_here_doc_vars *vars, char *limiter, char **env)
 {
     int value;
+    char *s;
+
     while (vars->entered_data)
-    { 
+    {
         if (!ft_strcmp(vars->entered_data, limiter) )
             break ;
-        write(vars->p[STD_OUTPUT], vars->entered_data, ft_strlen(vars->entered_data));
+        s = expanding(vars->entered_data,env);
+        write(vars->p[STD_OUTPUT], s, ft_strlen(s));
         write(vars->p[STD_OUTPUT], "\n", 2);
+        vars->entered_data = NULL;
+        free(s);
         vars->s = readline("> ");
-        value = here_doc_helper2(vars, limiter, env);
+        value = here_doc_helper2(vars, limiter, env); 
         if (value == -4)
             return (-4);
         else if (value == 1)
             return (vars->p[STD_INPUT]);
-		// if (vars->s)
-		// {
-		// 	free(vars->entered_data);
-		// 	if (ft_strlen(vars->s))
-    	// 		vars->entered_data = expanding(vars->s, env);
-		// 	else
-		// 		vars->entered_data = vars->s;
-		// }
-		// else
-		// {
-		// 	g_key.after_exit = 1;
-		// 	if (g_key.flag == 6)
-        //         printf(">\n");
-        //     free (limiter);
-        //     free (vars->entered_data);
-		// 	close(vars->p[STD_OUTPUT]);
-        //     if (g_key.flag == 6)
-        //         return (-4);
-		// 	return (vars->p[STD_INPUT]);
-		// }
-	}
+    }
     close(vars->p[STD_OUTPUT]);
-    free (vars->entered_data);
+    if (vars->entered_data)
+        free (vars->entered_data);
     free (limiter);
     return (vars->p[STD_INPUT]);
 }
@@ -359,22 +344,21 @@ int here_doc(char *limiter, char **env)
     t_here_doc_vars vars;
 
 	g_key.flag_for_here = 1;
+    pipe(vars.p);
 	vars.s = readline("> ");
 	if (vars.s)
-	{
-		if (ft_strlen(vars.s))
-    		vars.entered_data = expanding(vars.s, env);
-		else
-			vars.entered_data = vars.s;
-	}
+        vars.entered_data = vars.s;
 	else
 	{
 		g_key.after_exit = 1;
 		if (g_key.flag == 6)
+        {
 			printf(">\n");
-		return (-4);
+            return (-4);
+        }
+        close(vars.p[STD_OUTPUT]);
+		return (vars.p[STD_INPUT]);
 	}
-	pipe(vars.p);
     limiter = remove_quotes(limiter);
     return (here_doc_helper(&vars, limiter, env));
 }
@@ -398,9 +382,9 @@ int heredoc_searcher(char **splitted_data, t_returned_data *returned_data, char 
         {
             i += 2;
             returned_data->input_fd =  here_doc(splitted_data[i], env);
+            g_key.flag_for_here = 0;
             if (returned_data->input_fd == -4)
                 return (-4);
-            g_key.flag_for_here = 0;
         }
         i++;
     }
@@ -848,6 +832,7 @@ char    *expanding(char *str, char **env)
 {
     t_expanding vars;
     char *temp;
+    char *f;
 
     expanding_init(&vars, str);
     while (vars.data.context[vars.data.index])
@@ -900,6 +885,24 @@ void    getting_input_output_fd(char *str, t_returned_data *temp)
     getting_output_fd(str, temp, unexisting_file_idx);
 }
 
+void    pipe_handling_helper(int i, int commands_number, int (*pipes_array)[2], t_returned_data *temp)
+{
+    if (commands_number > 1)
+    {
+        if (i < commands_number - 1)
+            pipe(pipes_array[i]);
+        if (i == 0)
+            temp->output_fd = pipes_array[i][STD_OUTPUT];
+        else if (i == commands_number - 1)
+            temp->input_fd = pipes_array[i - 1][STD_INPUT];
+        else
+        {
+            temp->input_fd = pipes_array[i - 1][STD_INPUT];
+            temp->output_fd = pipes_array[i][STD_OUTPUT];
+        } 
+    }
+}
+    
 void    pipe_handling(int commands_number, char **splitted_by_pipe, t_returned_data *temp)
 {
     int (*pipes_array)[2];
@@ -912,20 +915,7 @@ void    pipe_handling(int commands_number, char **splitted_by_pipe, t_returned_d
     while (splitted_by_pipe[++i])
     {
         temp_input = temp->input_fd;
-		if (commands_number > 1)
-		{
-			if (i < commands_number - 1)
-				pipe(pipes_array[i]);
-			if (i == 0)
-				temp->output_fd = pipes_array[i][STD_OUTPUT];
-			else if (i == commands_number - 1)
-                temp->input_fd = pipes_array[i - 1][STD_INPUT];
-			else
-			{
-                temp->input_fd = pipes_array[i - 1][STD_INPUT];
-				temp->output_fd = pipes_array[i][STD_OUTPUT];
-			} 
-		}
+        pipe_handling_helper(i, commands_number, pipes_array, temp);
         getting_input_output_fd(splitted_by_pipe[i], temp);
 		ptr = ft_split(splitted_by_pipe[i], SPACE);
         if (find_heredoc_position(ptr))
@@ -976,23 +966,44 @@ void    ft_free_h(t_returned_data *head)
 		head = temp;
 	}
 }
-void    prompt(char **env, t_list *new_env)
+
+int prompt_helper(char *str)
 {
-    t_data entered_data;
-    t_returned_data *returned_data;
-    int ret = 0;
-    
-    returned_data = NULL;
-    entered_data.context = readline("minishell : ");
-    if (entered_data.context == NULL)
+    int len;
+
+    len = 0;
+    while (str && str[len])
+    {
+        if (str[len] != ' ')
+            return (1);
+        else if (str[len] == ' ' && !str[len + 1])
+            return (0);
+        len++;
+    }
+    if (str == NULL)
 	{
 		printf("exit\n");
     	exit(g_key.exit_stat);
 	}
-	if (ft_strlen(entered_data.context) == 0)
-        return ;
-    if (g_key.after_exit == 1 && entered_data.context)
+	if (ft_strlen(str) == 0)
+        return (FALSE);
+     if (g_key.after_exit == 1 && str)
     	g_key.after_exit = 0;
+    return (TRUE);
+}
+
+void    prompt(char **env, t_list *new_env)
+{
+    t_data entered_data;
+    t_returned_data *returned_data;
+    int ret;
+
+    ret = 0;
+    returned_data = NULL;
+    entered_data.context = readline("minishell : ");
+
+    if (!prompt_helper(entered_data.context))
+        return ;
     add_history(entered_data.context);
     if (error_handling(entered_data.context))
     {
@@ -1008,8 +1019,9 @@ void    prompt(char **env, t_list *new_env)
     }
     exec(returned_data, env, &new_env);
     ft_free_list(returned_data);
-	// system("leaks minishell");
+    // system("leaks minishell");
 }
+
 int main(int ac, char **av,  char **env)
 {
 	t_list	*new_env;
