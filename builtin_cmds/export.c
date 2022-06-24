@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 12:47:10 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/24 16:06:35 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/24 18:09:47 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,7 @@ void	ft_export(t_list **env, char **args)
 
 	i = 0;
 	split_arg = NULL;
+	g_key.exit_stat = 0;
 	change_path_value(env);
 	if (*args == NULL)
 		sort_list(*env);
@@ -115,7 +116,7 @@ void	ft_export(t_list **env, char **args)
 			split_arg = split_with_equ(args[i]);
 		if (!check_if_valid(args[i]) || args[i][0] == '=')
 		{
-			export_error(split_arg, args[i], &i);
+			export_error(split_arg, args, &i);
 			continue ;
 		}
 		else if (ft_isnode(env, args[i]))

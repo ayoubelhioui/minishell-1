@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 10:21:42 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/06/24 17:59:44 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/24 18:18:57 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include "parsing/input_output_fd/input_output.h"
 #include "parsing/command_argument/command_argument.h"
 #include "parsing/string_manipulation/string_manipulation.h"
-#include "parsing/initializing_data/initalizing_data.h"
+#include "parsing/initializing_data/initializing_data.h"
 
 void	ft_free_h(t_returned_data *head)
 {
@@ -76,13 +76,12 @@ void	prompt(char **env, t_list *new_env)
 	ret = preparing(&entered_data, new_env, &returned_data);
 	if (g_key.flag == 6 && ret == -4)
 	{
-		printf("Im Surely HEre\n");
 		ft_free_list(returned_data);
 		return ;
 	}
 	exec(returned_data, env, &new_env);
 	ft_free_list(returned_data);
-	system("leaks minishell");
+	// system("leaks minishell");
 }
 
 int	main(int ac, char **av, char **env)
