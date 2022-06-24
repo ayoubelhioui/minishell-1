@@ -6,7 +6,7 @@
 /*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 12:47:10 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/24 16:17:29 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/24 19:32:50 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,7 @@ void	ft_export(t_list **env, char **args)
 
 	i = 0;
 	split_arg = NULL;
+	g_key.exit_stat = 0;
 	change_path_value(env);
 	if (*args == NULL)
 		sort_list(*env);

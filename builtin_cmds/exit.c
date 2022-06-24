@@ -6,7 +6,7 @@
 /*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 12:49:37 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/24 18:34:35 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/24 19:32:48 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ void	ft_exit(char **ex)
 	int			negative;
 	long long	last;
 
+	negative = 0;
 	g = (long long) exit_atoi(*ex, &negative);
 	if (negative == 1 && g != -1)
 		g *= -1;
