@@ -67,6 +67,14 @@
         "vector": "cpp",
         "iostream": "cpp",
         "types.h": "c",
-        "termios.h": "c"
+        "termios.h": "c",
+        "expanding.h": "c",
+        "errno.h": "c",
+        "error_handling.h": "c",
+        "input_output.h": "c",
+        "here_doc.h": "c",
+        "command_argument.h": "c",
+        "string_manipulation.h": "c",
+        "initalizing_data.h": "c"
     }
 }
