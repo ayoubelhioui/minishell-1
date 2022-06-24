@@ -3,22 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 12:49:37 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/22 20:45:56 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/23 19:45:38 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	check_negative(int *negative, char *str, int i)
+void	check_negative(int *negative, char *str, int *i)
 {
-	if (str[i] == '-' || str[i] == '+')
+	if (str[*i] == '-' || str[*i] == '+')
 	{
-		if (str[i] == '-')
+		if (str[*i] == '-')
 			(*negative)++;
-		i++;
+		(*i)++;
 	}
 }
 
@@ -33,7 +33,7 @@ unsigned long long	exit_atoi(char *str, int *negative)
 		|| str[i] == '\t' || str[i] == '\n'
 		|| str[i] == '\v' || str[i] == '\f')
 			i++;
-	check_negative(negative, str, i);
+	check_negative(negative, str, &i);
 	if (!ft_strcmp(str, "-9223372036854775808") && *negative == 1)
 		return (9223372036854775808ULL);
 	temp = 0;
@@ -59,7 +59,7 @@ void	ft_exit(char **ex)
 	g = (long long) exit_atoi(*ex, &negative);
 	if (negative == 1 && g != -1)
 		g *= -1;
-	if (g != -1 && get_length(ex) != 1 && ft_strcmp(ex[0], "-1"))
+	if (g != -1 && get_length(ex) != 1)
 	{
 		printf("minishell: exit: too many arguments\n");
 		g_key.exit_stat = 1;

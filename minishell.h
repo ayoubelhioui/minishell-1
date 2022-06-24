@@ -118,14 +118,25 @@ typedef struct g_str
 	int		flag;
 	int		after_exit;
 }	        t_str;
+
+typedef struct pipe_vars
+{
+    int (*pipes_array)[2];
+    int i;
+    int temp_input;
+	char	**ptr;
+}              t_pipe_vars;
+
 t_str	g_key;
 char	*get_next_line(int fd);
 void	ft_free(char **s);
-char	*expanding(char *str, char **env);
+// char	*expanding(char *str, char **env);
 void	returned_data_addback(t_returned_data **returned_data, \
 	t_returned_data *new);
+void    prompt(char **env, t_list *new_env);
+int     prompt_helper(char *str);
 void	replace_with_real_value(t_returned_data *returned_data, \
-char *real_value, char *saver, int dollar_position);
+char    *real_value, char *saver, int dollar_position);
 void	remove_the_word(t_returned_data *data, char *saver, int position);
 int		check_unclosed_quotes(char *context);
 void	ft_strcpy(char *s, char *str, int start_position, int length);
@@ -158,4 +169,14 @@ void	close_all_pipes(t_returned_data *head);
 void	sig_quit();
 void	ft_free_list(t_returned_data *head);
 void	ft_dupping(t_returned_data *data, int check);
+void    in_a_quote(int *in_quote, int SINGLE_OR_DOUBLE);
+void    all_about_free(char *s1, char *s2, char *s3);
+char    *remove_quotes(char *context);
+char    **get_new_env(t_list *env);
+void    ft_strcpy(char *s, char *str,int start_position, int length);
+int     redirection_counter(t_list *splitted_data, char redirection);
+char    *search_in_env(char *entered_data, char **env);
+void    all_about_free(char *s1, char *s2, char *s3);
+char    **get_new_env(t_list *env);
+void	export_error(char **split_arg, char *arg, int *i);
 #endif

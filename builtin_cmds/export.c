@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 12:47:10 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/22 20:49:51 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/24 16:06:35 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,9 @@ void	change_value(char *arg, t_list **env)
 	{
 		spl = split_with_equ((*env)->content);
 		split_arg = split_with_equ(arg);
-		if (!ft_strcmp(spl[0], split_arg[0]))
-			changing(env, arg);
+		if (ft_equal(arg))
+			if (!ft_strcmp(spl[0], split_arg[0]))
+				changing(env, arg);
 		free_splits(spl, split_arg);
 		(*env) = (*env)->next;
 	}
@@ -61,8 +62,9 @@ void	add_value(char *arg, t_list **env)
 	{
 		spl = split_with_equ((*env)->content);
 		split_arg = split_with_plus(arg);
-		if (!ft_strcmp(spl[0], split_arg[0]))
-			adding(spl, split_arg, env);
+		if (split_arg[1])
+			if (!ft_strcmp(spl[0], split_arg[0]))
+				adding(spl, split_arg, env);
 		free_splits(spl, split_arg);
 		(*env) = (*env)->next;
 	}
@@ -103,6 +105,7 @@ void	ft_export(t_list **env, char **args)
 	char	**split_arg;
 
 	i = 0;
+	split_arg = NULL;
 	change_path_value(env);
 	if (*args == NULL)
 		sort_list(*env);
@@ -112,8 +115,7 @@ void	ft_export(t_list **env, char **args)
 			split_arg = split_with_equ(args[i]);
 		if (!check_if_valid(args[i]) || args[i][0] == '=')
 		{
-			printf("export: \'%s\': not a valid identifier\n", args[i++]);
-			ft_free(split_arg);
+			export_error(split_arg, args[i], &i);
 			continue ;
 		}
 		else if (ft_isnode(env, args[i]))

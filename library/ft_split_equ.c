@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split_equ.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 15:03:27 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/14 15:11:38 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/23 15:31:14 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ int	len_e2(char *arg, int prev_len)
 	int	len;
 	int	i;	
 
+	if (arg == NULL)
+		return (0);
 	len = 0;
 	if (arg[prev_len] == '\0')
 		return (0);
@@ -33,6 +35,8 @@ int	len_e1(char *arg)
 {
 	int	len;
 
+	if (arg == NULL)
+		return (0);
 	len = 0;
 	while (arg[len] != '=' && arg[len])
 		len++;

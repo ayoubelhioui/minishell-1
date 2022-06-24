@@ -1,28 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   list_utils.c                                       :+:      :+:    :+:   */
+/*   error_handling.h                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/06/22 21:15:45 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/24 16:10:13 by ijmari           ###   ########.fr       */
+/*   Created: 2022/06/24 10:51:48 by ael-hiou          #+#    #+#             */
+/*   Updated: 2022/06/24 11:00:21 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+# ifndef ERROR_HANDLING_H
+# define ERROR_HANDLING_H
+#include "../../minishell.h"
 
-void	ft_free_list(t_returned_data *head)
-{
-	t_returned_data	*temp;
+int check_unclosed_quotes(char *context);
+int error_handling_helper(t_error_handling_vars *vars, char *context);
+int error_handling(char *context);
 
-	while (head)
-	{
-		temp = head->next;
-		ft_free(head->args);
-		if (head->cmd_path)
-			free(head->cmd_path);
-		free(head);
-		head = temp;
-	}
-}
+# endif

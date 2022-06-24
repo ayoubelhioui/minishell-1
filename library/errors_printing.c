@@ -1,28 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   list_utils.c                                       :+:      :+:    :+:   */
+/*   errors_printing.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/06/22 21:15:45 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/24 16:10:13 by ijmari           ###   ########.fr       */
+/*   Created: 2022/06/24 16:10:35 by ijmari            #+#    #+#             */
+/*   Updated: 2022/06/24 16:10:56 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
-void	ft_free_list(t_returned_data *head)
+void	export_error(char **split_arg, char *arg, int *i)
 {
-	t_returned_data	*temp;
-
-	while (head)
-	{
-		temp = head->next;
-		ft_free(head->args);
-		if (head->cmd_path)
-			free(head->cmd_path);
-		free(head);
-		head = temp;
-	}
+	printf("export: \'%s\': not a valid identifier\n", arg[(*i)++]);
+	if (split_arg)
+		ft_free(split_arg);
+	g_key.exit_stat = 1;
+	return (1);
 }
