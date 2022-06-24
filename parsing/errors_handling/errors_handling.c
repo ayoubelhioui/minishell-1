@@ -6,7 +6,7 @@
 /*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 10:51:35 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/06/24 16:35:05 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/24 20:46:38 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,26 +34,22 @@ int	error_handling_helper(t_error_handling_vars *vars, char *context)
 {
 	if (context[vars->i] == RED_INPUT && vars->in_quote == 0)
 	{
-		vars->i++;
-		if (context[vars->i] == RED_OUTPUT || context[vars->i] == '\0')
+		if (context[++vars->i] == RED_OUTPUT || context[vars->i] == '\0')
 			return (TRUE);
 		if (context[vars->i] == RED_INPUT)
 		{
-			vars->i++;
-			if (context[vars->i] == '\0' || context[vars->i] == \
+			if (context[++vars->i] == '\0' || context[vars->i] == \
 					RED_INPUT || context[vars->i] == RED_OUTPUT)
 				return (TRUE);
 		}
 	}
 	else if (context[vars->i] == RED_OUTPUT && vars->in_quote == 0)
 	{
-		vars->i++;
-		if (context[vars->i] == RED_INPUT || context[vars->i] == '\0')
+		if (context[++vars->i] == RED_INPUT || context[vars->i] == '\0')
 			return (TRUE);
 		if (context[vars->i] == RED_OUTPUT)
 		{
-			vars->i++;
-			if (context[vars->i] == '\0' || context[vars->i] == \
+			if (context[++vars->i] == '\0' || context[vars->i] == \
 					RED_OUTPUT || context[vars->i] == RED_INPUT)
 				return (TRUE);
 		}

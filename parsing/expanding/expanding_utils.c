@@ -6,7 +6,7 @@
 /*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 10:14:54 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/06/24 17:59:50 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/24 20:52:49 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,4 +34,12 @@ char	*expanding_join(char *s1, char *s2)
 		str[i++] = s2[j++];
 	str[i] = '\0';
 	return (str);
+}
+
+void	get_value(t_dollar_sign_vars *vars, char **env)
+{
+	if (vars->s2[0] == ZERO)
+		vars->env_value = ft_strjoin(vars->temp1, vars->temp);
+	else
+		vars->env_value = search_in_env(vars->s2, env);
 }
