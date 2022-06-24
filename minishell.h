@@ -178,5 +178,5 @@ int     redirection_counter(t_list *splitted_data, char redirection);
 char    *search_in_env(char *entered_data, char **env);
 void    all_about_free(char *s1, char *s2, char *s3);
 char    **get_new_env(t_list *env);
-void	export_error(char **split_arg, char *arg, int *i);
+void	export_error(char **split_arg, char **arg, int *i);
 #endif

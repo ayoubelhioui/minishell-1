@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 12:47:10 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/24 16:06:35 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/24 16:17:29 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ void	ft_export(t_list **env, char **args)
 			split_arg = split_with_equ(args[i]);
 		if (!check_if_valid(args[i]) || args[i][0] == '=')
 		{
-			export_error(split_arg, args[i], &i);
+			export_error(split_arg, args, &i);
 			continue ;
 		}
 		else if (ft_isnode(env, args[i]))

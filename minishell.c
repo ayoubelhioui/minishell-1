@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 10:21:42 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/06/24 15:03:04 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/24 19:30:51 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include "parsing/input_output_fd/input_output.h"
 #include "parsing/command_argument/command_argument.h"
 #include "parsing/string_manipulation/string_manipulation.h"
-#include "parsing/initializing_data/initalizing_data.h"
+#include "parsing/initializing_data/initializing_data.h"
 
 void	ft_free_h(t_returned_data *head)
 {
@@ -82,7 +82,6 @@ void	prompt(char **env, t_list *new_env)
 	}
 	exec(returned_data, env, &new_env);
 	ft_free_list(returned_data);
-	// system("leaks minishell");
 }
 
 int	main(int ac, char **av, char **env)
