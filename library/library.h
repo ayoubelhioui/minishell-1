@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   library.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 15:14:17 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/22 20:49:30 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/24 10:28:43 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LIBRARY_H
+# ifndef LIBRARY_H
 # define LIBRARY_H
 # include <stdio.h>
 # include <string.h>
