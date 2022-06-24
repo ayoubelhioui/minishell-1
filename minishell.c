@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 10:21:42 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/06/24 15:03:04 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/24 17:59:44 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ void	prompt(char **env, t_list *new_env)
 	}
 	exec(returned_data, env, &new_env);
 	ft_free_list(returned_data);
-	// system("leaks minishell");
+	system("leaks minishell");
 }
 
 int	main(int ac, char **av, char **env)

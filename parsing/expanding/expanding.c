@@ -3,48 +3,48 @@
 /*                                                        :::      ::::::::   */
 /*   expanding.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 10:03:23 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/06/24 10:14:29 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/24 16:49:10 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "expanding.h"
 
-
-void    expanding_helper(t_expanding *vars)
+void	expanding_helper(t_expanding *vars)
 {
-    if ((vars->data.context[vars->data.index] == RED_INPUT) && (vars->data.context[vars->data.index + 1] == RED_INPUT))
-        vars->is_limiter = TRUE;
-    else if (vars->data.context[vars->data.index] == SPACE)
-        vars->is_limiter = FALSE;
-    else if (vars->data.context[vars->data.index] == DOUBLE_QUOTE)
-        in_a_quote(&vars->in_quote, DOUBLE_QUOTE);
-    else if (vars->data.context[vars->data.index] == SINGLE_QUOTE)
-        in_a_quote(&vars->in_quote, SINGLE_QUOTE);
+	if ((vars->data.context[vars->data.index] == RED_INPUT)
+		&& (vars->data.context[vars->data.index + 1] == RED_INPUT))
+		vars->is_limiter = TRUE;
+	else if (vars->data.context[vars->data.index] == SPACE)
+		vars->is_limiter = FALSE;
+	else if (vars->data.context[vars->data.index] == DOUBLE_QUOTE)
+		in_a_quote(&vars->in_quote, DOUBLE_QUOTE);
+	else if (vars->data.context[vars->data.index] == SINGLE_QUOTE)
+		in_a_quote(&vars->in_quote, SINGLE_QUOTE);
 }
 
-void    expanding_init(t_expanding *vars, char *str)
+void	expanding_init(t_expanding *vars, char *str)
 {
-    vars->in_quote = 0;
-    vars->is_limiter = FALSE;
-    vars->saver = NULL;
-    vars->data.context = str;
-    vars->data.index = 0;
-    vars->j = 0;
-    vars->x = 0;
+	vars->in_quote = 0;
+	vars->is_limiter = FALSE;
+	vars->saver = NULL;
+	vars->data.context = str;
+	vars->data.index = 0;
+	vars->j = 0;
+	vars->x = 0;
 }
 
-void    expanding_final_part(t_expanding *vars)
+void	expanding_final_part(t_expanding *vars)
 {
-    char *temp;
+	char *temp;
 
-     if (vars->x < vars->data.index)
-    {
-        temp = vars->saver;
-        vars->saver = expanding_join(vars->saver, vars->temp);
-        free(temp);
+	if (vars->x < vars->data.index)
+	{
+		temp = vars->saver;
+		vars->saver = expanding_join(vars->saver, vars->temp);
+		free(temp);
     }
     free(vars->temp);
 }
@@ -57,7 +57,7 @@ char *dollar_sign_found(t_data *data, char **env, char *saver, int *last_dollar_
     vars.index_saver = data->index;
 
     while ((data->context[data->index]) && ((ft_isalnum(data->context[data->index])) || (data->context[data->index] == UNDER_SCORE)))
-        data->index++;
+		data->index++;
     vars.s1 = ft_substr(data->context, *last_dollar_index, vars.index_saver - *last_dollar_index - 1);
     *last_dollar_index = data->index;
     vars.s2 = ft_substr(data->context, vars.index_saver, data->index - vars.index_saver);
