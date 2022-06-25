@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   things_done.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 20:39:37 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/25 15:17:59 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/25 16:58:31 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,5 +114,4 @@ void	exec(t_returned_data *data, char **env, t_list **env_l)
 		check_and_exec(data, env_l, env, counter);
 	}
 	g_key.flag_for_here = 0;
-	g_key.after_exit = 0;
 }

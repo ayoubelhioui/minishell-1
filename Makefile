@@ -11,13 +11,14 @@ library/ft_substr.c library/ft_strncmp.c Library/ft_strcmp.c library/join_pl.c l
 library/export_utils2.c  library/things_done.c library/ft_export_utils.c library/ft_split_equ.c line.c library/exec_utils.c library/ft_atoi.c
 CC = cc
 NAME = minishell
-READLINE =  -lreadline -L /Users/ijmari/Desktop/brew/opt/readline/lib -I /Users/ijmari/Desktop/brew/opt/readline/include
+CFLAGS = -Wall -Wextra -Werror
+READLINE =  -lreadline -L /Users/ael-hiou/goinfre/.brew/opt/readline/lib -I /Users/ael-hiou/goinfre/.brew/opt/readline/include
 #  -fsanitize=address
 SRC_O = $(SRC:.c=.o)
 # 
 all :$(NAME)
 $(NAME) : $(SRC)
-	@$(CC) $(CFLAGS) $(READLINE) $(CFLAGS) $(SRC) -o $(NAME)
+	@$(CC) $(CFLAGS) $(READLINE) $(SRC) -o $(NAME)
 clean:
 	@rm -f $(SRC_O)
 fclean:clean

@@ -6,7 +6,7 @@
 /*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 10:21:42 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/06/25 16:31:55 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/25 16:58:23 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ int	prompt_helper(char *str)
 	}
 	if (ft_strlen(str) == 0)
 		return (FALSE);
-	printf("PLLL\n");
 	if (g_key.after_exit == 1 && str)
 		g_key.after_exit = 0;
 	return (TRUE);
