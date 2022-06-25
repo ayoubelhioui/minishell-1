@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 15:13:30 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/22 20:35:09 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/25 11:57:30 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,28 +29,21 @@ char	*copy(char const *s, char *str, unsigned int start, size_t len)
 
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
+	char	*temp;
 	size_t	i;
-	size_t	total;
-	char	*str;
 
+	i = 0;
 	if (!s)
 		return (NULL);
-	i = 0;
-	total = ft_strlen(s) - start;
-	if (start >= ft_strlen(s))
-		return (ft_strdup(""));
-	if (start + len > ft_strlen(s))
-	{
-		str = malloc((total + 1) * sizeof(char));
-		if (!str)
-			return (NULL);
-		return (copy(s, str, start, total));
-	}
-	else
-	{
-		str = malloc((len + 1) * sizeof(char));
-		if (!str)
-			return (NULL);
-		return (copy(s, str, start, len));
-	}
+	if (start > ft_strlen(s))
+		len = 0;
+	else if (ft_strlen(s) < len)
+		len = ft_strlen(s) - start;
+	temp = (char *)malloc(len + 1);
+	if (!temp)
+		return (0);
+	while (s[start] && i < len)
+		temp[i++] = s[start++];
+	temp[i] = '\0';
+	return (temp);
 }

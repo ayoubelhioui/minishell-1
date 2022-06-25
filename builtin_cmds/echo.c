@@ -6,24 +6,11 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 12:48:09 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/24 15:59:41 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/25 11:07:27 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-void	exit_stat_p(int *i, char *s, int flag, int c)
-{
-	if (flag != 1 && !s[*i + 2])
-		printf("%lld ", g_key.exit_stat);
-	else if (flag == 1 && !s[*i + 2] && c == 'a')
-		printf("%lld\n", g_key.exit_stat);
-	else if (flag == 1 && !s[*i + 2] && c == 'n')
-		printf("%lld", g_key.exit_stat);
-	else
-		printf("%lld", g_key.exit_stat);
-	(*i)++;
-}
 
 void	print_string(char *s, char c, int flag)
 {
@@ -32,9 +19,7 @@ void	print_string(char *s, char c, int flag)
 	i = 0;
 	while (s[i])
 	{
-		if (s[i] == '$' && s[i + 1] == '?')
-			exit_stat_p(&i, s, flag, c);
-		else if (c == 'n' && flag && !s[i + 1])
+		if (c == 'n' && flag && !s[i + 1])
 			printf("%c", s[i]);
 		else if (c != 'n' && flag && !s[i + 1])
 			printf("%c\n", s[i]);

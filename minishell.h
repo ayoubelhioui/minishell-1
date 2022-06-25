@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 19:39:41 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/06/24 21:00:50 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/25 11:19:50 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,6 +190,7 @@ void	ft_strcpy(char *s, char *str, int start_position, int length);
 int		redirection_counter(t_list *splitted_data, char redirection);
 char	*search_in_env(char *entered_data, char **env);
 void	all_about_free(char *s1, char *s2, char *s3);
+char	*join_exit_stat(char *str);
 char	**get_new_env(t_list *env);
 void	export_error(char **split_arg, char **arg, int *i);
 char	*remove_quotes(char *context);

@@ -1,0 +1,23 @@
+total 232
+drwxr-xr-x  22 ijmari  2019    748 Jun 25 12:17 ./
+drwxr-xr-x  15 ijmari  2019    510 Jun 25 12:13 ../
+-rw-r--r--   1 ijmari  2019   6148 Jun 25 10:13 .DS_Store
+drwxr-xr-x  15 ijmari  2019    510 Jun 25 10:13 .git/
+drwxr-xr-x   4 ijmari  2019    136 Jun 24 14:58 .vscode/
+-rw-r--r--   1 ijmari  2019   1658 Jun 25 11:10 Makefile
+drwxr-xr-x  10 ijmari  2019    340 Jun 25 10:13 builtin_cmds/
+drwxr-xr-x  33 ijmari  2019   1122 Jun 25 11:10 library/
+-rw-r--r--   1 ijmari  2019   1732 Jun 25 10:13 line.c
+-rw-r--r--   1 ijmari  2019   1126 Jun 24 16:10 list_utils.c
+-rw-------   1 ijmari  2019      0 Jun 25 12:19 m.txt
+-rwxr-xr-x   1 ijmari  2019  65352 Jun 25 12:03 minishell*
+-rw-r--r--   1 ijmari  2019   2772 Jun 25 11:21 minishell.c
+drwxr-xr-x   3 ijmari  2019    102 Jun 25 10:14 minishell.dSYM/
+-rw-r--r--   1 ijmari  2019   5292 Jun 25 11:19 minishell.h
+-rw-r--r--   1 ijmari  2019   2205 Jun 24 14:58 minishell_utils.c
+-rw-------   1 ijmari  2019      0 Jun 25 12:19 o.txt
+-rw-r--r--   1 ijmari  2019      9 Jun 25 10:13 ok
+-rw-------   1 ijmari  2019   2741 Jun 24 18:55 p.txt
+drwxr-xr-x  10 ijmari  2019    340 Jun 24 14:58 parsing/
+-rw-r--r--   1 ijmari  2019   1326 Jun 25 10:13 signals.c
+-rw-r--r--   1 ijmari  2019   2388 Jun 24 14:58 utils.c
