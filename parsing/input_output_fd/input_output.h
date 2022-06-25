@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   input_output.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 11:17:09 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/06/24 17:59:10 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/25 14:29:19 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	getting_output_fd_helper(char **s, int i, \
 t_returned_data *returned_data);
 void	getting_output_fd(char *str, t_returned_data \
 *returned_data, int unexisting_file_idx);
-int		getting_input_fd(char *str, t_returned_data \
+int		getting_input_fd(t_returned_data \
 *returned_data, char **s);
 void	getting_input_output_fd(char *str, t_returned_data *temp);
 

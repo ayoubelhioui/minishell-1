@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 11:59:02 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/06/25 10:56:29 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/25 15:12:03 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ void	create_returned_nodes(t_returned_data \
 	while (commands_number > 0)
 	{
 		new = malloc(sizeof(t_returned_data));
+		new->cmd_dup = NULL;
 		new->cmd_path = NULL;
 		new->next = NULL;
 		new->args = malloc(sizeof(char *));
@@ -81,7 +82,7 @@ t_list *env, t_returned_data **returned_data)
 	}
 	pipe_handling(vars.commands_number, vars.splitted_by_pipe, *returned_data);
 	get_cmd_args(vars.splitted_by_pipe, *returned_data, vars.new_env);
-	args_final_touch(*returned_data, vars.new_env);
+	args_final_touch(*returned_data);
 	free_splits(vars.splitted_by_pipe, vars.splitted_by_space);
 	free(vars.new_env);
 	return (1);

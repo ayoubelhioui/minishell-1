@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 16:35:49 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/23 19:50:45 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/25 14:31:57 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ void	delete_node(t_list **env, int pos)
 	}
 }
 
-void	print_list(t_list *en, char	*arg)
+void	print_list(t_list *en)
 {
 	char	**name_path;
 	t_list	*cc;

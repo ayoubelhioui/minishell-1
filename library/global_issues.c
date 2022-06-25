@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 16:10:35 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/25 14:24:47 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/25 14:29:48 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,6 @@
 
 void	execve_err(t_returned_data *data)
 {
-	char	*temp;
-
 	write(2, "minishell: ", 11);
 	write(2, data->cmd_dup, ft_strlen(data->cmd_dup));
 	write(2, ": ", 2);

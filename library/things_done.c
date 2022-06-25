@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 20:39:37 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/25 14:19:56 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/25 15:17:59 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ void	handle_the_cmd(t_returned_data *t, t_returned_data *data, \
 	t_list **env_l, char **env)
 {
 	int		check;
-	char	*temp;
 
 	signal(SIGQUIT, sig_quit);
 	if (data->flag == 1)
@@ -97,9 +96,11 @@ void	exec(t_returned_data *data, char **env, t_list **env_l)
 {
 	int				counter;
 	int				saver;
+	int				exist;
 
 	counter = lst_count(data);
-	if (counter == 1 && built_exist(data->cmd_dup) && data->is_executable)
+	exist = built_exist(data->cmd_dup);
+	if (counter == 1 && exist && data->is_executable)
 	{
 		saver = dup(1);
 		if (data->output_fd != 1)
@@ -113,4 +114,5 @@ void	exec(t_returned_data *data, char **env, t_list **env_l)
 		check_and_exec(data, env_l, env, counter);
 	}
 	g_key.flag_for_here = 0;
+	g_key.after_exit = 0;
 }

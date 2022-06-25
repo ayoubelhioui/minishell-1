@@ -6,13 +6,13 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 15:12:37 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/14 15:12:42 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/25 15:09:30 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	ft_strcmp(const char *s1, const char *s2)
+int	ft_strcmp(char *s1, char *s2)
 {
 	size_t	i;
 

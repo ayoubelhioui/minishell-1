@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   input_output.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 11:19:46 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/06/24 17:57:36 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/25 14:31:19 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ void	getting_output_fd(char *str, t_returned_data \
 *returned_data, int unexisting_file_idx)
 {
 	char	**s;
-	char	*temp;
 	int		i;
 
 	s = ft_split(str, SPACE);
@@ -62,7 +61,7 @@ void	getting_output_fd(char *str, t_returned_data \
 	ft_free(s);
 }
 
-int	getting_input_fd(char *str, t_returned_data *returned_data, char **s)
+int	getting_input_fd(t_returned_data *returned_data, char **s)
 {
 	int	temp_input;
 	int	i;
@@ -94,7 +93,7 @@ void	getting_input_output_fd(char *str, t_returned_data *temp)
 	char	**s;
 
 	s = ft_split(str, SPACE);
-	unexisting_file_idx = getting_input_fd(str, temp, s);
+	unexisting_file_idx = getting_input_fd(temp, s);
 	ft_free (s);
 	getting_output_fd(str, temp, unexisting_file_idx);
 }

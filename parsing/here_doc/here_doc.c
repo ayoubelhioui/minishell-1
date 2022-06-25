@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 11:09:13 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/06/24 19:01:55 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/25 14:39:41 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	find_heredoc_position(char **s)
 	return (FALSE);
 }
 
-int	here_doc_helper2(t_here_doc_vars *vars, char *limiter, char **env)
+int	here_doc_helper2(t_here_doc_vars *vars, char *limiter)
 {
 	if (vars->s)
 	{
@@ -71,7 +71,7 @@ int	here_doc_helper(t_here_doc_vars *vars, char *limiter, char **env)
 		vars->entered_data = NULL;
 		free(s);
 		vars->s = readline("> ");
-		value = here_doc_helper2(vars, limiter, env);
+		value = here_doc_helper2(vars, limiter);
 		if (value == -4)
 			return (-4);
 		else if (value == 1)

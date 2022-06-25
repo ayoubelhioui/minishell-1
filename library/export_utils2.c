@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 14:58:47 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/22 20:52:43 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/25 14:33:20 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ void	change_path_value(t_list **env)
 {
 	t_list	*head;
 	char	**new;
-	char	*cwd;
 
 	head = *env;
 	while (head)

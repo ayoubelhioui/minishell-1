@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 10:21:42 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/06/25 14:15:33 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/25 14:48:02 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ int	prompt_helper(char *str)
 	}
 	if (ft_strlen(str) == 0)
 		return (FALSE);
+	printf("PLLL\n");
 	if (g_key.after_exit == 1 && str)
 		g_key.after_exit = 0;
 	return (TRUE);
@@ -69,7 +70,6 @@ void	prompt(char **env, t_list *new_env)
 	}
 	exec(returned_data, env, &new_env);
 	ft_free_list(returned_data);
-	system("leaks minishell");
 }
 
 int	main(int ac, char **av, char **env)
