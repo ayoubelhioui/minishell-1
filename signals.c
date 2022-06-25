@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 18:55:21 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/22 21:17:51 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/24 19:00:45 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,4 @@ void	sig_handler(int sig)
 		g_key.saver = dup(0);
 		close(0);
 	}
-	else if (g_key.flag_for_here == 2)
-		g_key.exit_stat = 130;
 }
