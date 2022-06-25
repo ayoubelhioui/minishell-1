@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 10:21:42 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/06/24 18:18:57 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/24 19:32:19 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,6 @@ void	prompt(char **env, t_list *new_env)
 	}
 	exec(returned_data, env, &new_env);
 	ft_free_list(returned_data);
-	// system("leaks minishell");
 }
 
 int	main(int ac, char **av, char **env)

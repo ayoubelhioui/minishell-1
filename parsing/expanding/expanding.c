@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expanding.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 10:03:23 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/06/24 18:02:18 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/25 10:08:33 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ char *saver, int *last_dollar_index)
 {
 	t_dollar_sign_vars	vars;
 
-	data->index++;
 	vars.env_value = NULL;
 	vars.index_saver = data->index;
 	while ((data->context[data->index]) \
@@ -69,10 +68,7 @@ char *saver, int *last_dollar_index)
 	vars.temp = ft_substr(data->context, vars.index_saver + 1, \
 	data->index - vars.index_saver - 1);
 	vars.temp1 = ft_strdup("minishell");
-	if (vars.s2[0] == ZERO)
-		vars.env_value = ft_strjoin(vars.temp1, vars.temp);
-	else
-		vars.env_value = search_in_env(vars.s2, env);
+	get_value(&vars, env);
 	all_about_free(vars.temp1, vars.temp, vars.s2);
 	vars.temp = expanding_join(vars.s1, vars.env_value);
 	vars.temp1 = saver;
@@ -80,15 +76,12 @@ char *saver, int *last_dollar_index)
 	if (vars.temp1)
 		free(vars.temp1);
 	all_about_free(vars.temp, vars.env_value, vars.s1);
-	data->index--;
 	return (saver);
 }
 
 char	*expanding(char *str, char **env)
 {
 	t_expanding	vars;
-	char		*temp;
-	char		*f;
 
 	expanding_init(&vars, str);
 	while (vars.data.context[++vars.data.index])
@@ -99,8 +92,10 @@ char	*expanding(char *str, char **env)
 		(ft_isalnum(vars.data.context[vars.data.index + 1]) || \
 		vars.data.context[vars.data.index + 1] == UNDER_SCORE))
 		{
+			vars.data.index++;
 			vars.saver = dollar_sign_found(&vars.data, \
 			env, vars.saver, &vars.j);
+			vars.data.index--;
 			vars.x = vars.data.index + 1;
 		}
 		if (!vars.data.context[vars.data.index])
