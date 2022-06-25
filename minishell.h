@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 19:39:41 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/06/25 11:19:50 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/25 14:19:39 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,4 +196,5 @@ void	export_error(char **split_arg, char **arg, int *i);
 char	*remove_quotes(char *context);
 void	in_a_quote(int *in_quote, int SINGLE_OR_DOUBLE);
 int		get_length(char **args);
+void	execve_err(t_returned_data *data);
 #endif

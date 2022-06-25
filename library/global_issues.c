@@ -6,12 +6,24 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 16:10:35 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/25 13:21:47 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/25 14:24:47 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 #include "../parsing/expanding/expanding.h"
+
+void	execve_err(t_returned_data *data)
+{
+	char	*temp;
+
+	write(2, "minishell: ", 11);
+	write(2, data->cmd_dup, ft_strlen(data->cmd_dup));
+	write(2, ": ", 2);
+	write(2, "command not found\n", 18);
+	g_key.exit_stat = 127;
+	exit(127);
+}
 
 void	export_error(char **split_arg, char **arg, int *i)
 {
@@ -29,44 +41,44 @@ char	*chrdup(char c)
 	t[0] = c;
 	t[1] = '\0';
 	return (t);
-	
 }
 
-
-char	*join_exit_stat(char *str)
+char	*expand_exit_stat(char *str, int *pos, char *saver)
 {
-	char	*temp;
-	char	*saver;
 	char	*value;
-	int		start;
-	int		pos;
 	char	*it;
 	char	*tmp;
 
-	start = 0;
+	if (str[*pos] == '$' && str[*pos + 1] == '?')
+	{
+		value = ft_itoa((int) g_key.exit_stat);
+		tmp = saver;
+		saver = expanding_join(saver, value);
+		free(tmp);
+		free(value);
+		(*pos)++;
+	}
+	else
+	{
+		tmp = saver;
+		it = chrdup(str[*pos]);
+		saver = expanding_join(saver, it);
+		free(tmp);
+		free(it);
+	}
+	return (saver);
+}
+
+char	*join_exit_stat(char *str)
+{
+	char	*saver;
+	int		pos;
+
 	pos = 0;
-	temp = NULL;
 	saver = NULL;
 	while (str[pos])
 	{
-		if (str[pos] == '$' && str[pos + 1] == '?')
-		{
-			value = ft_itoa((int) g_key.exit_stat);
-			tmp = saver;
-			saver = expanding_join(saver, value);
-			free(tmp);
-			free(value);
-			pos++;
-		}
-		else
-		{
-			// it = chrdup(str[pos]);
-			tmp = saver;
-			it = chrdup(str[pos]);
-			saver = expanding_join(saver, it);
-			free(tmp);
-			free(it);
-		}
+		saver = expand_exit_stat(str, &pos, saver);
 		pos++;
 	}
 	return (saver);
