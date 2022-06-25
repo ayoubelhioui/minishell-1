@@ -6,7 +6,7 @@
 /*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 11:09:13 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/06/24 17:48:31 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/25 12:39:47 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	here_doc_helper2(t_here_doc_vars *vars, char *limiter, char **env)
 {
 	if (vars->s)
 	{
-		if (vars->entered_data)
+		if (vars->entered_data)     
 			free(vars->entered_data);
 		vars->entered_data = vars->s;
 		return (FALSE);
