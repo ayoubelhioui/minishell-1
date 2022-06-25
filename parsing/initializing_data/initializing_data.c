@@ -6,7 +6,7 @@
 /*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 11:59:02 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/06/24 17:28:50 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/24 21:03:01 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,34 +58,31 @@ void	create_returned_nodes(t_returned_data \
 	}
 }
 
-int	preparing(t_data *entered_data, t_list *env, \
-t_returned_data **returned_data)
+int	preparing(t_data *entered_data, \
+t_list *env, t_returned_data **returned_data)
 {
-	char	**splitted_by_space;
-	char	**splitted_by_pipe;
-	char	**new_env;
-	int		commands_number;
-	int		ret;
+	t_preparing_vars	vars;
 
-	new_env = get_new_env(env);
-	entered_data->context = expanding(entered_data->context, new_env);
+	vars.new_env = get_new_env(env);
+	entered_data->context = expanding(entered_data->context, vars.new_env);
 	entered_data->context = get_new_context(entered_data);
-	splitted_by_pipe = ft_split(entered_data->context, PIPE);
-	commands_number = get_length(splitted_by_pipe);
-	splitted_by_space = ft_split(entered_data->context, SPACE);
+	vars.splitted_by_pipe = ft_split(entered_data->context, PIPE);
+	vars.commands_number = get_length(vars.splitted_by_pipe);
+	vars.splitted_by_space = ft_split(entered_data->context, SPACE);
 	free(entered_data->context);
-	create_returned_nodes(returned_data, commands_number);
-	ret = heredoc_searcher(splitted_by_space, *returned_data, new_env);
-	if (ret == -4 && g_key.flag == 6)
+	create_returned_nodes(returned_data, vars.commands_number);
+	vars.ret = heredoc_searcher(vars.splitted_by_space, \
+	*returned_data, vars.new_env);
+	if (vars.ret == -4 && g_key.flag == 6)
 	{
-		free_splits(splitted_by_pipe, splitted_by_space);
-		free (new_env);
+		free_splits(vars.splitted_by_pipe, vars.splitted_by_space);
+		free (vars.new_env);
 		return (-4);
 	}
-	pipe_handling(commands_number, splitted_by_pipe, *returned_data);
-	get_cmd_args(splitted_by_pipe, *returned_data, new_env);
-	args_final_touch(*returned_data, new_env);
-	free_splits(splitted_by_pipe, splitted_by_space);
-	free(new_env);
+	pipe_handling(vars.commands_number, vars.splitted_by_pipe, *returned_data);
+	get_cmd_args(vars.splitted_by_pipe, *returned_data, vars.new_env);
+	args_final_touch(*returned_data, vars.new_env);
+	free_splits(vars.splitted_by_pipe, vars.splitted_by_space);
+	free(vars.new_env);
 	return (1);
 }

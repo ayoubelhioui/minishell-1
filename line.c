@@ -6,11 +6,12 @@
 /*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/13 17:00:46 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/06/13 17:04:49 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/24 19:53:01 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
 char	*ft_strchr(const char *s, int c)
 {
 	char	*str;

@@ -6,14 +6,15 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 18:55:21 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/24 19:00:45 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/25 10:13:24 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	sig_quit(void)
+void	sig_quit(int l)
 {
+	(void) l;
 	g_key.exit_stat = 131;
 	exit(131);
 }
