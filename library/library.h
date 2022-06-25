@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 15:14:17 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/24 15:55:52 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/25 10:30:23 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ size_t		ft_strlen(const char *s);
 char		*ft_strdup(const char *src);
 int			ft_isdigit(int c);
 int			ft_isalpha(int c);
+char		*ft_itoa(int n);
 int			ft_isalnum(int c);
 void		ft_lstadd_back(t_list **lst, t_list *new);
 int			ft_lstsize(t_list *lst);

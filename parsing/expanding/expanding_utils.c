@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expanding_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 10:14:54 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/06/24 20:52:49 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/25 13:13:29 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ char	*expanding_join(char *s1, char *s2)
 	i = 0;
 	j = 0;
 	total_len = ft_strlen(s1) + ft_strlen(s2);
-	str = malloc((total_len + 1) * sizeof(char));
+	str = malloc((total_len + 1));
 	if (!str)
 		return (NULL);
 	while (i < ft_strlen(s1))

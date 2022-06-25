@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command_argument.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 11:31:55 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/06/24 13:52:01 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/25 13:23:12 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,8 @@ void	get_cmd_args_helper1(char **data, int *i, \
 		int *j, t_returned_data *returned_data)
 {
 	char	*temp;
+	char	*num;
+	char	*fr;
 
 	if (!ft_strcmp(data[*i], "<") || !ft_strcmp(data[*i], ">"))
 	{
@@ -64,6 +66,12 @@ void	get_cmd_args_helper1(char **data, int *i, \
 	{
 		temp = data[*i];
 		returned_data->args[*j] = remove_quotes(data[*i]);
+		if (ft_strstr(returned_data->args[*j], "$?"))
+		{
+			fr = returned_data->args[*j];
+			returned_data->args[*j] = join_exit_stat(returned_data->args[*j]);
+			free(fr);
+		}
 		*j += 1;
 		data[*i] = returned_data->args[*j - 1];
 		free (temp);

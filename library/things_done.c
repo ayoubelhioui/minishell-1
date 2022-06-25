@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 20:39:37 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/24 14:59:56 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/25 10:45:15 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,8 @@ void	close_unused_pipes(t_returned_data *head, t_returned_data *curr)
 void	handle_the_cmd(t_returned_data *t, t_returned_data *data, \
 	t_list **env_l, char **env)
 {
-	int	check;
+	int		check;
+	char	*temp;
 
 	signal(SIGQUIT, sig_quit);
 	if (data->flag == 1)
@@ -65,6 +66,19 @@ void	handle_the_cmd(t_returned_data *t, t_returned_data *data, \
 	else if (execve(data->cmd_path, \
 	data->args, env) == -1)
 	{
+		write(2, "minishell: ", 11);
+		if (!ft_strcmp("$?", data->cmd_path))
+		{
+			temp = ft_itoa(g_key.exit_stat);
+			write(2, temp, ft_strlen(temp));
+			write(2, ": ", 2);
+			free(temp);
+		}
+		else
+		{
+			write(2, data->cmd_dup, ft_strlen(data->cmd_dup));
+			write(2, ": ", 2);
+		}
 		write(2, "command not found\n", 18);
 		g_key.exit_stat = 127;
 		exit(127);
