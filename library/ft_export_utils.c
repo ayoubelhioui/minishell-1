@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 16:02:27 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/22 20:39:22 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/25 14:32:22 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ void	sort_list(t_list *en)
 		}
 		lptr = ptr1;
 	}
-	print_list(en, NULL);
+	print_list(en);
 }
 
 int	there_is_plus(char *arg)

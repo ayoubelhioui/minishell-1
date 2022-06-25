@@ -14,10 +14,10 @@ NAME = minishell
 READLINE =  -lreadline -L /Users/ael-hiou/goinfre/.brew/opt/readline/lib -I /Users/ael-hiou/goinfre/.brew/opt/readline/include
 #  -fsanitize=address
 SRC_O = $(SRC:.c=.o)
-
+# 
 all :$(NAME)
 $(NAME) : $(SRC)
-	@$(CC) -g $(READLINE) $(CFLAGS) $(SRC) -o $(NAME)
+	@$(CC) $(CFLAGS) $(READLINE) $(CFLAGS) $(SRC) -o $(NAME)
 clean:
 	@rm -f $(SRC_O)
 fclean:clean

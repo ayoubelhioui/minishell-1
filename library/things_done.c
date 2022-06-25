@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 20:39:37 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/25 10:45:15 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/25 15:17:59 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ void	handle_the_cmd(t_returned_data *t, t_returned_data *data, \
 	t_list **env_l, char **env)
 {
 	int		check;
-	char	*temp;
 
 	signal(SIGQUIT, sig_quit);
 	if (data->flag == 1)
@@ -65,24 +64,7 @@ void	handle_the_cmd(t_returned_data *t, t_returned_data *data, \
 		exit(0);
 	else if (execve(data->cmd_path, \
 	data->args, env) == -1)
-	{
-		write(2, "minishell: ", 11);
-		if (!ft_strcmp("$?", data->cmd_path))
-		{
-			temp = ft_itoa(g_key.exit_stat);
-			write(2, temp, ft_strlen(temp));
-			write(2, ": ", 2);
-			free(temp);
-		}
-		else
-		{
-			write(2, data->cmd_dup, ft_strlen(data->cmd_dup));
-			write(2, ": ", 2);
-		}
-		write(2, "command not found\n", 18);
-		g_key.exit_stat = 127;
-		exit(127);
-	}
+		execve_err(data);
 }
 
 void	check_and_exec(t_returned_data *data, t_list **env_l, \
@@ -114,9 +96,11 @@ void	exec(t_returned_data *data, char **env, t_list **env_l)
 {
 	int				counter;
 	int				saver;
+	int				exist;
 
 	counter = lst_count(data);
-	if (counter == 1 && built_exist(data->cmd_dup) && data->is_executable)
+	exist = built_exist(data->cmd_dup);
+	if (counter == 1 && exist && data->is_executable)
 	{
 		saver = dup(1);
 		if (data->output_fd != 1)
@@ -130,4 +114,5 @@ void	exec(t_returned_data *data, char **env, t_list **env_l)
 		check_and_exec(data, env_l, env, counter);
 	}
 	g_key.flag_for_here = 0;
+	g_key.after_exit = 0;
 }

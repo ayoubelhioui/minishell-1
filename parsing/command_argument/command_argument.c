@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 11:31:55 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/06/25 13:23:12 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/25 14:27:53 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	get_args_length(char **data)
 	return (counter);
 }
 
-void	args_final_touch(t_returned_data *returned_data, char **env)
+void	args_final_touch(t_returned_data *returned_data)
 {
 	int	i;
 
@@ -53,7 +53,6 @@ void	get_cmd_args_helper1(char **data, int *i, \
 		int *j, t_returned_data *returned_data)
 {
 	char	*temp;
-	char	*num;
 	char	*fr;
 
 	if (!ft_strcmp(data[*i], "<") || !ft_strcmp(data[*i], ">"))

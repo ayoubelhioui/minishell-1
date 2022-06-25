@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 14:52:24 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/24 16:08:09 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/25 14:33:09 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,10 +69,7 @@ void	handle_unset(t_list **env, char *arg)
 
 void	ft_unset(t_list **env, char	**args)
 {
-	t_list	*curr;
-	char	*temp;
 	int		i;
-	int		pos;
 
 	i = 0;
 	if (!check_unset(args[i]) || args[i][0] == '=')

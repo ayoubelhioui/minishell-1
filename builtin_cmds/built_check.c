@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_check.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 20:42:43 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/23 19:20:31 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/25 15:12:58 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 int	built_exist(char *cmd_path)
 {
+	if (!cmd_path)
+		return (0);
 	if (!ft_strcmp(cmd_path, "cd"))
 		return (1);
 	else if (!ft_strcmp(cmd_path, "pwd"))
@@ -33,6 +35,8 @@ int	built_exist(char *cmd_path)
 
 int	built_check(t_returned_data *ret, t_list **env)
 {
+	if (!ret->cmd_dup)
+		return (0);
 	if (!ft_strcmp(ret->cmd_dup, "cd"))
 		cd(&ret->args[1], env);
 	else if (!ft_strcmp(ret->cmd_dup, "pwd"))

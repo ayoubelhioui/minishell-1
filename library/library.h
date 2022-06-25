@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 15:14:17 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/25 10:30:23 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/25 15:05:53 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ char		*ft_substr(char const *s, unsigned int start, size_t len);
 char		*ft_strjoin(char *s1, char *s2);
 char		*ft_strtrim(char *s1, char *set);
 int			ft_strncmp(const char *s1, const char *s2, size_t n);
-int			ft_strcmp(const char *s1, const char *s2);
+int			ft_strcmp(char *s1, char *s2);
 char		**ft_split(char *s, char c);
 int			ft_atoi(const char *str);
 size_t		ft_strlen(const char *s);
@@ -54,7 +54,7 @@ int			ft_check(const char *set, char a);
 size_t		ft_right(const char *s1, const char *set);
 size_t		ft_left(const char *s1, const char *set);
 char		*ft_strtrim(char *s1, char *set);
-void		print_list(t_list *en, char *arg);
+void		print_list(t_list *en);
 void		ft_free(char **ptr);
 char		*join_pl(char const *s1, char const *s2);
 char		**split_with_plus(char *arg);
