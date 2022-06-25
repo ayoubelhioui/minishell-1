@@ -6,7 +6,7 @@
 /*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 10:03:23 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/06/25 16:29:33 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/25 17:02:23 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,6 @@ char *saver, int *last_dollar_index)
 	*last_dollar_index = data->index;
 	vars.to_be_expanded = ft_substr(data->context, vars.index_saver, \
 	data->index - vars.index_saver);
-	printf("s2 Is : %s\n", vars.to_be_expanded);
 	vars.temp = ft_substr(data->context, vars.index_saver + 1, \
 	data->index - vars.index_saver - 1);
 	vars.temp1 = ft_strdup("minishell");
