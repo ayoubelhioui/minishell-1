@@ -6,7 +6,7 @@
 /*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 10:03:23 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/06/25 13:25:57 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/25 16:29:33 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,22 +60,23 @@ char *saver, int *last_dollar_index)
 	&& ((ft_isalnum(data->context[data->index])) \
 	|| (data->context[data->index] == UNDER_SCORE)))
 		data->index++;
-	vars.s1 = ft_substr(data->context, *last_dollar_index, \
+	vars.first_part = ft_substr(data->context, *last_dollar_index, \
 	vars.index_saver - *last_dollar_index - 1);
 	*last_dollar_index = data->index;
-	vars.s2 = ft_substr(data->context, vars.index_saver, \
+	vars.to_be_expanded = ft_substr(data->context, vars.index_saver, \
 	data->index - vars.index_saver);
+	printf("s2 Is : %s\n", vars.to_be_expanded);
 	vars.temp = ft_substr(data->context, vars.index_saver + 1, \
 	data->index - vars.index_saver - 1);
 	vars.temp1 = ft_strdup("minishell");
 	get_value(&vars, env);
-	all_about_free(vars.temp1, vars.temp, vars.s2);
-	vars.temp = expanding_join(vars.s1, vars.env_value);
+	all_about_free(vars.temp1, vars.temp, vars.to_be_expanded);
+	vars.temp = expanding_join(vars.first_part, vars.env_value);
 	vars.temp1 = saver;
 	saver = expanding_join(saver, vars.temp);
 	if (vars.temp1)
 		free(vars.temp1);
-	all_about_free(vars.temp, vars.env_value, vars.s1);
+	all_about_free(vars.temp, vars.env_value, vars.first_part);
 	return (saver);
 }
 

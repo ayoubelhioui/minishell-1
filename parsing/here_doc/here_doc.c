@@ -3,14 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   here_doc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 11:09:13 by ael-hiou          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2022/06/25 12:39:47 by ael-hiou         ###   ########.fr       */
-=======
-/*   Updated: 2022/06/24 19:01:55 by ijmari           ###   ########.fr       */
->>>>>>> 512f6b26833c2d2faf071609b031e10a8cccf867
+/*   Updated: 2022/06/25 16:29:03 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +65,7 @@ int	here_doc_helper(t_here_doc_vars *vars, char *limiter, char **env)
 	{
 		if (!ft_strcmp(vars->entered_data, limiter))
 			break ;
-		s = expanding(vars->entered_data, env);
+		s = expanding_here_doc(vars->entered_data, env);
 		write(vars->p[STD_OUTPUT], s, ft_strlen(s));
 		write(vars->p[STD_OUTPUT], "\n", 2);
 		vars->entered_data = NULL;

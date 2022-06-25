@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 19:39:41 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/06/25 11:19:50 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/25 14:34:49 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,8 @@ typedef struct dollar_sign_vars
 {
 	int		index_saver;
 	char	*env_value;
-	char	*s1;
-	char	*s2;
+	char	*first_part;
+	char	*to_be_expanded;
 	char	*temp;
 	char	*temp1;
 }	t_dollar_sign_vars;
