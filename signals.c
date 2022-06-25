@@ -6,7 +6,7 @@
 /*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 18:55:21 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/25 16:54:55 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/25 18:40:58 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,7 @@ void	sig_handler(int sig)
 	if (g_key.flag_for_here == 0)
 	{
 		g_key.exit_stat = 1;
-		if (g_key.after_exit == 0)
-			write(1, "\n", 1);
+		write(1, "\n", 1);
 		rl_on_new_line();
 		rl_replace_line("", 0);
 		rl_redisplay();

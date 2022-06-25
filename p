@@ -1,0 +1,14 @@
+Makefile
+builtin_cmds
+library
+line.c
+list_utils.c
+minishell
+minishell.c
+minishell.dSYM
+minishell.h
+minishell_utils.c
+p
+parsing
+signals.c
+utils.c
