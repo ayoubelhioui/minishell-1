@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 16:02:27 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/25 14:32:22 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/26 19:21:47 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,11 +76,13 @@ void	sort_list(t_list *en)
 	t_list	*ptr1;
 	t_list	*lptr;
 	t_list	*curr;
+	t_list	*lst_dup;
 
+	lst_dup = ft_lstdup(en);
 	swapped = 1;
-	curr = en;
+	curr = lst_dup;
 	lptr = NULL;
-	if (en == NULL)
+	if (lst_dup == NULL)
 		return ;
 	while (swapped)
 	{
@@ -94,7 +96,7 @@ void	sort_list(t_list *en)
 		}
 		lptr = ptr1;
 	}
-	print_list(en);
+	print_list(lst_dup);
 }
 
 int	there_is_plus(char *arg)

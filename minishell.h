@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 19:39:41 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/06/25 16:31:57 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/26 19:20:17 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,4 +197,5 @@ char	*remove_quotes(char *context);
 void	in_a_quote(int *in_quote, int SINGLE_OR_DOUBLE);
 int		get_length(char **args);
 void	execve_err(t_returned_data *data);
+t_list	*ft_lstdup(t_list *a);
 #endif
