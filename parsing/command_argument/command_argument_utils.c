@@ -6,7 +6,7 @@
 /*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 11:38:44 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/06/24 14:01:27 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/27 19:02:52 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ char	*get_command_path(char **env_variables, char *command)
 			return (NULL);
 	}
 	vars.path = ft_split(env_variables[i], ':');
-	vars.temp = remove_quotes(command);
+	vars.temp = ft_strdup(command);
 	if (get_cmd_path_helper(&vars))
 		return (vars.full_path);
 	ft_free(vars.path);

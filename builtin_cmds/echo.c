@@ -3,33 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 12:48:09 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/26 19:17:51 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/27 18:32:08 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-void	print_string(char *s, char c, int flag)
-{
-	int	i;
-
-	i = 0;
-	while (s[i])
-	{
-		if (c == 'n' && flag && !s[i + 1])
-			printf("%c", s[i]);
-		else if (c != 'n' && flag && !s[i + 1])
-			printf("%c\n", s[i]);
-		else if (!flag && !s[i + 1])
-			printf("%c ", s[i]);
-		else
-			printf("%c", s[i]);
-		i++;
-	}
-}
 
 int	some_ns(char *s)
 {
@@ -52,18 +33,19 @@ int	some_ns(char *s)
 void	ft_echo(char **s)
 {
 	int		i;
-	char	c;
+	int		flag;
 
-	c = 'a';
+	flag = 0;
 	i = -1;
 	if (*s == NULL)
 		printf("\n");
 	while (some_ns(s[++i]))
-		c = 'n';
-	while (s && s[i])
-	{
-		print_string(s[i], c, !s[i + 1]);
-		i++;
-	}
+		flag = 1;
+	while (s[i] && s[i + 1])
+		printf("%s ", s[i++]);
+	if (s[i])
+		printf("%s", s[i]);
+	if (!flag)
+		printf("\n");
 	g_key.exit_stat = 0;
 }

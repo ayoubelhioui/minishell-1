@@ -6,7 +6,7 @@
 /*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 10:03:23 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/06/25 17:05:59 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/27 16:57:21 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 void	expanding_helper(t_expanding *vars)
 {
+	while (vars->data.context[vars->data.index] == SPACE)
+		vars->data.index++;
 	if ((vars->data.context[vars->data.index] == RED_INPUT)
 		&& (vars->data.context[vars->data.index + 1] == RED_INPUT))
 		vars->is_limiter = TRUE;
