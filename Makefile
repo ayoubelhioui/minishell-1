@@ -18,7 +18,7 @@ SRC_O = $(SRC:.c=.o)
 # 
 all :$(NAME)
 $(NAME) : $(SRC)
-	@$(CC) $(CFLAGS) $(READLINE) $(SRC) -o $(NAME)
+	@$(CC) -g $(CFLAGS) $(READLINE) $(SRC) -o $(NAME)
 clean:
 	@rm -f $(SRC_O)
 fclean:clean

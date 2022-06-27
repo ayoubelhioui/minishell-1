@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 19:39:41 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/06/26 19:20:17 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/27 15:02:02 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,7 +136,7 @@ typedef struct g_str
 	int			flag_for_here;
 	int			saver;
 	int			flag;
-	int			after_exit;
+	int			cd_flag;
 }				t_str;
 
 typedef struct pipe_vars
@@ -198,4 +198,5 @@ void	in_a_quote(int *in_quote, int SINGLE_OR_DOUBLE);
 int		get_length(char **args);
 void	execve_err(t_returned_data *data);
 t_list	*ft_lstdup(t_list *a);
+void	set_oldpwd(t_list **env, char *old);
 #endif

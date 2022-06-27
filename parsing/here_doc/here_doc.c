@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   here_doc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 11:09:13 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/06/25 17:05:53 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/27 14:56:43 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ int	here_doc_helper2(t_here_doc_vars *vars, char *limiter)
 	}
 	else
 	{
-		g_key.after_exit = 1;
 		if (g_key.flag == 6)
 			printf(">\n");
 		free (limiter);
@@ -95,7 +94,6 @@ int	here_doc(char *limiter, char **env)
 		vars.entered_data = vars.s;
 	else
 	{
-		g_key.after_exit = 1;
 		if (g_key.flag == 6)
 		{
 			printf(">\n");
