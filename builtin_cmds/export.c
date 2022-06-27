@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 12:47:10 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/24 19:32:50 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/27 15:42:37 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ void	changing(t_list **env, char *arg)
 		j++;
 	}
 	(*env)->content[j] = '\0';
+	printf("it is now %s\n", (*env)->content);
 	(*env)->criteria = 'e';
 }
 
@@ -126,4 +127,5 @@ void	ft_export(t_list **env, char **args)
 		ft_free(split_arg);
 		i++;
 	}
+	g_key.cd_flag = 0;
 }

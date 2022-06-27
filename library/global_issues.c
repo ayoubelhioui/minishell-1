@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 16:10:35 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/25 14:29:48 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/26 19:15:40 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ char	*expand_exit_stat(char *str, int *pos, char *saver)
 
 	if (str[*pos] == '$' && str[*pos + 1] == '?')
 	{
+		// printf("exit is %lld\n", g_key.exit_stat);
 		value = ft_itoa((int) g_key.exit_stat);
 		tmp = saver;
 		saver = expanding_join(saver, value);

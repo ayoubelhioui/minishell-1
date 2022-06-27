@@ -6,7 +6,7 @@
 /*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 10:21:42 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/06/27 16:18:19 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/27 16:53:34 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,6 @@ int	prompt_helper(char *str)
 	}
 	if (ft_strlen(str) == 0)
 		return (FALSE);
-	if (g_key.after_exit == 1 && str)
-		g_key.after_exit = 0;
 	return (TRUE);
 }
 
@@ -84,7 +82,7 @@ int	main(int ac, char **av, char **env)
 	}
 	create_list(env, &new_env);
 	g_key.flag_for_here = 0;
-	g_key.after_exit = 0;
+	g_key.cd_flag = 0;
 	while (TRUE)
 	{
 		g_key.flag = 0;
@@ -95,5 +93,6 @@ int	main(int ac, char **av, char **env)
 		signal(SIGINT, &sig_handler);
 		signal(SIGQUIT, SIG_IGN);
 		prompt(env, new_env);
+		system("leaks minishell");
 	}
 }

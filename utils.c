@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 16:35:49 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/25 14:31:57 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/27 16:19:36 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,24 @@ void	create_list(char **env, t_list **env_l)
 {
 	int		i;
 	t_list	*head;
+	char	**spl;
 
 	i = 0;
 	head = *env_l;
 	*env_l = ft_lstnew (env[i]);
 	i++;
 	while (env[i])
-		ft_lstadd_back (env_l, ft_lstnew(env[i++]));
+	{
+		spl = split_with_equ(env[i]);
+		if (!ft_strcmp(spl[0], "OLDPWD"))
+		{
+			ft_lstadd_back (env_l, ft_lstnew("OLDPWD"));
+			i++;
+		}
+		else
+			ft_lstadd_back (env_l, ft_lstnew(env[i++]));
+		ft_free(spl);
+	}
 }
 
 void	delete_node(t_list **env, int pos)
@@ -75,6 +86,7 @@ void	delete_node(t_list **env, int pos)
 void	print_list(t_list *en)
 {
 	char	**name_path;
+	t_list	*temp;
 	t_list	*cc;
 
 	cc = en;
@@ -88,12 +100,19 @@ void	print_list(t_list *en)
 			else if (name_path[1])
 				printf("declare -x %s%c\"%s\"\n", name_path[0], '=', name_path[1]);
 			else
-				printf("declare -x %s%c\"\"\n", name_path[0], '=');
+				printf("declare -x %s\n", name_path[0]);
 		}
 		else
 			printf("declare -x %s\n", name_path[0]);
 		ft_free(name_path);
 		cc = cc->next;
+	}
+	while (en)
+	{
+		temp = en->next;
+		free(en);
+		free(en->content);
+		en = temp;
 	}
 }
 

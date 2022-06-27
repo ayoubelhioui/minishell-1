@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 12:47:45 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/20 14:55:24 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/27 14:57:41 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,27 +15,27 @@
 void	cd(char **paths, t_list **env)
 {
 	int		ret;
-	char	**buff;
 	t_list	*curr;
+	char	**data;
 
 	curr = *env;
 	ret = 0;
+	g_key.cd_flag = 1;
 	if (*paths == NULL || !ft_strcmp(paths[0], "~"))
 	{
 		while (curr)
 		{
-			if (ft_strstr(curr->content, "HOME="))
+			data = split_with_equ(curr->content);
+			if (!ft_strcmp(data[0], "HOME"))
 			{
-				buff = ft_split(curr->content, '=');
-				ret = chdir((const char *) buff[1]);
-				ft_free(buff);
+				ret = chdir((const char *) data[1]);
+				ft_free(data);
 				break ;
 			}
+			ft_free(data);
 			curr = curr->next;
 		}
 	}
 	else
 		ret = chdir((const char *) paths[0]);
-	if (ret != 0)
-		printf("cd: no such file or directory : %s\n", paths[0]);
 }

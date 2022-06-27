@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   here_doc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 11:09:13 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/06/27 16:54:02 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/27 14:56:43 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,8 +126,7 @@ int	heredoc_searcher(char **splitted_data, t_returned_data \
 		&& !ft_strcmp(splitted_data[i + 1], "<") && in_quote == 0)
 		{
 			i += 2;
-			
-			returned_data->input_fd = here_doc(ft_strtrim(splitted_data[i], " "), env);
+			returned_data->input_fd = here_doc(splitted_data[i], env);
 			g_key.flag_for_here = 0;
 			if (returned_data->input_fd == -4)
 				return (-4);

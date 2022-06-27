@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 14:58:47 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/25 14:33:20 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/27 16:20:12 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,11 @@ void	set_new_path(t_list *head)
 	char	*cwd;
 
 	cwd = getcwd(NULL, sizeof(cwd));
+	if (g_key.cd_flag == 0)
+	{
+		free(cwd);
+		return ;
+	}
 	if (head->content)
 		free(head->content);
 	head->content = ft_strjoin("PWD=", cwd);
@@ -57,7 +62,10 @@ void	change_path_value(t_list **env)
 	if (!head)
 		return ;
 	else
+	{
+		set_oldpwd(env, head->content);
 		set_new_path(head);
+	}
 }
 
 void	adding(char **spl, char **split_arg, t_list **env)
