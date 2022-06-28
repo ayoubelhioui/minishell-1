@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 15:21:58 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/27 16:22:03 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/28 15:15:52 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ void	ft_free_list(t_returned_data *head)
 t_list	*ft_lstdup(t_list *a)
 {
 	t_list	*dup;
+
 	dup = ft_lstnew (a->content);
 	a = a->next;
 	while (a)
@@ -40,11 +41,21 @@ t_list	*ft_lstdup(t_list *a)
 	return (dup);
 }
 
+void	setting_oldpwd(char *old, t_list *head)
+{
+	char	**prev;
+
+	prev = split_with_equ(old);
+	if (head->content)
+		free(head->content);
+	head->content = ft_strjoin("OLDPWD=", prev[1]);
+	ft_free(prev);
+}
+
 void	set_oldpwd(t_list **env, char *old)
 {
 	t_list	*head;
 	char	**pw;
-	char	**prev;
 
 	head = (*env);
 	while (head)
@@ -61,11 +72,18 @@ void	set_oldpwd(t_list **env, char *old)
 	if (!head)
 		return ;
 	else if (g_key.cd_flag == 1)
+		setting_oldpwd(old, head);
+}
+
+void	free_dup(t_list *en)
+{
+	t_list	*temp;
+
+	while (en)
 	{
-		prev = split_with_equ(old);
-		if (head->content)
-			free(head->content);	
-		head->content = ft_strjoin("OLDPWD=", prev[1]);
-		ft_free(prev);
+		temp = en->next;
+		free(en);
+		free(en->content);
+		en = temp;
 	}
 }

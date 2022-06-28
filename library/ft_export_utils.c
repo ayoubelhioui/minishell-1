@@ -6,25 +6,27 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 16:02:27 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/27 15:35:43 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/28 15:13:09 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	add_it_back(char **split_arg, char *arg, t_list **env)
+void	add_it_back(char **split_arg, char **arg, t_list **env, int i)
 {
 	char	*temp;
 
 	temp = NULL;
-	if (there_is_plus(arg))
+	if (there_is_plus(arg[i]))
 	{
 		temp = join_pl(split_arg[0], "=");
 		temp = ft_strjoin(temp, split_arg[1]);
 		ft_lstadd_back(env, ft_lstnew(temp));
 	}
 	else
-		ft_lstadd_back(env, ft_lstnew(arg));
+		ft_lstadd_back(env, ft_lstnew(arg[i]));
+	if (arg[i + 1] == NULL)
+		g_key.cd_flag = 0;
 }
 
 int	check_if_valid(char *arg)

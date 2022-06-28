@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 12:48:09 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/27 18:32:08 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/28 14:43:41 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,10 @@ void	ft_echo(char **s)
 	flag = 0;
 	i = -1;
 	if (*s == NULL)
+	{
 		printf("\n");
+		return ;
+	}
 	while (some_ns(s[++i]))
 		flag = 1;
 	while (s[i] && s[i + 1])

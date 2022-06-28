@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 15:14:17 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/25 15:05:53 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/28 15:16:55 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,11 +62,11 @@ int			there_is_plus(char *arg);
 void		sort_list(t_list *en);
 void		swap(t_list *a, t_list *b, int *ptr);
 int			check_if_valid(char *arg);
-void		add_it_back(char **split_arg, char *arg, t_list **env);
+void		add_it_back(char **split_arg, char **arg, t_list **env, int i);
 char		**split_with_equ(char *arg);
 void		change_path_value(t_list **env);
 void		free_splits(char **first, char **second);
-void		get_things_changed(char *arg, t_list **env);
+void		get_things_changed(char **arg, t_list **env, int i);
 void		add_value(char *arg, t_list **env);
 void		change_value(char *arg, t_list **env);
 void		adding(char **spl, char **split_arg, t_list **env);

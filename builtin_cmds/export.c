@@ -6,7 +6,7 @@
 /*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 12:47:10 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/27 19:08:24 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/28 17:26:34 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,11 +120,10 @@ void	ft_export(t_list **env, char **args)
 			continue ;
 		}
 		else if (ft_isnode(env, args[i]))
-			get_things_changed(args[i], env);
+			get_things_changed(args, env, i);
 		else
-			add_it_back(split_arg, args[i], env);
+			add_it_back(split_arg, args, env, i);
 		ft_free(split_arg);
 		i++;
 	}
-	g_key.cd_flag = 0;
 }

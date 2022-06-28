@@ -6,18 +6,20 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 14:58:47 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/27 16:20:12 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/28 15:17:33 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	get_things_changed(char *arg, t_list **env)
+void	get_things_changed(char **arg, t_list **env, int i)
 {
-	if (there_is_plus(arg))
-		add_value (arg, env);
+	if (there_is_plus(arg[i]))
+		add_value (arg[i], env);
 	else
-		change_value(arg, env);
+		change_value(arg[i], env);
+	if (arg[i + 1] == NULL)
+		g_key.cd_flag = 0;
 }
 
 void	free_splits(char **first, char **second)

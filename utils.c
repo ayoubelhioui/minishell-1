@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 16:35:49 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/27 16:19:36 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/28 14:57:05 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,6 @@ void	delete_node(t_list **env, int pos)
 void	print_list(t_list *en)
 {
 	char	**name_path;
-	t_list	*temp;
 	t_list	*cc;
 
 	cc = en;
@@ -107,13 +106,7 @@ void	print_list(t_list *en)
 		ft_free(name_path);
 		cc = cc->next;
 	}
-	while (en)
-	{
-		temp = en->next;
-		free(en);
-		free(en->content);
-		en = temp;
-	}
+	free_dup(en);
 }
 
 int	ft_equal(char *arg)
