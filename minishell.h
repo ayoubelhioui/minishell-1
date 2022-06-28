@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 19:39:41 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/06/27 15:02:02 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/27 16:53:50 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,6 +128,7 @@ typedef struct error_handling_vars
 {
 	int	i;
 	int	in_quote;
+	int	is_first_enter;
 }				t_error_handling_vars;
 
 typedef struct g_str

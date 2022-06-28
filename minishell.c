@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 10:21:42 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/06/27 16:06:47 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/27 18:51:41 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,6 @@ int	main(int ac, char **av, char **env)
 		signal(SIGINT, &sig_handler);
 		signal(SIGQUIT, SIG_IGN);
 		prompt(env, new_env);
-		system("leaks minishell");
+		// system("leaks minishell");
 	}
 }
