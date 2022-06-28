@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 12:47:10 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/27 15:42:37 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/27 19:08:24 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ void	changing(t_list **env, char *arg)
 		j++;
 	}
 	(*env)->content[j] = '\0';
-	printf("it is now %s\n", (*env)->content);
 	(*env)->criteria = 'e';
 }
 
