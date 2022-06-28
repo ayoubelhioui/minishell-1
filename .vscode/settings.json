@@ -75,6 +75,7 @@
         "here_doc.h": "c",
         "command_argument.h": "c",
         "string_manipulation.h": "c",
-        "initalizing_data.h": "c"
+        "initalizing_data.h": "c",
+        "errors_handling.h": "c"
     }
 }

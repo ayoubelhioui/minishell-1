@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   input_output.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 11:19:46 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/06/25 14:31:19 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/28 19:37:54 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ int	getting_input_fd(t_returned_data *returned_data, char **s)
 {
 	int	temp_input;
 	int	i;
+	char	*temp;
 
 	i = -1;
 	temp_input = returned_data->input_fd;
@@ -75,13 +76,16 @@ int	getting_input_fd(t_returned_data *returned_data, char **s)
 		else if (!ft_strcmp(s[i], "<"))
 		{
 			i++;
-			returned_data->input_fd = open(s[i], O_RDONLY);
+			temp = remove_quotes(s[i]);
+			returned_data->input_fd = open(temp, O_RDONLY);
 			if (returned_data->input_fd == -1)
 			{
 				printf("%s:%s\n", s[i], strerror(errno));
+				free (temp);
 				returned_data->is_executable = FALSE;
 				return (i);
 			}
+			free (temp);
 		}
 	}
 	return (i);
