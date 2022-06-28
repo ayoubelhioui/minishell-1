@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 16:10:35 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/26 19:15:40 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/28 15:13:45 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ void	export_error(char **split_arg, char **arg, int *i)
 	if (split_arg)
 		ft_free(split_arg);
 	g_key.exit_stat = 1;
+	if (arg[*i + 1] == NULL)
+		g_key.cd_flag = 0;
 }
 
 char	*chrdup(char c)
@@ -49,7 +51,6 @@ char	*expand_exit_stat(char *str, int *pos, char *saver)
 
 	if (str[*pos] == '$' && str[*pos + 1] == '?')
 	{
-		// printf("exit is %lld\n", g_key.exit_stat);
 		value = ft_itoa((int) g_key.exit_stat);
 		tmp = saver;
 		saver = expanding_join(saver, value);

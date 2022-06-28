@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   errors_handling.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 10:51:35 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/06/27 16:46:25 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/28 14:49:32 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ void	skip_spaces(t_error_handling_vars *vars, char *context)
 	while (context[vars->i] == SPACE)
 			vars->i++;
 }
+
 int	check_unclosed_quotes(char *context)
 {
 	int	in_quote;
@@ -41,7 +42,8 @@ int	error_handling_helper(t_error_handling_vars *vars, char *context)
 	{
 		vars->i++;
 		skip_spaces(vars, context);
-		if (context[vars->i] == RED_OUTPUT || context[vars->i] == '\0' || context[vars->i] == PIPE)
+		if (context[vars->i] == RED_OUTPUT || context[vars->i] == '\0'
+			|| context[vars->i] == PIPE)
 			return (TRUE);
 		if (context[vars->i] == RED_INPUT)
 		{
@@ -54,7 +56,8 @@ int	error_handling_helper(t_error_handling_vars *vars, char *context)
 	{
 		vars->i++;
 		skip_spaces(vars, context);
-		if (context[vars->i] == RED_INPUT || context[vars->i] == '\0' || context[vars->i] == PIPE)
+		if (context[vars->i] == RED_INPUT || context[vars->i] == '\0'
+			|| context[vars->i] == PIPE)
 			return (TRUE);
 		if (context[vars->i] == RED_OUTPUT)
 		{
@@ -83,14 +86,17 @@ int	error_handling(char *context)
 		else if (context[vars.i] == SINGLE_QUOTE)
 			in_a_quote(&vars.in_quote, SINGLE_QUOTE);
 		skip_spaces(&vars, context);
-		if (context[vars.i] == PIPE && vars.in_quote == 0 && vars.is_first_enter == 0)
+		if (context[vars.i] == PIPE && vars.in_quote == 0
+			&& vars.is_first_enter == 0)
 			return (TRUE);
 		vars.is_first_enter = 1;
 		if (context[vars.i] == PIPE && vars.in_quote == 0)
 		{
 			vars.i++;
 			skip_spaces(&vars, context);
-			if (context[vars.i] == PIPE || context[vars.i] == '\0' || context[vars.i] == RED_INPUT || context[vars.i] == RED_OUTPUT)
+			if (context[vars.i] == PIPE || context[vars.i] == '\0'
+				|| context[vars.i] == RED_INPUT
+				|| context[vars.i] == RED_OUTPUT)
 				return (TRUE);
 		}
 		else if (error_handling_helper(&vars, context))

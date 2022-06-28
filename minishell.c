@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 10:21:42 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/06/27 18:51:41 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/28 15:15:26 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ void	prompt(char **env, t_list *new_env)
 	{
 		free(entered_data.context);
 		printf("error occured\n");
+		g_key.exit_stat = 258;
 		return ;
 	}
 	ret = preparing(&entered_data, new_env, &returned_data);
@@ -93,6 +94,6 @@ int	main(int ac, char **av, char **env)
 		signal(SIGINT, &sig_handler);
 		signal(SIGQUIT, SIG_IGN);
 		prompt(env, new_env);
-		// system("leaks minishell");
+		system("leaks minishell");
 	}
 }
