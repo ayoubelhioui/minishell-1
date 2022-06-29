@@ -13,7 +13,6 @@ CC = cc
 NAME = minishell
 CFLAGS = -Wall -Wextra -Werror
 READLINE =   -lreadline -L /Users/ael-hiou/goinfre/.brew/opt/readline/lib -I /Users/ael-hiou/goinfre/.brew/opt/readline/include
-#    -fsanitize=address
 SRC_O = $(SRC:.c=.o)
 # 
 all :$(NAME)
