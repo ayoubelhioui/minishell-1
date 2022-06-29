@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   list_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 15:21:58 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/28 15:15:52 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/29 15:30:23 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,8 +82,8 @@ void	free_dup(t_list *en)
 	while (en)
 	{
 		temp = en->next;
-		free(en);
 		free(en->content);
+		free(en);
 		en = temp;
 	}
 }

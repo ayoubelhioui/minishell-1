@@ -6,7 +6,7 @@
 /*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 11:19:46 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/06/28 19:37:54 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/29 10:51:03 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,8 @@ void	getting_output_fd(char *str, t_returned_data \
 
 int	getting_input_fd(t_returned_data *returned_data, char **s)
 {
-	int	temp_input;
-	int	i;
+	int		temp_input;
+	int		i;
 	char	*temp;
 
 	i = -1;
@@ -75,8 +75,7 @@ int	getting_input_fd(t_returned_data *returned_data, char **s)
 			i += 2;
 		else if (!ft_strcmp(s[i], "<"))
 		{
-			i++;
-			temp = remove_quotes(s[i]);
+			temp = remove_quotes(s[++i]);
 			returned_data->input_fd = open(temp, O_RDONLY);
 			if (returned_data->input_fd == -1)
 			{

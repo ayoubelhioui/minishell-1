@@ -6,7 +6,7 @@
 /*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 10:51:35 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/06/28 18:52:56 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/29 10:54:30 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ int	input_error_handling(t_error_handling_vars *vars, char *context)
 	}
 	return (FALSE);
 }
+
 int	check_unclosed_quotes(char *context)
 {
 	int	in_quote;

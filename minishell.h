@@ -6,7 +6,7 @@
 /*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 19:39:41 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/06/28 18:50:01 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/29 15:21:36 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,4 +202,5 @@ void	execve_err(t_returned_data *data);
 t_list	*ft_lstdup(t_list *a);
 void	set_oldpwd(t_list **env, char *old);
 void	free_dup(t_list *en);
+t_list	*ft_lstnew_e(char *content);
 #endif

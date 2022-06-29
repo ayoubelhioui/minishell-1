@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lstnew_bonus.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 15:01:08 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/27 15:51:23 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/29 15:22:35 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,3 +27,4 @@ t_list	*ft_lstnew(char *content)
 	new->next = NULL;
 	return (new);
 }
+

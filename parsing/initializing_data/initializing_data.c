@@ -6,25 +6,24 @@
 /*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 11:59:02 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/06/28 18:53:37 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/29 10:50:04 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "initializing_data.h"
 
-void add_to_list(t_list **head, char *string)
+void	add_to_list(t_list **head, char *string)
 {
-	t_list *new;
+	t_list	*new;
 
 	new = ft_lstnew(string);
 	ft_lstadd_back(head, new);
 }
 
-void returned_data_addback(t_returned_data
-							   **returned_data,
-						   t_returned_data *new)
+void	returned_data_addback(t_returned_data **returned_data, \
+t_returned_data *new)
 {
-	t_returned_data *temp;
+	t_returned_data	*temp;
 
 	temp = (*returned_data);
 	if (*returned_data)
@@ -37,11 +36,10 @@ void returned_data_addback(t_returned_data
 		*returned_data = new;
 }
 
-void create_returned_nodes(t_returned_data
-							   **returned_data,
-						   int commands_number)
+void	create_returned_nodes(t_returned_data **returned_data, \
+		int commands_number)
 {
-	t_returned_data *new;
+	t_returned_data	*new;
 
 	while (commands_number > 0)
 	{
@@ -61,10 +59,10 @@ void create_returned_nodes(t_returned_data
 	}
 }
 
-int preparing(t_data *entered_data,
-			  t_list *env, t_returned_data **returned_data)
+int	preparing(t_data *entered_data, \
+			t_list *env, t_returned_data **returned_data)
 {
-	t_preparing_vars vars;
+	t_preparing_vars	vars;
 
 	vars.new_env = get_new_env(env);
 	entered_data->context = expanding(entered_data->context, vars.new_env);
@@ -74,8 +72,8 @@ int preparing(t_data *entered_data,
 	vars.splitted_by_space = ft_split(entered_data->context, SPACE);
 	free(entered_data->context);
 	create_returned_nodes(returned_data, vars.commands_number);
-	vars.ret = heredoc_searcher(vars.splitted_by_space,
-								*returned_data, vars.new_env);
+	vars.ret = heredoc_searcher(vars.splitted_by_space, \
+	*returned_data, vars.new_env);
 	if (vars.ret == -4 && g_key.flag == 6)
 	{
 		free_splits(vars.splitted_by_pipe, vars.splitted_by_space);
