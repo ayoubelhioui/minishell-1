@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 15:12:46 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/14 15:12:47 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/29 15:35:23 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ char	*ft_strdup(const char *src)
 	size_t	i;
 	char	*p;
 
+	if (!src)
+		return (NULL);
 	n = ft_strlen(src);
 	p = malloc(sizeof(char) * (n + 1));
 	if (p)

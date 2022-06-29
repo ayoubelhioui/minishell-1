@@ -12,8 +12,8 @@ library/export_utils2.c  library/things_done.c library/ft_export_utils.c library
 CC = cc
 NAME = minishell
 CFLAGS = -Wall -Wextra -Werror
-READLINE = -lreadline -L /Users/ijmari/Desktop/brew/opt/readline/lib -I /Users/ijmari/Desktop/brew/opt/readline/include
-#   -fsanitize=address
+READLINE =  -fsanitize=address -lreadline -L /Users/ijmari/Desktop/brew/opt/readline/lib -I /Users/ijmari/Desktop/brew/opt/readline/include
+#  
 SRC_O = $(SRC:.c=.o)
 # 
 all :$(NAME)
