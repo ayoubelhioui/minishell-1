@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   things_done.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/22 20:39:37 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/27 16:57:54 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/29 16:39:06 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ void	handle_the_cmd(t_returned_data *t, t_returned_data *data, \
 	int		check;
 
 	signal(SIGQUIT, sig_quit);
+	signal(SIGINT, sig_handler);
 	if (data->flag == 1)
 		exit(0);
 	close_unused_pipes(t, data);

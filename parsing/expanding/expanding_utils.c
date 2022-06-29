@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expanding_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 10:14:54 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/06/29 15:00:56 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/29 16:44:52 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,5 @@ void	get_value(t_dollar_sign_vars *vars, char **env)
 	if (vars->to_be_expanded[0] == ZERO)
 		vars->env_value = ft_strjoin(vars->temp1, vars->temp);
 	else
-	{
-		printf("to be : %s\n", vars->to_be_expanded);
 		vars->env_value = search_in_env(vars->to_be_expanded, env);
-	}
 }

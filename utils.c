@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 16:35:49 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/29 15:29:12 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/29 16:40:56 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ void	print_list(t_list *en)
 			else if (name_path[1])
 				printf("declare -x %s%c\"%s\"\n", name_path[0], '=', name_path[1]);
 			else
-				printf("declare -x %s\n", name_path[0]);
+				printf("declare -x %s%c%s%s\n", name_path[0], '=', "\"", "\"");
 		}
 		else
 			printf("declare -x %s\n", name_path[0]);
@@ -107,6 +107,7 @@ void	print_list(t_list *en)
 		cc = cc->next;
 	}
 	free_dup(en);
+	g_key.cd_flag = 0;
 }
 
 int	ft_equal(char *arg)

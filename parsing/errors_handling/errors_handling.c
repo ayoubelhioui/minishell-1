@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   errors_handling.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 10:51:35 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/06/29 10:54:30 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/29 17:14:54 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,9 @@ int	pipe_error_handling(t_error_handling_vars *vars, char *context)
 		if (context[vars->i] == PIPE || context[vars->i] == '\0'
 			|| context[vars->i] == RED_INPUT
 			|| context[vars->i] == RED_OUTPUT)
+		{		
 			return (TRUE);
+		}
 	}
 	return (FALSE);
 }
@@ -97,15 +99,15 @@ int	error_handling(char *context)
 		return (TRUE);
 	while (context[++vars.i])
 	{
+		skip_spaces(&vars, context);
 		if (context[vars.i] == DOUBLE_QUOTE)
 			in_a_quote(&vars.in_quote, DOUBLE_QUOTE);
 		else if (context[vars.i] == SINGLE_QUOTE)
 			in_a_quote(&vars.in_quote, SINGLE_QUOTE);
-		skip_spaces(&vars, context);
-		if (context[vars.i] == PIPE && vars.in_quote == 0
+		else if (context[vars.i] == PIPE && vars.in_quote == 0
 			&& vars.is_first_enter == 0)
 			return (TRUE);
-		if (pipe_error_handling(&vars, context))
+		else if (pipe_error_handling(&vars, context))
 			return (TRUE);
 		else if (redirections_handling(&vars, context))
 			return (TRUE);
