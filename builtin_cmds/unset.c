@@ -6,7 +6,7 @@
 /*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/14 14:52:24 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/25 14:33:09 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/29 17:13:37 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,12 +72,15 @@ void	ft_unset(t_list **env, char	**args)
 	int		i;
 
 	i = 0;
-	if (!check_unset(args[i]) || args[i][0] == '=')
-	{
-		printf("unset: \'%s\': not a valid identifier\n", args[i]);
-		g_key.exit_stat = 1;
-		return ;
-	}
 	while (args[i])
+	{
+		if (!check_unset(args[i]) || args[i][0] == '=')
+		{
+			printf("unset: \'%s\': not a valid identifier\n", args[i]);
+			g_key.exit_stat = 1;
+			i++;
+			continue ;
+		}
 		handle_unset(env, args[i++]);
+	}
 }

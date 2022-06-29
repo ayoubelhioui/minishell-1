@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 12:10:36 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/06/29 15:06:57 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/29 17:14:27 by ijmari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,14 +53,10 @@ char	*search_in_env(char *entered_data, char **env)
 
 	i = 0;
 	if (ft_isdigit(entered_data[0]))
-	{
-		printf("OK\n");
 		return (ft_strdup(entered_data + 1));
-	}
 	while (env[i])
 	{
 		holder = ft_split(env[i], EQUAL);
-		// printf("one %s two %s\n", holder[0], holder[1]);
 		if (ft_strcmp(holder[0], entered_data) == 0)
 		{
 			returned = ft_strdup(holder[1]);
