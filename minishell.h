@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 19:39:41 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/06/28 15:09:43 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/29 15:21:36 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,6 +149,7 @@ typedef struct pipe_vars
 }			t_pipe_vars;
 
 t_str	g_key;
+void	skip_spaces(t_error_handling_vars *vars, char *context);
 char	*get_next_line(int fd);
 void	ft_free(char **s);
 void	returned_data_addback(t_returned_data **returned_data, \
@@ -201,4 +202,5 @@ void	execve_err(t_returned_data *data);
 t_list	*ft_lstdup(t_list *a);
 void	set_oldpwd(t_list **env, char *old);
 void	free_dup(t_list *en);
+t_list	*ft_lstnew_e(char *content);
 #endif

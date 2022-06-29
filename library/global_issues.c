@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   global_issues.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 16:10:35 by ijmari            #+#    #+#             */
-/*   Updated: 2022/06/28 15:13:45 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/28 21:04:39 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	export_error(char **split_arg, char **arg, int *i)
 	if (split_arg)
 		ft_free(split_arg);
 	g_key.exit_stat = 1;
-	if (arg[*i + 1] == NULL)
+	if (arg[*i] == NULL)
 		g_key.cd_flag = 0;
 }
 

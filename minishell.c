@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ijmari <ijmari@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 10:21:42 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/06/28 15:15:26 by ijmari           ###   ########.fr       */
+/*   Updated: 2022/06/29 15:31:50 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,12 @@
 #include "parsing/command_argument/command_argument.h"
 #include "parsing/string_manipulation/string_manipulation.h"
 #include "parsing/initializing_data/initializing_data.h"
+
+void	skip_spaces(t_error_handling_vars *vars, char *context)
+{
+	while (context[vars->i] == SPACE)
+			vars->i++;
+}
 
 int	prompt_helper(char *str)
 {

@@ -6,7 +6,7 @@
 /*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 11:59:02 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/06/25 18:53:28 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/29 10:50:04 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ void	add_to_list(t_list **head, char *string)
 	ft_lstadd_back(head, new);
 }
 
-void	returned_data_addback(t_returned_data \
-**returned_data, t_returned_data *new)
+void	returned_data_addback(t_returned_data **returned_data, \
+t_returned_data *new)
 {
 	t_returned_data	*temp;
 
@@ -36,8 +36,8 @@ void	returned_data_addback(t_returned_data \
 		*returned_data = new;
 }
 
-void	create_returned_nodes(t_returned_data \
-**returned_data, int commands_number)
+void	create_returned_nodes(t_returned_data **returned_data, \
+		int commands_number)
 {
 	t_returned_data	*new;
 
@@ -60,7 +60,7 @@ void	create_returned_nodes(t_returned_data \
 }
 
 int	preparing(t_data *entered_data, \
-t_list *env, t_returned_data **returned_data)
+			t_list *env, t_returned_data **returned_data)
 {
 	t_preparing_vars	vars;
 
@@ -77,7 +77,7 @@ t_list *env, t_returned_data **returned_data)
 	if (vars.ret == -4 && g_key.flag == 6)
 	{
 		free_splits(vars.splitted_by_pipe, vars.splitted_by_space);
-		free (vars.new_env);
+		free(vars.new_env);
 		return (-4);
 	}
 	pipe_handling(vars.commands_number, vars.splitted_by_pipe, *returned_data);
