@@ -6,7 +6,7 @@
 /*   By: ael-hiou <ael-hiou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 11:38:44 by ael-hiou          #+#    #+#             */
-/*   Updated: 2022/06/27 19:02:52 by ael-hiou         ###   ########.fr       */
+/*   Updated: 2022/06/28 19:43:37 by ael-hiou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ void	freeing(char **s)
 			free (s[i++]);
 			if (!ft_strcmp(s[i], "<") || !ft_strcmp(s[i], ">"))
 				free (s[i++]);
+			if (!s[i])
+				return ;
 			free (s[i]);
 		}
 		i++;
